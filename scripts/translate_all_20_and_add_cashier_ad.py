@@ -52,7 +52,7 @@ s=s.replace('preview.srcdoc=p.html;','preview.srcdoc=screenMarkup(p,currentLangu
 assert s.count('id="uiLanguage"')==1
 p.write_text(s,encoding="utf-8")
 # Verify no screens removed, no image content modified, and all language controls exist.
-result=json.loads(s[s.index("const pages=")+12:s.index(";let selected=")])
+result,_=json.JSONDecoder().raw_decode(s[s.index("const pages=")+12:])
 assert len(result)==20
 assert next(x for x in result if x["en"]=="USR-POS-001")["html"].count('class="card"')==3
 assert all('buuurt-bottom-nav' in x['html'] for x in result)
