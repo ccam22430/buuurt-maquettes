@@ -1,9 +1,11 @@
 name: Apply approved multilingual mockup update
 on:
+  workflow_dispatch:
   push:
     branches: [main]
     paths:
       - '.github/workflows/translate-all-maquettes.yml'
+      - 'scripts/translate_all_20_and_add_cashier_ad.py'
 permissions:
   contents: write
 jobs:
