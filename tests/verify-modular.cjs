@@ -49,7 +49,18 @@ async function verify() {
   if (process.argv.includes('--parity')) {
     const legacy = readLegacyScreens().sort((a, b) => a.en.localeCompare(b.en));
     const original = legacy.find(page => page.en === 'MER-001');
-    original.html = original.html.replace(components['standard-header-indicator'], components['notification-header-indicator']);
+    const merchant = rendered.find(page => page.en === 'MER-001');
+    const intro = merchant.html.match(/<style>\.merchant-intro[\s\S]+?<\/main>/)?.[0];
+    assert(intro, 'Merchant introduction is missing');
+    for (const label of ['Rejoignez BUUURT', 'Créer mon compte commerce', 'J’ai déjà un compte']) {
+      assert(intro.includes(label), label);
+    }
+    const start = original.html.indexOf('<div class="section">');
+    const end = original.html.indexOf(components['bottom-navigation']);
+    assert(start > 0 && end > start);
+    original.html = original.html.slice(0, start).replace(
+      components['standard-header-indicator'], components['notification-header-indicator']
+    ) + intro + original.html.slice(end);
     assert.deepEqual(rendered, legacy);
   }
   console.log('PASS: 20 écrans, 40 codes, composition et destinations internes');
