@@ -24,7 +24,7 @@ body{max-width:1000px;margin:auto;padding:14px;background:#f4f4f6;color:#17171d;
 </div><div class="carousel-controls" data-carousel><button type="button" data-prev aria-label="Previous">‹</button><div class="dots" data-dots></div><button type="button" data-next aria-label="Next">›</button></div></div>
 <p class="demo-tip">Exemple de démonstration : les autres cartes représentent des annonces fictives déjà publiées.</p>
 <button class="crop-button" type="button" data-open-crop><span>▣</span>Ajuster le cadrage<span class="chevron">›</span></button>
-<section class="crop-panel" data-crop hidden><b>Ajuster la photo</b><label>Zoom<input type="range" min="100" max="160" value="100" data-zoom></label><label>Position horizontale<input type="range" min="0" max="100" value="50" data-position></label><button type="button" data-close-crop>Terminer</button></section>
+<section class="crop-panel" data-crop hidden><b>Ajuster la photo</b><label>Zoom<input type="range" min="100" max="160" value="100" data-zoom></label><label>Position horizontale<input type="range" min="0" max="100" value="50" data-position-x></label><label>Position verticale<input type="range" min="0" max="100" value="50" data-position-y></label><button type="button" data-close-crop>Terminer</button></section>
 <button class="continue" type="button" data-continue>Continuer →</button><p class="next-message" hidden>L’étape suivante sera conçue séparément.</p>
 </main></div></article><article class="screen" id="nl-MER-PUB-PRV-001" lang="nl">
 <h3>MER-PUB-PRV-001 / COM-PUB-APE-001 — Voorbeeld van de aankondiging</h3>
@@ -37,7 +37,7 @@ body{max-width:1000px;margin:auto;padding:14px;background:#f4f4f6;color:#17171d;
 </div><div class="carousel-controls" data-carousel><button type="button" data-prev aria-label="Previous">‹</button><div class="dots" data-dots></div><button type="button" data-next aria-label="Next">›</button></div></div>
 <p class="demo-tip">Demo: de andere kaarten zijn fictieve voorbeelden van eerder gepubliceerde berichten.</p>
 <button class="crop-button" type="button" data-open-crop><span>▣</span>Foto bijsnijden<span class="chevron">›</span></button>
-<section class="crop-panel" data-crop hidden><b>Foto aanpassen</b><label>Zoom<input type="range" min="100" max="160" value="100" data-zoom></label><label>Horizontale positie<input type="range" min="0" max="100" value="50" data-position></label><button type="button" data-close-crop>Gereed</button></section>
+<section class="crop-panel" data-crop hidden><b>Foto aanpassen</b><label>Zoom<input type="range" min="100" max="160" value="100" data-zoom></label><label>Horizontale positie<input type="range" min="0" max="100" value="50" data-position-x></label><label>Verticale positie<input type="range" min="0" max="100" value="50" data-position-y></label><button type="button" data-close-crop>Gereed</button></section>
 <button class="continue" type="button" data-continue>Doorgaan →</button><p class="next-message" hidden>De volgende stap wordt afzonderlijk ontworpen.</p>
 </main></div></article><article class="screen" id="en-MER-PUB-PRV-001" lang="en">
 <h3>MER-PUB-PRV-001 / COM-PUB-APE-001 — Announcement preview</h3>
@@ -50,7 +50,7 @@ body{max-width:1000px;margin:auto;padding:14px;background:#f4f4f6;color:#17171d;
 </div><div class="carousel-controls" data-carousel><button type="button" data-prev aria-label="Previous">‹</button><div class="dots" data-dots></div><button type="button" data-next aria-label="Next">›</button></div></div>
 <p class="demo-tip">Demo: the other cards are fictional examples of previously published announcements.</p>
 <button class="crop-button" type="button" data-open-crop><span>▣</span>Adjust photo<span class="chevron">›</span></button>
-<section class="crop-panel" data-crop hidden><b>Adjust photo</b><label>Zoom<input type="range" min="100" max="160" value="100" data-zoom></label><label>Horizontal position<input type="range" min="0" max="100" value="50" data-position></label><button type="button" data-close-crop>Done</button></section>
+<section class="crop-panel" data-crop hidden><b>Adjust photo</b><label>Zoom<input type="range" min="100" max="160" value="100" data-zoom></label><label>Horizontal position<input type="range" min="0" max="100" value="50" data-position-x></label><label>Vertical position<input type="range" min="0" max="100" value="50" data-position-y></label><button type="button" data-close-crop>Done</button></section>
 <button class="continue" type="button" data-continue>Continue →</button><p class="next-message" hidden>The next step will be designed separately.</p>
 </main></div></article><script>
 const samples={
@@ -79,7 +79,15 @@ document.querySelectorAll(".preview-step").forEach(root=>{
  root.querySelector("[data-open-crop]").addEventListener("click",()=>{crop.hidden=!crop.hidden});
  root.querySelector("[data-close-crop]").addEventListener("click",()=>{crop.hidden=true});
  root.querySelector("[data-zoom]").addEventListener("input",e=>{img.style.transform="scale("+(e.target.value/100)+")"});
- const positionX=root.querySelector("[data-position-x]"),positionY=root.querySelector("[data-position-y]");\n function setPosition(){img.style.objectPosition=positionX.value+"% "+positionY.value+"%"}\n positionX.addEventListener("input",setPosition);positionY.addEventListener("input",setPosition);
+ const positionX=root.querySelector("[data-position-x]");
+ const positionY=root.querySelector("[data-position-y]");
+ function setPosition(){
+  const position=positionX.value+"% "+positionY.value+"%";
+  img.style.objectPosition=position;
+  img.style.transformOrigin=position;
+ }
+ positionX.addEventListener("input",setPosition);
+ positionY.addEventListener("input",setPosition);
  root.querySelector("[data-continue]").addEventListener("click",()=>{root.querySelector(".next-message").hidden=false});
  show();
 });
