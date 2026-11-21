@@ -1,5 +1,6 @@
 name: Apply black notification icon HAB-SIT-001
 on:
+  workflow_dispatch:
   push:
     branches: [main]
     paths: ['.github/workflows/apply-hab-sit-001-black-bell.yml']
