@@ -1,4 +1,4 @@
-name: Apply black notification icon HAB-SIT-001
+name: Apply black notification icon HAB-SIT-001 (retry)
 on:
   workflow_dispatch:
   push:
