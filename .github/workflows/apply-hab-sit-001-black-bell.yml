@@ -25,6 +25,14 @@ jobs:
           const icon="<span aria-label='3 ongelezen meldingen' title='3 ongelezen meldingen' style='display:inline-flex;position:relative;align-items:center;justify-content:center;width:27px;height:27px;border:1.5px solid #111;border-radius:50%;background:#fff;color:#111;vertical-align:middle'><svg xmlns='http://www.w3.org/2000/svg' width='17' height='17' viewBox='0 0 24 24' fill='none' stroke='#111' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9'/><path d='M10 21h4'/></svg><span style='position:absolute;top:-7px;right:-8px;min-width:15px;height:15px;padding:0 2px;border-radius:10px;background:#111;color:#fff;font:700 10px/15px Arial,sans-serif;text-align:center'>3</span></span>";
           if(page.includes("aria-label='3 ongelezen meldingen'")){console.log('Already patched');process.exit(0);}
           const old=page.includes('◎ NL⌄  🔔')?'◎ NL⌄  🔔':'◎ NL⌄  ♧';
+          const bellPos=page.indexOf('🔔');
+          if(bellPos>=0 && page.split('🔔').length===2){
+            const replaced=page.slice(0,bellPos)+icon+page.slice(bellPos+2);
+            const updated=original.slice(0,start)+replaced+original.slice(end);
+            fs.writeFileSync(file,updated);
+            console.log('PASS: replaced unique bell in HAB-SIT-001');
+            process.exit(0);
+          }
           if(page.split(old).length!==2){console.log('DIAGNOSTIC page length:',page.length);console.log('DIAGNOSTIC NL selector index:',page.indexOf('NL⌄'));console.log('DIAGNOSTIC emoji index:',page.indexOf('🔔'));console.log('DIAGNOSTIC original icon index:',page.indexOf('♧'));console.log('DIAGNOSTIC page prefix:',JSON.stringify(page.slice(0,800)));fs.mkdirSync('diagnostics',{recursive:true});fs.writeFileSync('diagnostics/hab-sit-001-header.txt',JSON.stringify({start,end,pageLength:page.length,selectorIndex:page.indexOf('NL⌄'),emojiIndex:page.indexOf('🔔'),originalIndex:page.indexOf('♧'),first1200:page.slice(0,1200)},null,2));console.log('Diagnostic file written');process.exit(0);}
           const updated=original.slice(0,start)+page.replace(old,'◎ NL⌄  '+icon)+original.slice(end);
           if(updated.slice(0,start)!==original.slice(0,start)||updated.slice(start+page.length-old.length+('◎ NL⌄  '+icon).length)!==original.slice(end))throw Error('Unexpected change outside page');
