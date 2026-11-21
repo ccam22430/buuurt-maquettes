@@ -143,7 +143,9 @@ export function screenMarkup(page, lang) {
     markup = markup.replace(/(<input id="l(?:fr|nl|en)" type="radio" name="arrival-lang")( checked)?>/g,
       (_, prefix) => prefix + (prefix.includes('id="' + checked + '"') ? ' checked' : '') + '>');
   }
-  if (lang === 'fr') return markup;
+  if (lang === 'fr') return markup
+    .replace(/(<span class="right">◎ )NL⌄/g, '$1FR⌄')
+    .replace(/3 ongelezen meldingen/g, '3 notifications non lues');
   const index = lang === 'nl' ? 0 : 1;
   const labels = arrival ? sharedLabels : { ...translations, ...sharedLabels };
   return translateMarkup(markup, lang, labels)

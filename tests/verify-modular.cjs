@@ -31,7 +31,8 @@ async function verify() {
       'brand-logo': 20,
       'header-menu': 20,
       'bottom-navigation': 20,
-      'standard-header-indicator': 19,
+      'standard-header-indicator': 18,
+      'notification-header-indicator': 2,
       'feed-category-tabs': 5,
     };
     for (const [name, count] of Object.entries(expectedScopes)) {
@@ -46,7 +47,10 @@ async function verify() {
       composeScreen(page.html, components) !== rendered[index].html).map(page => page.en), [pages[0].en]);
   }
   if (process.argv.includes('--parity')) {
-    assert.deepEqual(rendered, readLegacyScreens().sort((a, b) => a.en.localeCompare(b.en)));
+    const legacy = readLegacyScreens().sort((a, b) => a.en.localeCompare(b.en));
+    const original = legacy.find(page => page.en === 'MER-001');
+    original.html = original.html.replace(components['standard-header-indicator'], components['notification-header-indicator']);
+    assert.deepEqual(rendered, legacy);
   }
   console.log('PASS: 20 écrans, 40 codes, composition et destinations internes');
 }

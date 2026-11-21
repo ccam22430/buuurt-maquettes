@@ -17,8 +17,8 @@ Chaque fichier de `screens/` contient les codes, le titre et le HTML d’un écr
 | Portée | Éléments |
 | --- | --- |
 | Commune aux 20 écrans de référence | Styles de base, logo, menu supérieur et navigation basse |
-| Partagée par les écrans qui la référencent | Onglets de filtres sur les cinq écrans de fil concernés, indicateur d’en-tête standard sur 19 écrans |
-| Spécifique à un écran | Cloche détaillée de l’accueil web, contenu et CSS propres, sélecteur intégré à l’écran d’arrivée |
+| Partagée par les écrans qui la référencent | Onglets de filtres sur les cinq écrans de fil concernés, cloche avec badge sur l’accueil et l’accès commerçant, indicateur standard sur 18 écrans |
+| Spécifique à un écran | Contenu et CSS propres, sélecteur intégré à l’écran d’arrivée |
 
 Le dictionnaire de traduction et le rendu sont dans `components/render.mjs`. Les commandes du visualiseur sont dans `index.html`. Les libellés et interactions représentés restent ceux des maquettes de référence. Des commandes sont purement visuelles. La couverture des traductions est celle de la référence historique et doit être validée séparément pour une livraison bilingue.
 

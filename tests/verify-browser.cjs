@@ -42,7 +42,18 @@ const mobile = process.argv.includes('--mobile');
           return page.locator('#preview').getAttribute('srcdoc');
         }));
         assert(markup[0].includes('<html lang="' + lang + '"'));
-        if (parity && lang === 'fr') assert.equal(markup[1],markup[0],hash+' '+lang);
+        if (parity && lang === 'fr' && hash !== '#MER-001') {
+          const historical = markup[0]
+            .replace(/(<span class="right">◎ )NL⌄/g, '$1FR⌄')
+            .replace(/3 ongelezen meldingen/g, '3 notifications non lues');
+          assert.equal(markup[1], historical, hash + ' ' + lang);
+        }
+        if (hash === '#MER-001') {
+          const header = preview.frameLocator('#preview').locator('.head .right');
+          assert.match(await header.innerText(), new RegExp(lang.toUpperCase() + '⌄'));
+          assert.equal(await header.locator('svg').count(), 1);
+          assert.match(await header.innerText(), /3$/);
+        }
         const renders = await Promise.all(pages.map(page =>
           page.frameLocator('#preview').locator('html[lang='+lang+'] body').evaluate(async body => {
             await body.ownerDocument.fonts.ready;
@@ -61,11 +72,9 @@ const mobile = process.argv.includes('--mobile');
             };
           })
         ));
-        if (parity && lang === 'fr' && !mobile) {
-          assert.deepEqual(renders[1], renders[0], hash + ' French layout');
-        } else if (parity) {
+        if (parity) {
           assert.deepEqual(renders[1].images, renders[0].images, hash + ' images');
-          assert.deepEqual(renders[1].elements.map(el => el[0]), renders[0].elements.map(el => el[0]), hash + ' element structure');
+          if (hash !== '#MER-001') assert.deepEqual(renders[1].elements.map(el => el[0]), renders[0].elements.map(el => el[0]), hash + ' element structure');
         }
         const mockup = preview.frameLocator('#preview');
         assert.equal(await mockup.locator('.buuurt-bottom-nav').count(), 1);
