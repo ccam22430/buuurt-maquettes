@@ -39,7 +39,7 @@ jobs:
             const browser = await chromium.launch({args:['--no-sandbox']});
             try {
               const base = 'http://127.0.0.1:8765/';
-              const context = await browser.newContext({viewport:{width:1280,height:900}});
+              const context = await browser.newContext({viewport:{width:1280,height:1150}});
               const pages = await Promise.all([context.newPage(), context.newPage()]);
               const errors = [];
               for (const page of pages) {
@@ -63,7 +63,9 @@ jobs:
                     return page.locator('#preview').getAttribute('srcdoc');
                   }));
                   assert.equal(markup[1],markup[0],hash+' '+lang);
-                  const renders = await Promise.all(pages.map(async page=>{
+                  const renders = [];
+                for (const page of pages) {
+                  await page.bringToFront();
                     const frame=page.frameLocator('#preview');
                     await frame.locator('html[lang='+lang+'] body').waitFor();
                     await frame.locator('body').evaluate(async body=>{await body.ownerDocument.fonts.ready; await Promise.all([...body.ownerDocument.images].map(image=>image.decode()));});
