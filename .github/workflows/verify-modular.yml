@@ -51,15 +51,26 @@ jobs:
               await Promise.all(pages.map(page=>page.locator('#nav button').nth(19).waitFor({state:'attached'})));
               assert.equal(new URL(pages[1].url()).hash,'#MER-001');
               assert.equal(await pages[1].locator('#uiLanguage').inputValue(), 'nl');
+              async function updatePreview(page, action) {
+                await page.locator('#preview').evaluate(frame => {
+                  window.previewLoadedForTest = new Promise(resolve => frame.addEventListener('load', resolve, {once:true}));
+                });
+                await action();
+                await page.evaluate(() => window.previewLoadedForTest);
+              }
               const codes = [];
               for (let i=0; i<20; i++) {
-                await Promise.all(pages.map(page=>page.locator('#nav button').nth(i).click()));
+                await Promise.all(pages.map(page=>updatePreview(page,()=>page.locator('#nav button').nth(i).click())));
                 const hash = new URL(pages[0].url()).hash;
                 assert.equal(new URL(pages[1].url()).hash,hash);
                 codes.push(hash);
                 for (const lang of ['nl','fr','en']) {
                   const markup = await Promise.all(pages.map(async page=>{
-                    await page.locator('#uiLanguage').selectOption(lang);
+                    const selector = page.locator('#uiLanguage');
+                    if (await selector.inputValue() !== lang) {
+                      await updatePreview(page,()=>selector.selectOption(lang));
+                    }
+                    await page.mouse.move(0,0);
                     return page.locator('#preview').getAttribute('srcdoc');
                   }));
                   assert.equal(markup[1],markup[0],hash+' '+lang);
