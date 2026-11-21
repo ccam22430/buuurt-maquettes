@@ -34,27 +34,45 @@ section[lang=nl] .arrival .copy.nl,section[lang=en] .arrival .copy.en,section[la
 <label class="whatsapp"><input type="checkbox" role="switch" data-whatsapp> Les clients peuvent me contacter sur WhatsApp à ce numéro</label>
 <button class="button" type="button" disabled>Continuer →</button></div></div></article><script>
 const labels = {"fr": ["Présentation du commerce", "Courte description", "Horaires d’ouverture", "Choisir", "Ouvert", "Fermé", "Horaires variables", "Ajouter un créneau", "Retirer", "Fréquence", "Chaque semaine", "Toutes les deux semaines", "Chaque mois", "Date du premier jour ouvert", "Occurrence dans le mois", "Premier|Deuxième|Troisième|Quatrième|Dernier", "Copier vers d’autres jours", "Copier", "Numéro de téléphone", "Ce numéro sera affiché sur la fiche publique du commerce.", "Les clients peuvent me contacter sur WhatsApp à ce numéro", "Continuer", "Retour", "Lundi|Mardi|Mercredi|Jeudi|Vendredi|Samedi|Dimanche", "Début", "Fin"], "nl": ["Over je winkel", "Korte beschrijving", "Openingstijden", "Maak een keuze", "Open", "Gesloten", "Wisselende openingstijden", "Tijdvak toevoegen", "Verwijderen", "Frequentie", "Elke week", "Om de twee weken", "Elke maand", "Datum van de eerste openingsdag", "Weekdag in de maand", "Eerste|Tweede|Derde|Vierde|Laatste", "Kopiëren naar andere dagen", "Kopiëren", "Telefoonnummer", "Dit nummer wordt getoond op het openbare winkelprofiel.", "Klanten kunnen me op dit nummer bereiken via WhatsApp", "Doorgaan", "Terug", "Maandag|Dinsdag|Woensdag|Donderdag|Vrijdag|Zaterdag|Zondag", "Van", "Tot"], "en": ["About your business", "Short description", "Opening hours", "Choose", "Open", "Closed", "Variable opening hours", "Add a time slot", "Remove", "Frequency", "Every week", "Every two weeks", "Every month", "Date of the first open day", "Weekday occurrence in the month", "First|Second|Third|Fourth|Last", "Copy to other days", "Copy", "Phone number", "This number will appear on your public business profile.", "Customers can contact me on WhatsApp at this number", "Continue", "Back", "Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday", "From", "To"]};
-const emptyDay = () => ({status:'', slots:[['','']], frequency:'weekly', first:'', ordinal:'1'});
+const emptyDay = () => ({status:'', slots:[['09:00','18:00']], frequency:'weekly', first:'', ordinal:'1'});
 const key = 'buuurt-registration-presentation';
 const state = {desc:'', phone:'+31 ', whatsapp:false, days:Array.from({length:7}, emptyDay)};
 try { Object.assign(state, JSON.parse(sessionStorage.getItem(key) || '{}')); } catch {}
 const save = () => { try { sessionStorage.setItem(key, JSON.stringify(state)); } catch {} };
 const views = [...document.querySelectorAll('.screen')];
+let selectedDay = 0;
+const editor = {
+  fr: { day:'Jour à régler', save:'Enregistrer les horaires', saved:'Horaires enregistrés.', replace:'Remplacer les horaires déjà renseignés pour', invalid:'Vérifiez les créneaux et la date de première ouverture.' },
+  nl: { day:'Dag instellen', save:'Openingstijden opslaan', saved:'Openingstijden opgeslagen.', replace:'De bestaande openingstijden vervangen voor', invalid:'Controleer de tijdvakken en de eerste openingsdatum.' },
+  en: { day:'Day to edit', save:'Save opening hours', saved:'Opening hours saved.', replace:'Replace the existing hours for', invalid:'Check the time slots and the first opening date.' }
+};
+function normalizeTime(value) {
+  const match = value.trim().match(/^(\d{1,2})(?:[:h](\d{2}))?$/i);
+  if (!match || Number(match[1]) > 23 || Number(match[2] || 0) > 59) return '';
+  return match[1].padStart(2, '0') + ':' + (match[2] || '00');
+}
+function addSlot(slots) {
+  const end = normalizeTime(slots.at(-1)[1]);
+  const hour = end ? Number(end.slice(0, 2)) + 1 : 13;
+  return hour < 18 ? [String(hour).padStart(2, '0') + ':' + (end ? end.slice(3) : '00'), '18:00'] : ['', ''];
+}
 const options = (values, selected) => values.map(([value,label]) =>
   '<option value="' + value + '"' + (value === selected ? ' selected' : '') + '>' + label + '</option>').join('');
 function render(view) {
   const t = labels[view.lang], names = t[23].split('|');
   const hours = view.querySelector('.hours');
-  const open = [...hours.querySelectorAll('details')].map(day => day.open);
-  hours.innerHTML = state.days.map((day, index) => {
+  const ui = editor[view.lang];
+  const selector = '<label>' + ui.day + '<select data-day-select>' +
+    options(names.map((name, i) => [String(i), name]), String(selectedDay)) + '</select></label>';
+  hours.innerHTML = selector + state.days.map((day, index) => {
+    if (index !== selectedDay) return '';
     const status = [['',t[3]],['open',t[4]],['closed',t[5]],['variable',t[6]]];
     const frequency = [['weekly',t[10]],['fortnightly',t[11]],['monthly',t[12]]];
-    const summary = status.find(([code]) => code === day.status)[1];
     let fields = '';
     if (day.status === 'open') {
       fields = day.slots.map(([start,end], slot) => '<div class="slot" data-slot="' + slot + '"><label>' + t[24] +
-        '<input type="time" data-slot-field="0" required value="' + start + '"></label><label>' + t[25] +
-        '<input type="time" data-slot-field="1" required value="' + end + '"></label>' +
+        '<input type="text" inputmode="numeric" placeholder="HH:MM" data-slot-field="0" required value="' + start + '"></label><label>' + t[25] +
+        '<input type="text" inputmode="numeric" placeholder="HH:MM" data-slot-field="1" required value="' + end + '"></label>' +
         (day.slots.length > 1 ? '<button type="button" data-action="remove">' + t[8] + '</button>' : '') + '</div>').join('') +
         '<button type="button" data-action="add">' + t[7] + '</button><label>' + t[9] +
         '<select data-field="frequency">' + options(frequency, day.frequency) + '</select></label>';
@@ -62,12 +80,12 @@ function render(view) {
       if (day.frequency === 'monthly') fields += '<label>' + t[14] + '<select data-field="ordinal">' +
         options(t[15].split('|').map((label,i) => [String(i+1), label + ' — ' + names[index]]), day.ordinal) + '</select></label>';
       fields += '<div>' + t[16] + '<div class="copy-days">' + names.map((name,i) =>
-        i === index ? '' : '<label><input type="checkbox" data-copy="' + i + '"> ' + name + '</label>').join('') +
-        '</div><button type="button" data-action="copy">' + t[17] + '</button></div>';
+        i === index || state.days[i].status === 'closed' ? '' : '<label><input type="checkbox" data-copy="' + i + '"> ' + name + '</label>').join('') +
+        '</div></div>';
     }
-    return '<details data-day="' + index + '"' + (open[index] ? ' open' : '') + '><summary>' + names[index] + ' · ' + summary +
-      '</summary><div class="day-options"><select data-field="status" aria-label="' + names[index] + '" required>' + options(status,day.status) +
-      '</select>' + fields + '</div></details>';
+    return '<div data-day="' + index + '" class="day-options"><select data-field="status" aria-label="' + names[index] + '" required>' + options(status,day.status) +
+      '</select>' + fields + '<button type="button" data-action="save">' + ui.save +
+      '</button><output class="hours-status" role="status"></output></div>';
   }).join('');
 }
 function sync(view) {
@@ -89,10 +107,25 @@ for (const view of views) {
     for (const other of views) if (other !== view) sync(other);
   });
   view.querySelector('.hours').addEventListener('change', event => {
-    const target = event.target, index = Number(target.closest('[data-day]').dataset.day);
+    const target = event.target;
+    if (target.matches('[data-day-select]')) {
+      selectedDay = Number(target.value);
+      views.forEach(render);
+      view.querySelector('[data-day-select]').focus();
+      return;
+    }
+    const index = Number(target.closest('[data-day]').dataset.day);
     const day = state.days[index];
-    if (target.dataset.slotField) day.slots[Number(target.closest('[data-slot]').dataset.slot)][Number(target.dataset.slotField)] = target.value;
-    else if (target.dataset.field) day[target.dataset.field] = target.value;
+    if (target.dataset.slotField) {
+      target.value = normalizeTime(target.value);
+      day.slots[Number(target.closest('[data-slot]').dataset.slot)][Number(target.dataset.slotField)] = target.value;
+    }
+    else if (target.dataset.field) {
+      day[target.dataset.field] = target.value;
+      if (target.dataset.field === 'status' && day.status === 'open' && day.slots.length === 1 && day.slots[0].every(value => !value)) {
+        day.slots = [['09:00', '18:00']];
+      }
+    }
     else return;
     if (target.dataset.field === 'first' && target.value &&
         new Date(target.value + 'T00:00:00Z').getUTCDay() !== (index + 1) % 7) {
@@ -109,18 +142,39 @@ for (const view of views) {
     const button = event.target.closest('[data-action]');
     if (!button) return;
     const details = button.closest('[data-day]'), index = Number(details.dataset.day), day = state.days[index];
-    if (button.dataset.action === 'add') day.slots.push(['','']);
+    if (button.dataset.action === 'add') day.slots.push(addSlot(day.slots));
     if (button.dataset.action === 'remove') day.slots.splice(Number(button.closest('[data-slot]').dataset.slot), 1);
-    if (button.dataset.action === 'copy') for (const target of details.querySelectorAll('[data-copy]:checked')) {
+    if (button.dataset.action !== 'save') {
+      save();
+      const checked = [...details.querySelectorAll('[data-copy]:checked')].map(option => option.dataset.copy);
+      views.forEach(render);
+      for (const option of view.querySelectorAll('[data-copy]')) option.checked = checked.includes(option.dataset.copy);
+      return;
+    }
+    const ui = editor[view.lang];
+    const names = labels[view.lang][23].split('|');
+    if (!day.status || (day.status === 'open' && (
+      day.slots.some(([start, end]) => !start || !end || start >= end) ||
+      (day.frequency === 'fortnightly' && !day.first)
+    ))) {
+      details.querySelector('.hours-status').textContent = ui.invalid;
+      return;
+    }
+    for (const target of details.querySelectorAll('[data-copy]:checked')) {
+      const targetDay = state.days[Number(target.dataset.copy)];
+      if (targetDay.status === 'closed') continue;
       const copy = structuredClone(day);
       if (copy.frequency === 'fortnightly' && copy.first) {
         const date = new Date(copy.first + 'T00:00:00Z');
         date.setUTCDate(date.getUTCDate() + (Number(target.dataset.copy) - index + 7) % 7);
         copy.first = date.toISOString().slice(0,10);
       }
+      if (targetDay.status && JSON.stringify(targetDay) !== JSON.stringify(copy) &&
+          !window.confirm(ui.replace + ' ' + names[Number(target.dataset.copy)] + ' ?')) continue;
       state.days[Number(target.dataset.copy)] = copy;
     }
     save(); views.forEach(render);
+    view.querySelector('.hours-status').textContent = ui.saved;
   });
 }
 </script></body></html>
