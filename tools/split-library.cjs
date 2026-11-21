@@ -13,8 +13,8 @@ assert.equal(new Set(pages.map(p=>p.en)).size,20);
 const dir=path.join(root,'modular','screens');
 fs.mkdirSync(dir,{recursive:true});
 for(const p of pages){
- assert.match(p.fr,/^[A-Z]+-[A-Z]+-\d{3}$/);
- assert.match(p.en,/^[A-Z]+-[A-Z]+-\d{3}$/);
+ assert.match(p.fr,/^[A-Z]+(?:-[A-Z]+)?-\d{3}$/);
+ assert.match(p.en,/^[A-Z]+(?:-[A-Z]+)?-\d{3}$/);
  assert.ok(p.html.length>500,'Screen too small: '+p.fr);
  const target=path.join(dir,p.en+'.json');
  fs.writeFileSync(target,JSON.stringify(p));
