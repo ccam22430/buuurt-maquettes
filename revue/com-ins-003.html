@@ -155,9 +155,9 @@ function sync(view) {
   syncDescription(view);
 }
 const continueLabels = {
-  fr: ['Attention, renseignez le statut de chaque jour. Jours à compléter : ', 'Le numéro de téléphone est obligatoire. Indiquez le numéro complet.', 'L’adresse e-mail pour les échanges avec BUUURT est obligatoire.', 'Saisissez une adresse e-mail valide pour les échanges avec BUUURT.', 'Les sept jours, le téléphone et l’e-mail BUUURT sont renseignés. La prochaine étape reste à définir.'],
-  nl: ['Let op, kies een status voor elke dag. Nog in te vullen: ', 'Het telefoonnummer is verplicht. Vul het volledige nummer in.', 'Het e-mailadres voor contact met BUUURT is verplicht.', 'Vul een geldig e-mailadres in voor contact met BUUURT.', 'Alle zeven dagen, het telefoonnummer en het BUUURT-e-mailadres zijn ingevuld. De volgende stap moet nog worden bepaald.'],
-  en: ['Please choose a status for every day. Days still to complete: ', 'A phone number is required. Enter the full number.', 'An email address for communication with BUUURT is required.', 'Enter a valid email address for communication with BUUURT.', 'All seven days, the phone number and the BUUURT email are filled in. The next step is still to be defined.']
+  fr: ['Attention, renseignez le statut de chaque jour. Jours à compléter : ', 'Le numéro de téléphone est obligatoire. Indiquez le numéro complet.', 'L’adresse e-mail pour les échanges avec BUUURT est obligatoire.', 'Saisissez une adresse e-mail valide pour les échanges avec BUUURT.', 'Les sept jours, le téléphone et l’e-mail BUUURT sont renseignés.'],
+  nl: ['Let op, kies een status voor elke dag. Nog in te vullen: ', 'Het telefoonnummer is verplicht. Vul het volledige nummer in.', 'Het e-mailadres voor contact met BUUURT is verplicht.', 'Vul een geldig e-mailadres in voor contact met BUUURT.', 'Alle zeven dagen, het telefoonnummer en het BUUURT-e-mailadres zijn ingevuld.'],
+  en: ['Please choose a status for every day. Days still to complete: ', 'A phone number is required. Enter the full number.', 'An email address for communication with BUUURT is required.', 'Enter a valid email address for communication with BUUURT.', 'All seven days, the phone number and the BUUURT email are filled in.']
 };
 function checkContinue(view) {
   const names = labels[view.lang][22].split('|');
@@ -174,11 +174,28 @@ function checkContinue(view) {
   message.textContent = errors.length ? errors.join('\n') : complete;
   message.classList.toggle('complete', errors.length === 0);
   message.hidden = false;
+  return errors.length === 0;
 }
 
 for (const view of views) {
   render(view); sync(view); renderExtraEmails(view);
-  view.querySelector('[data-continue]').addEventListener('click', () => checkContinue(view));
+  view.querySelector('[data-continue]').addEventListener('click', () => {
+    if (!checkContinue(view)) return;
+    const description = view.querySelector('[data-desc]');
+    if (!description.reportValidity()) return;
+    const incomplete = state.days.some(day => day.status === 'open' && (
+      !day.slots?.length || day.slots.some(([start, end]) => !start || !end || start >= end) ||
+      (day.frequency === 'fortnightly' && !day.first)
+    ));
+    if (incomplete) {
+      const message = view.querySelector('.continue-status');
+      message.classList.remove('complete');
+      message.textContent = editor[view.lang].invalid;
+      return;
+    }
+    save();
+    window.location.href = 'com-ins-004.html#' + view.lang + '-MER-REG-004';
+  });
   const description = view.querySelector('[data-desc]');
   description.placeholder = descLabels[view.lang][category === 'diy' ? 0 : 1];
   view.querySelector('[data-save-desc]').addEventListener('click', () => {

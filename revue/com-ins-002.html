@@ -32,7 +32,7 @@ section[lang=nl] .arrival .copy.nl,section[lang=en] .arrival .copy.en,section[la
 <button class="media-reset" type="button" hidden>Restore default image</button></section><section class="media-group" data-media="cover"><h3>Cover photo</h3><div class="media-thumb cover"><span class="media-default" aria-hidden="true"></span><img alt="Cover photo" hidden></div>
 <label class="media-picker">Replace cover photo<input type="file" accept="image/*"></label>
 <button class="media-reset" type="button" hidden>Restore default image</button></section><a class="button" href="com-ins-003.html#en-MER-REG-003">Continue →</a>
-</div></div></article><script>
+</div></div></article><script src="merchant-media.js"></script><script>
 let category;
 try { category = JSON.parse(sessionStorage.getItem('buuurt-registration-draft') || '{}').state?.category; } catch {}
 const images = {};
@@ -59,14 +59,24 @@ for (const group of groups) {
     if (!file?.type.startsWith('image/')) return;
     if (images[key]) URL.revokeObjectURL(images[key]);
     images[key] = URL.createObjectURL(file);
+    window.merchantMedia.set(key, file).catch(console.error);
     input.value = '';
     render();
   });
   group.querySelector('.media-reset').addEventListener('click', () => {
     URL.revokeObjectURL(images[key]);
     delete images[key];
+    window.merchantMedia.remove(key).catch(console.error);
     render();
   });
 }
 render();
+for (const key of ['logo', 'cover']) {
+  window.merchantMedia.get(key).then(file => {
+    if (file && !images[key]) {
+      images[key] = URL.createObjectURL(file);
+      render();
+    }
+  }).catch(console.error);
+}
 </script></body></html>
