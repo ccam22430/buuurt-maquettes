@@ -65,12 +65,12 @@ jobs:
                   assert.equal(markup[1],markup[0],hash+' '+lang);
                   const renders = [];
                 for (const page of pages) {
-                  await page.bringToFront();
+                    await page.bringToFront();
                     const frame=page.frameLocator('#preview');
                     await frame.locator('html[lang='+lang+'] body').waitFor();
                     await frame.locator('body').evaluate(async body=>{await body.ownerDocument.fonts.ready; await Promise.all([...body.ownerDocument.images].map(image=>image.decode()));});
-                    return page.locator('#preview').screenshot({animations:'disabled'});
-                  }));
+                    renders.push(await page.locator('#preview').screenshot({animations:'disabled'}));
+                  }
                   assert.ok(renders[0].equals(renders[1]),hash+' '+lang+' screenshot mismatch');
                 }
               }
