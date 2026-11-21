@@ -79,7 +79,7 @@ document.querySelectorAll(".preview-step").forEach(root=>{
  root.querySelector("[data-open-crop]").addEventListener("click",()=>{crop.hidden=!crop.hidden});
  root.querySelector("[data-close-crop]").addEventListener("click",()=>{crop.hidden=true});
  root.querySelector("[data-zoom]").addEventListener("input",e=>{img.style.transform="scale("+(e.target.value/100)+")"});
- root.querySelector("[data-position]").addEventListener("input",e=>{img.style.objectPosition=e.target.value+"% 50%"});
+ const positionX=root.querySelector("[data-position-x]"),positionY=root.querySelector("[data-position-y]");\n function setPosition(){img.style.objectPosition=positionX.value+"% "+positionY.value+"%"}\n positionX.addEventListener("input",setPosition);positionY.addEventListener("input",setPosition);
  root.querySelector("[data-continue]").addEventListener("click",()=>{root.querySelector(".next-message").hidden=false});
  show();
 });
