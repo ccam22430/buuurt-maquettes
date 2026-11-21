@@ -2,16 +2,82 @@ name: Verify modular BUUURT screens
 on:
   push:
     branches: ['refactor/modular-20-screens-20261121']
-    paths: ['.github/workflows/verify-modular.yml', 'modular/**', 'tests/verify-modular.cjs']
+    paths: ['.github/workflows/verify-modular.yml', 'modular/**', 'tests/verify-modular.cjs', 'tools/split-library.cjs']
   pull_request:
-    paths: ['modular/**', 'tests/verify-modular.cjs']
+    paths: ['modular/**', 'tests/verify-modular.cjs', 'tools/split-library.cjs']
 permissions:
   contents: read
 jobs:
   verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - name: Verify exact 20-screen extraction
         run: node tests/verify-modular.cjs
+      - name: Verify extraction is reproducible
+        run: |
+          node tools/split-library.cjs
+          git diff --exit-code
+      - name: Install Chromium for render comparison
+        run: |
+          npm install --no-save --package-lock=false playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Compare all 20 screens in Dutch, French and English
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 &
+          server_pid=$!
+          trap 'kill "$server_pid"' EXIT
+          for attempt in {1..20}; do
+            if curl -fsS -o /dev/null http://127.0.0.1:8765/; then break; fi
+            sleep 1
+          done
+          node <<'NODE'
+          const { chromium } = require('playwright');
+          const assert = require('node:assert/strict');
+          (async () => {
+            const browser = await chromium.launch({args:['--no-sandbox']});
+            try {
+              const base = 'http://127.0.0.1:8765/';
+              const context = await browser.newContext({viewport:{width:1280,height:900}});
+              const pages = await Promise.all([context.newPage(), context.newPage()]);
+              const errors = [];
+              for (const page of pages) {
+                page.on('pageerror', err => errors.push(err.message));
+                page.on('response', res => {if (res.status() >= 400 && !res.url().endsWith('/favicon.ico')) errors.push(res.status() + ' ' + res.url());});
+              }
+              const old = 'BUUURT_Bibliotheque_Visuelle_20_Ecrans_Menu_NL.html';
+              await Promise.all(pages.map((page,i)=>page.goto(base+[old,'modular/'][i]+'#COM-001')));
+              await Promise.all(pages.map(page=>page.locator('#nav button').nth(19).waitFor({state:'attached'})));
+              assert.equal(new URL(pages[1].url()).hash,'#MER-001');
+              assert.equal(await pages[1].locator('#uiLanguage').inputValue(), 'nl');
+              const codes = [];
+              for (let i=0; i<20; i++) {
+                await Promise.all(pages.map(page=>page.locator('#nav button').nth(i).click()));
+                const hash = new URL(pages[0].url()).hash;
+                assert.equal(new URL(pages[1].url()).hash,hash);
+                codes.push(hash);
+                for (const lang of ['nl','fr','en']) {
+                  const markup = await Promise.all(pages.map(async page=>{
+                    await page.locator('#uiLanguage').selectOption(lang);
+                    return page.locator('#preview').getAttribute('srcdoc');
+                  }));
+                  assert.equal(markup[1],markup[0],hash+' '+lang);
+                  const renders = await Promise.all(pages.map(async page=>{
+                    const frame=page.frameLocator('#preview');
+                    await frame.locator('html[lang='+lang+'] body').waitFor();
+                    await frame.locator('body').evaluate(async body=>{await body.ownerDocument.fonts.ready; await Promise.all([...body.ownerDocument.images].map(image=>image.decode()));});
+                    return page.locator('#preview').screenshot({animations:'disabled'});
+                  }));
+                  assert.ok(renders[0].equals(renders[1]),hash+' '+lang+' screenshot mismatch');
+                }
+              }
+              await pages[1].locator('#next').click();
+              assert.equal(new URL(pages[1].url()).hash,codes[0]);
+              await pages[1].locator('#prev').click();
+              assert.equal(new URL(pages[1].url()).hash,codes[19]);
+              assert.deepEqual(errors,[]);
+              console.log('PASS: 60 identical rendered screenshots and HTML documents; 20 menu targets, legacy deep link, NL default, navigation wraparound');
+            } finally { await browser.close(); }
+          })().catch(err=>{console.error(err); process.exitCode=1;});
+          NODE
