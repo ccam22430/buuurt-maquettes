@@ -3,7 +3,7 @@
 - Les 20 maquettes s’ouvrent en néerlandais par défaut, et chaque écran peut passer en anglais sans changer de destination.
 - Les textes, titres et attributs d’accessibilité de la maquette sont dans la langue choisie. Les notes de revue et les noms propres conservent leur rôle.
 - Le changement de langue conserve les champs et le consentement dans la maquette d’arrivée. Les liens internes existants conservent la langue.
-- Les composants, liens, images et styles sources conservent leur portée. La référence française reste identique. Les différences intentionnelles portent sur la traduction et la conservation de l’état.
+- Les composants, liens, images et styles sources conservent leur portée. Le HTML de référence français reste identique. Les différences intentionnelles portent sur la traduction, la conservation de l’état et l’ajustement de l’aperçu aux écrans étroits.
 - Les contrôles Chromium couvrent les écrans sur ordinateur et mobile, y compris le formulaire simulé. Aucune donnée saisie dans la maquette n’est envoyée.
 
 ## Audit des 20 écrans
@@ -23,6 +23,6 @@ La cloche détaillée de l’accueil et l’indicateur standard des 19 autres é
 
 Construire le fichier de revue hors ligne avec `node tools/bundle-preview.cjs aperçu.html` et l’ouvrir dans un navigateur. Priorités de revue : accueil et cloche en EN, fil de rue et fil de proximité en NL/EN, écran d’arrivée avec un brouillon de formulaire, puis passage au parcours commerçant.
 
-Le dépôt sert actuellement la bibliothèque historique via GitHub Pages à la racine du site du dépôt. Après accord explicite, confirmer la branche, le dossier source et le SHA du déploiement GitHub Pages actif. Consigner le SHA de restauration, puis fusionner la PR et vérifier le déploiement Pages. Contrôler l’URL historique ainsi que le chemin `/buuurt-maquettes/modular/`, les 20 entrées, les deux langues et un lien historique. L’URL historique reste le point d’entrée connu. Pour un remplacement ou une redirection de cette URL, faire valider le changement d’entrée.
+Le dépôt sert actuellement la bibliothèque historique via GitHub Pages. Le dernier déploiement réussi vérifié, nº 7965676564, pointe sur `main` au commit `61c5c32`. Après accord explicite, confirmer la branche, le dossier source et le SHA du déploiement GitHub Pages actif. Consigner le SHA de restauration, puis fusionner la PR et vérifier le déploiement Pages. Contrôler l’URL historique ainsi que le chemin `/buuurt-maquettes/modular/`, les 20 entrées, les deux langues et un lien historique. L’URL historique reste le point d’entrée connu. Pour un remplacement ou une redirection de cette URL, faire valider le changement d’entrée.
 
 En cas de régression, revenir sur le commit de fusion via un commit de réversion sur la branche publiée, suivre le nouveau déploiement Pages et revérifier l’URL historique. Aucun changement de paramètre Pages ni aucune réécriture d’historique ne sont requis pour cette réversion.

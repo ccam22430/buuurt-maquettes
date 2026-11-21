@@ -195,7 +195,7 @@ function arrivalFields(doc) {
 }
 
 function saveArrivalDraft(doc) {
-  const fields = arrivalFields(doc);
+  const fields = doc?.querySelector('.arrival .copy.' + currentLanguage);
   if (!fields) return;
   arrivalDraft = {
     email: fields.querySelector('input[type="email"]').value,
@@ -231,19 +231,21 @@ for (const [index, page] of pages.entries()) {
 
 preview.addEventListener('load', () => {
   const doc = preview.contentDocument;
+  const phone = doc?.querySelector('.phone');
+  if (phone) phone.style.maxWidth = '100%';
   const fields = arrivalFields(doc);
   if (fields && arrivalDraft) {
     fields.querySelector('input[type="email"]').value = arrivalDraft.email;
     fields.querySelector('input[type="checkbox"]').checked = arrivalDraft.consent;
   }
-  doc?.addEventListener('click', event => {
-    const choice = event.target.closest('.arrival .langs label');
-    if (choice && ['lfr', 'lnl', 'len'].includes(choice.htmlFor)) {
-      event.preventDefault();
+  doc?.addEventListener('change', event => {
+    const choice = event.target;
+    if (choice.name === 'arrival-lang' && ['lfr', 'lnl', 'len'].includes(choice.id)) {
       saveArrivalDraft(doc);
-      setLanguage(choice.htmlFor.slice(1));
-      return;
+      setLanguage(choice.id.slice(1));
     }
+  });
+  doc?.addEventListener('click', event => {
     const href = event.target.closest('a[href]')?.getAttribute('href');
     if (!href?.endsWith('.html')) return;
     const index = byCode.get(href.slice(0, -5));

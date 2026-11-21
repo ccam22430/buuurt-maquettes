@@ -61,7 +61,7 @@ const mobile = process.argv.includes('--mobile');
             };
           })
         ));
-        if (parity && lang === 'fr') {
+        if (parity && lang === 'fr' && !mobile) {
           assert.deepEqual(renders[1], renders[0], hash + ' French layout');
         } else if (parity) {
           assert.deepEqual(renders[1].images, renders[0].images, hash + ' images');
@@ -69,9 +69,17 @@ const mobile = process.argv.includes('--mobile');
         }
         const mockup = preview.frameLocator('#preview');
         assert.equal(await mockup.locator('.buuurt-bottom-nav').count(), 1);
+        if (mobile) {
+          assert(await mockup.locator('.phone').evaluate(phone =>
+            phone.getBoundingClientRect().right <= phone.ownerDocument.documentElement.clientWidth
+          ), hash + ' mobile preview width');
+        }
         if (lang === 'en') {
           assert.equal(await mockup.locator('.buuurt-bottom-nav').getAttribute('aria-label'), 'Main navigation');
           assert.match(await mockup.locator('.buuurt-bottom-nav').innerText(), /Shops\s+♡\s+Favorites/);
+          if (hash === '#USR-WEB-001') {
+            assert.equal(await mockup.locator('[aria-label="3 unread notifications"]').getAttribute('title'), '3 unread notifications');
+          }
         }
       }
     }
