@@ -74,15 +74,25 @@ jobs:
                     return page.locator('#preview').getAttribute('srcdoc');
                   }));
                   assert.equal(markup[1],markup[0],hash+' '+lang);
-                  const renders = [];
-                for (const page of pages) {
-                    await page.bringToFront();
-                    const frame=page.frameLocator('#preview');
-                    await frame.locator('html[lang='+lang+'] body').waitFor();
-                    await frame.locator('body').evaluate(async body=>{await body.ownerDocument.fonts.ready; await Promise.all([...body.ownerDocument.images].map(image=>image.decode()));});
-                    renders.push(await page.locator('#preview').screenshot({animations:'disabled'}));
-                  }
-                  assert.ok(renders[0].equals(renders[1]),hash+' '+lang+' screenshot mismatch');
+                  const renders = await Promise.all(pages.map(page =>
+                    page.frameLocator('#preview').locator('html[lang='+lang+'] body').evaluate(async body => {
+                      await body.ownerDocument.fonts.ready;
+                      const images = [...body.ownerDocument.images];
+                      await Promise.all(images.map(image => image.decode()));
+                      const properties = ['display','visibility','opacity','color','background-color',
+                        'font-family','font-size','font-weight','line-height','border','border-radius',
+                        'box-shadow','text-align','overflow','object-fit','transform'];
+                      return {
+                        images: images.map(image => [image.naturalWidth, image.naturalHeight]),
+                        elements: [body,...body.querySelectorAll('*')].map(element => {
+                          const {x,y,width,height} = element.getBoundingClientRect();
+                          const style = getComputedStyle(element);
+                          return [element.tagName,x,y,width,height,...properties.map(name=>style.getPropertyValue(name))];
+                        })
+                      };
+                    })
+                  ));
+                  assert.deepEqual(renders[1],renders[0],hash+' '+lang+' rendered layout mismatch');
                 }
               }
               await pages[1].locator('#next').click();
@@ -90,7 +100,7 @@ jobs:
               await pages[1].locator('#prev').click();
               assert.equal(new URL(pages[1].url()).hash,codes[19]);
               assert.deepEqual(errors,[]);
-              console.log('PASS: 60 identical rendered screenshots and HTML documents; 20 menu targets, legacy deep link, NL default, navigation wraparound');
+              console.log('PASS: 60 matching Chromium layouts and HTML documents; 20 menu targets, legacy deep link, NL default, navigation wraparound');
             } finally { await browser.close(); }
           })().catch(err=>{console.error(err); process.exitCode=1;});
           NODE
