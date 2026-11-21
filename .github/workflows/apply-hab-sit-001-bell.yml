@@ -1,0 +1,48 @@
+name: Apply HAB-SIT-001 notification bell
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/apply-hab-sit-001-bell.yml']
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Replace only HAB-SIT-001 header icon
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const path = 'BUUURT_Bibliotheque_Visuelle_20_Ecrans_Menu_NL.html';
+          const html = fs.readFileSync(path,'utf8');
+          const start = html.indexOf('"fr": "HAB-SIT-001"');
+          const end = html.indexOf('"}, {"fr":', start + 30);
+          if (start < 0 || end < 0) throw Error('Page boundary not found');
+          const page = html.slice(start,end);
+          const oldIcon = '◎ NL⌄  ♧';
+          const newIcon = '◎ NL⌄  🔔';
+          if (!page.includes(oldIcon)) {
+            if (page.includes(newIcon)) { console.log('Already updated'); process.exit(0); }
+            throw Error('Expected original icon not found');
+          }
+          if (page.split(oldIcon).length !== 2) throw Error('Ambiguous icon');
+          const updated = html.slice(0,start) + page.replace(oldIcon,newIcon) + html.slice(end);
+          if (updated.length !== html.length + 1) throw Error('Unexpected change length');
+          fs.writeFileSync(path,updated,'utf8');
+          console.log('One icon changed in HAB-SIT-001');
+          NODE
+      - name: Commit verified correction
+        run: |
+          if git diff --quiet -- BUUURT_Bibliotheque_Visuelle_20_Ecrans_Menu_NL.html; then
+            echo 'No change needed'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add BUUURT_Bibliotheque_Visuelle_20_Ecrans_Menu_NL.html
+          git commit -m 'fix: show notification bell on HAB-SIT-001'
+          git push
