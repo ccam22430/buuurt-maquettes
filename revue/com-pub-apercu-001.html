@@ -78,16 +78,19 @@ document.querySelectorAll(".preview-step").forEach(root=>{
  const crop=root.querySelector("[data-crop]"),img=root.querySelector("[data-main-image]");
  root.querySelector("[data-open-crop]").addEventListener("click",()=>{crop.hidden=!crop.hidden});
  root.querySelector("[data-close-crop]").addEventListener("click",()=>{crop.hidden=true});
- root.querySelector("[data-zoom]").addEventListener("input",e=>{img.style.transform="scale("+(e.target.value/100)+")"});
+ const zoom=root.querySelector("[data-zoom]");
  const positionX=root.querySelector("[data-position-x]");
  const positionY=root.querySelector("[data-position-y]");
- function setPosition(){
+ function updateCrop(){
   const position=positionX.value+"% "+positionY.value+"%";
+  const distanceFromCenter=Math.max(Math.abs(positionX.value-50),Math.abs(positionY.value-50))/50;
+  // Leave room to pan even when the photo already fits one edge of the frame.
+  const scale=Math.max(zoom.value/100,1+0.12*distanceFromCenter);
   img.style.objectPosition=position;
   img.style.transformOrigin=position;
+  img.style.transform="scale("+scale+")";
  }
- positionX.addEventListener("input",setPosition);
- positionY.addEventListener("input",setPosition);
+ [zoom,positionX,positionY].forEach(control=>control.addEventListener("input",updateCrop));
  root.querySelector("[data-continue]").addEventListener("click",()=>{root.querySelector(".next-message").hidden=false});
  show();
 });
