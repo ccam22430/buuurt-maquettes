@@ -1,7 +1,7 @@
 name: Verify modular BUUURT screens
 on:
   pull_request:
-    paths: ['.github/workflows/verify-modular.yml', 'modular/**', 'tests/**', 'tools/split-library.cjs']
+    paths: ['.github/workflows/verify-modular.yml', 'modular/**', 'tests/**', 'tools/**']
 permissions:
   contents: read
 jobs:
@@ -30,8 +30,10 @@ jobs:
             if curl -fsS -o /dev/null http://127.0.0.1:8765/; then break; fi
             sleep 1
           done
+          node tools/bundle-preview.cjs preview-review.html
           if [ "$PR_NUMBER" = '2' ]; then
             node tests/verify-browser.cjs --parity
+            node tests/verify-browser.cjs --parity --mobile
           else
             node tests/verify-browser.cjs
           fi

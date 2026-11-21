@@ -1,11 +1,12 @@
 const { chromium } = require('playwright');
 const assert = require('node:assert/strict');
 const parity = process.argv.includes('--parity');
+const mobile = process.argv.includes('--mobile');
 (async () => {
   const browser = await chromium.launch({ executablePath: process.env.BUUURT_CHROMIUM || undefined, args: ['--no-sandbox'] });
   try {
     const base = 'http://127.0.0.1:8765/';
-    const context = await browser.newContext({viewport:{width:1280,height:1150}});
+    const context = await browser.newContext({viewport: mobile ? {width:390,height:844} : {width:1280,height:1150}});
     const preview = await context.newPage();
     const pages = parity ? [await context.newPage(), preview] : [preview];
     const errors = [];
@@ -41,7 +42,7 @@ const parity = process.argv.includes('--parity');
           return page.locator('#preview').getAttribute('srcdoc');
         }));
         assert(markup[0].includes('<html lang="' + lang + '"'));
-        if (parity) assert.equal(markup[1],markup[0],hash+' '+lang);
+        if (parity && lang === 'fr') assert.equal(markup[1],markup[0],hash+' '+lang);
         const renders = await Promise.all(pages.map(page =>
           page.frameLocator('#preview').locator('html[lang='+lang+'] body').evaluate(async body => {
             await body.ownerDocument.fonts.ready;
@@ -60,7 +61,18 @@ const parity = process.argv.includes('--parity');
             };
           })
         ));
-        if (parity) assert.deepEqual(renders[1],renders[0],hash+' '+lang+' rendered layout mismatch');
+        if (parity && lang === 'fr') {
+          assert.deepEqual(renders[1], renders[0], hash + ' French layout');
+        } else if (parity) {
+          assert.deepEqual(renders[1].images, renders[0].images, hash + ' images');
+          assert.deepEqual(renders[1].elements.map(el => el[0]), renders[0].elements.map(el => el[0]), hash + ' element structure');
+        }
+        const mockup = preview.frameLocator('#preview');
+        assert.equal(await mockup.locator('.buuurt-bottom-nav').count(), 1);
+        if (lang === 'en') {
+          assert.equal(await mockup.locator('.buuurt-bottom-nav').getAttribute('aria-label'), 'Main navigation');
+          assert.match(await mockup.locator('.buuurt-bottom-nav').innerText(), /Shops\s+♡\s+Favorites/);
+        }
       }
     }
     await preview.locator('#next').click();
@@ -87,17 +99,33 @@ const parity = process.argv.includes('--parity');
     }
     await preview.goto(base + 'modular/?arrival#USR-LOC-002');
     const frame = preview.frameLocator('#preview');
-    await frame.locator('label[for="len"]').click();
-    assert(await frame.locator('#len').isChecked());
+    await frame.locator('.copy.nl input[type=email]').fill('review@example.test');
+    await frame.locator('.copy.nl input[type=checkbox]').check();
+    await updatePreview(preview, () => frame.locator('label[for="len"]').click());
+    assert.equal(await preview.locator('#uiLanguage').inputValue(), 'en');
+    assert.equal(await frame.locator('.copy.en input[type=email]').inputValue(), 'review@example.test');
+    assert(await frame.locator('.copy.en input[type=checkbox]').isChecked());
+    await updatePreview(preview, () => preview.locator('#uiLanguage').selectOption('nl'));
+    assert.equal(await frame.locator('.copy.nl input[type=email]').inputValue(), 'review@example.test');
+    assert(await frame.locator('.copy.nl input[type=checkbox]').isChecked());
     await updatePreview(preview, () => preview.locator('#uiLanguage').selectOption('en'));
-    assert(await frame.locator('#len').isChecked());
     const arrivalLink = frame.locator('a[href="HAB-MAN-001.html"]:visible').first();
     await updatePreview(preview, () => arrivalLink.click());
     assert.equal(new URL(preview.url()).hash, '#USR-SEL-001');
     assert(await frame.locator('html[lang="en"]').count());
     assert.deepEqual(errors, []);
-    console.log(parity
-      ? 'PASS: 60 rendus Chromium identiques à la référence, navigation et liens internes'
-      : 'PASS: 60 rendus Chromium, navigation et liens internes');
+    await preview.goto('file://' + require('node:path').resolve('preview-review.html'));
+    assert.equal(await preview.locator('#nav button').count(), 20);
+    for (let index = 0; index < 20; index++) {
+      await updatePreview(preview, () => preview.locator('#nav button').nth(index).click());
+      for (const lang of ['nl', 'en']) {
+        const selector = preview.locator('#uiLanguage');
+        if (await selector.inputValue() !== lang) await updatePreview(preview, () => selector.selectOption(lang));
+        assert(await preview.frameLocator('#preview').locator('html[lang=' + lang + ']').count());
+      }
+    }
+    assert.deepEqual(errors, []);
+    console.log('PASS Chromium ' + (mobile ? '390×844' : '1280×1150') +
+      ': 60 rendus, 11 parcours, état du formulaire et 40 vues hors ligne');
   } finally { await browser.close(); }
 })().catch(err=>{console.error(err); process.exitCode=1;});

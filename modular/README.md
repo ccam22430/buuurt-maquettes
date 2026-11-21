@@ -26,5 +26,8 @@ Le dictionnaire de traduction et les commandes du visualiseur sont dans `index.h
 
 - `node tests/verify-modular.cjs` contrôle les fichiers, les composants et les destinations.
 - `node tests/verify-modular.cjs --parity` contrôle en plus la recomposition exacte avec le HTML historique.
-- Avec le serveur local démarré et Playwright/Chromium disponibles, `node tests/verify-browser.cjs` contrôle la navigation et les interactions représentées. Ajouter `--parity` pour comparer les 60 rendus avec la référence.
+- Avec le serveur local démarré et Playwright/Chromium disponibles, `node tests/verify-browser.cjs` contrôle la navigation et les interactions représentées. Ajouter `--parity` pour comparer les rendus avec la référence selon le contrat de localisation.
 - En cas de changement intentionnel d’une maquette, la comparaison historique peut signaler l’écart. Utiliser les contrôles courants pour vérifier la version en cours de maintenance.
+
+La revue bilingue et la procédure de publication sont dans [VALIDATION.md](VALIDATION.md).
+Pour les tests Chromium, générer au préalable `preview-review.html` avec `node tools/bundle-preview.cjs preview-review.html`. Le fichier généré est un aperçu autonome. L’option `--mobile` teste à 390 × 844. En mode `--parity`, le rendu français est comparé exactement et la structure ainsi que les images sont comparées en NL et EN.
