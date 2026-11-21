@@ -1,0 +1,23 @@
+name: Build modular mockup preview
+on:
+  push:
+    branches: ['refactor/modular-20-screens-20261121']
+    paths: ['.github/workflows/build-modular-preview.yml', 'tools/split-library.cjs']
+permissions:
+  contents: write
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract and verify 20 screens
+        run: node tools/split-library.cjs
+      - name: Commit isolated preview
+        run: |
+          git add modular/index.html modular/screens/
+          if git diff --cached --quiet; then echo "No changes"; exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'build: generate isolated modular 20-screen preview'
+          git push
