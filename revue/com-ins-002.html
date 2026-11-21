@@ -37,6 +37,11 @@ let category;
 try { category = JSON.parse(sessionStorage.getItem('buuurt-registration-draft') || '{}').state?.category; } catch {}
 const images = {};
 const groups = [...document.querySelectorAll('[data-media]')];
+if (new URLSearchParams(location.search).get('edit') === 'media') {
+  for (const screen of document.querySelectorAll('.screen')) {
+    screen.querySelector('.reg > a.button').href = 'com-ins-004.html#' + screen.lang + '-MER-REG-004';
+  }
+}
 function render() {
   for (const group of groups) {
     const kind = group.dataset.media;
@@ -79,4 +84,15 @@ for (const key of ['logo', 'cover']) {
     }
   }).catch(console.error);
 }
+
+const editTargets = {"media": "[data-media=\"logo\"]"};
+function scrollToEditTarget() {
+  const section = new URLSearchParams(location.search).get('edit');
+  if (!Object.hasOwn(editTargets, section)) return;
+  const screen = document.getElementById(location.hash.slice(1));
+  const target = [...(screen?.querySelectorAll(editTargets[section]) || [])].find(node => !node.closest('[hidden]'));
+  target?.scrollIntoView({block:'center'});
+}
+window.addEventListener('hashchange', scrollToEditTarget);
+requestAnimationFrame(scrollToEditTarget);
 </script></body></html>

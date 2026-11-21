@@ -313,4 +313,15 @@ for (const view of views) {
     for (const other of views) if (!other.querySelector('.continue-status').hidden) checkContinue(other);
   });
 }
+
+const editTargets = {"description": "[data-desc]", "hours": ".hours", "contact": "[data-phone]"};
+function scrollToEditTarget() {
+  const section = new URLSearchParams(location.search).get('edit');
+  if (!Object.hasOwn(editTargets, section)) return;
+  const screen = document.getElementById(location.hash.slice(1));
+  const target = [...(screen?.querySelectorAll(editTargets[section]) || [])].find(node => !node.closest('[hidden]'));
+  target?.scrollIntoView({block:'center'});
+}
+window.addEventListener('hashchange', scrollToEditTarget);
+requestAnimationFrame(scrollToEditTarget);
 </script></body></html>

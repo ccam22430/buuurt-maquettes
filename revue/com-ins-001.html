@@ -109,7 +109,9 @@ for (const view of views) {
   });
   view.querySelector('[data-next]').addEventListener('click', event => {
     try { sessionStorage.setItem(draftKey, JSON.stringify({ state, point })); } catch {}
-    window.location.href = event.currentTarget.dataset.next;
+    window.location.href = new URLSearchParams(location.search).has('edit')
+      ? 'com-ins-004.html#' + view.lang + '-MER-REG-004'
+      : event.currentTarget.dataset.next;
   });
   view.querySelector('.stall-map').addEventListener('click', event => {
     const rect = event.currentTarget.getBoundingClientRect();
@@ -118,4 +120,15 @@ for (const view of views) {
   });
 }
 refresh();
+
+const editTargets = {"identity": "[data-key=\"name\"]", "location": "[data-address] input,[data-market] select"};
+function scrollToEditTarget() {
+  const section = new URLSearchParams(location.search).get('edit');
+  if (!Object.hasOwn(editTargets, section)) return;
+  const screen = document.getElementById(location.hash.slice(1));
+  const target = [...(screen?.querySelectorAll(editTargets[section]) || [])].find(node => !node.closest('[hidden]'));
+  target?.scrollIntoView({block:'center'});
+}
+window.addEventListener('hashchange', scrollToEditTarget);
+requestAnimationFrame(scrollToEditTarget);
 </script></body></html>
