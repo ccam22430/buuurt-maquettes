@@ -1,0 +1,9 @@
+{
+  "start": 2713,
+  "end": 263851,
+  "pageLength": 261138,
+  "selectorIndex": 260033,
+  "emojiIndex": 260038,
+  "originalIndex": -1,
+  "first1200": "\"fr\": \"HAB-SIT-001\", \"en\": \"USR-WEB-001\", \"title\": \"HAB-SIT-001 — Accueil BUUURT.nl\", \"html\": \"<!DOCTYPE html>\\n<html lang=\\\"fr\\\"><meta charset=\\\"utf-8\\\"/><meta content=\\\"width=device-width,initial-scale=1\\\" name=\\\"viewport\\\"/><title>HAB-SIT-001 — Accueil BUUURT.nl</title><style>*{box-sizing:border-box}body{margin:0;background:#f4f4f6;font-family:Arial,Helvetica,sans-serif;color:#191922}.catalog{max-width:1200px;margin:25px auto;padding:0 18px}.catalog h1{font-size:27px}.catalog p{line-height:1.55}.catalog a{color:#b40052}.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(245px,1fr));gap:12px}.tile{background:white;border:1px solid #ddd;border-radius:14px;padding:15px;text-decoration:none;color:#151515}.tile b{color:#f50060}.tile small{display:block;color:#666;margin-top:8px}.phone{width:390px;min-height:790px;margin:22px auto;background:white;border:9px solid #171717;border-radius:44px;box-shadow:0 8px 35px #0002;overflow:hidden}.status{height:30px;padding:9px 28px 0;font-size:12px;font-weight:bold}.head{height:76px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;gap:8px}.hamb{font-size:25px}.logo{width:144px;height:69px;object-fit:conta"
+}
