@@ -1,0 +1,27 @@
+name: Verify BUUURT mockup search
+on:
+  pull_request:
+    paths:
+      - 'BUUURT_Bibliotheque_Recherche_Codes.html'
+      - 'tests/check-library-search.cjs'
+      - '.github/workflows/check-library-search.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'BUUURT_Bibliotheque_Recherche_Codes.html'
+      - 'tests/check-library-search.cjs'
+      - '.github/workflows/check-library-search.yml'
+permissions:
+  contents: read
+jobs:
+  verify-search:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify mockup code search
+        run: node tests/check-library-search.cjs
