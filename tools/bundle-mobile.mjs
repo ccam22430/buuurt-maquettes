@@ -17,6 +17,8 @@ const logo = shared['brand-logo'].match(/src="([^"]+)"/)[1];
 assert(logo.startsWith('data:'), 'Le logo doit être intégré au fichier');
 const baseStyle = shared['base-styles'].replace(/<\/?style>/g, '');
 
+const languages = [['nl', 'Nederlands'], ['en', 'English'], ['fr', 'Français']];
+
 function renderView(page, lang) {
   const id = lang + '-' + page.en;
   const source = screenMarkup(page, lang);
@@ -35,10 +37,14 @@ function renderView(page, lang) {
       css.replace(/(^|[},])(\s*\.arrival)/g, '$1#' + id + ' $2')
         .replace(/#(lfr|lnl|len):checked/g, '#' + id + '-$1:checked')
         .replace(/label\[for=(lfr|lnl|len)\]/g, 'label[for=' + id + '-$1]') + '</style>');
-  return '<article class="screen" id="' + id + '"><h3>' + title + '</h3>' + body + '</article>';
+  const switcher = languages.map(([code, name]) =>
+    '<a href="#' + code + '-' + page.en + '" lang="' + code + '"' +
+    (code === lang ? ' aria-current="true"' : '') + '>' + name + '</a>').join('');
+  return '<article class="screen" id="' + id + '"><h3>' + title + '</h3><nav class="language screen-language" aria-label="NL / EN / FR">' +
+    switcher + '</nav>' + body + '</article>';
 }
 
-const body = [['nl', 'Nederlands'], ['en', 'English']].map(([lang, name]) => {
+const body = languages.map(([lang, name]) => {
   const links = pages.map(page => '<li><a href="#' + lang + '-' + page.en + '">' + page.en + '</a></li>');
   return '<section lang="' + lang + '" id="' + lang + '"><h2>' + name + '</h2><ol class="index">' +
     links.join('') + '</ol>\n' + pages.map(page => renderView(page, lang)).join('\n') + '</section>';
@@ -53,12 +59,14 @@ body{max-width:900px;margin:auto;padding:12px}
 .index{columns:2;padding-left:30px}.index li{padding:3px}
 .screen .reference{max-width:390px}
 .language a{display:inline-block;padding:8px 12px}
+.screen-language{max-width:390px;margin:4px auto 0;display:flex;flex-wrap:wrap;gap:4px}
+.screen-language a[aria-current]{font-weight:bold;background:#fff;border-radius:8px}
 .arrival .langs,.arrival input[type=radio],.arrival .copy{display:none}
-section[lang=nl] .arrival .copy.nl,section[lang=en] .arrival .copy.en{display:block}
+section[lang=nl] .arrival .copy.nl,section[lang=en] .arrival .copy.en,section[lang=fr] .arrival .copy.fr{display:block}
 `;
 assert(!/<(?:script|iframe)\b/i.test(body), 'L’aperçu doit rester statique');
 fs.writeFileSync(output, '<!doctype html><html lang="fr"><head><meta charset="utf-8">' +
   '<meta name="viewport" content="width=device-width,initial-scale=1"><title>BUUURT — 20 maquettes</title>' +
   '<style>' + css + '</style></head><body><h1>BUUURT — 20 maquettes</h1>' +
-  '<nav class="language" aria-label="Langues"><a href="#nl">Nederlands</a> <a href="#en">English</a></nav>\n' +
+  '<nav class="language" aria-label="Langues"><a href="#nl">Nederlands</a> <a href="#en">English</a> <a href="#fr">Français</a></nav>\n' +
   body + '</body></html>');

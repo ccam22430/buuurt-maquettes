@@ -36,6 +36,6 @@ Pour les tests Chromium, générer au préalable `preview-review.html` avec `nod
 ## Aperçu mobile hors ligne
 
 Depuis la racine, lancer `node tools/bundle-mobile.mjs BUUURT-maquettes-mobile.html`.
-L’aperçu intègre les 20 écrans en NL et en EN. Il réutilise les fichiers d’écran, les composants et les traductions du visualiseur. Le sommaire et les liens entre maquettes fonctionnent avec des ancres HTML. La langue se choisit en haut du fichier. Les interactions et la conservation des saisies se vérifient avec le visualiseur interactif.
+L’aperçu intègre les 20 écrans en NL, EN et FR. Il réutilise les fichiers d’écran, les composants et les traductions du visualiseur. Le sommaire et les liens entre maquettes fonctionnent avec des ancres HTML. Le sélecteur sous chaque titre ouvre le même écran dans la langue choisie. Les interactions et la conservation des saisies se vérifient avec le visualiseur interactif.
 
 `node tests/verify-mobile.mjs` génère les deux aperçus dans une copie temporaire et vérifie la portée de retouches locales et partagées.

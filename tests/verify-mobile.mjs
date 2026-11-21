@@ -39,8 +39,8 @@ function changedViews(base, edited) {
 try {
   for (const dir of ['modular', 'tools']) fs.cpSync(new URL(dir, root), path.join(isolated, dir), { recursive: true });
   const base = build();
-  const expected = ['nl', 'en'].flatMap(lang => codes.map(code => lang + '-' + code));
-  assert.equal(expected.length, 40);
+  const expected = ['nl', 'en', 'fr'].flatMap(lang => codes.map(code => lang + '-' + code));
+  assert.equal(expected.length, 60);
   assert.deepEqual([...base.views.keys()], expected);
   const ids = [...base.html.matchAll(/\sid="([^"]+)"/g)].map(match => match[1]);
   const unique = new Set(ids);
@@ -56,7 +56,7 @@ try {
     assert(index !== -1);
     page.html[index] = page.html[index].replace('</h2>', ' ' + marker + '</h2>');
   });
-  const local = ['nl-MER-003', 'en-MER-003'];
+  const local = ['nl-MER-003', 'en-MER-003', 'fr-MER-003'];
   assert.deepEqual(changedViews(base, edited), local);
   assert(local.every(id => edited.views.get(id).includes(marker)));
   assert(!base.bundle.includes(marker) && edited.bundle.includes(marker));
@@ -65,14 +65,14 @@ try {
     shared['feed-category-tabs'] = shared['feed-category-tabs'].replace('</div>', '<span>' + marker + '</span></div>');
   });
   const feed = ['USR-SEL-003', 'USR-STR-001', 'USR-STO-001', 'USR-POS-001', 'USR-LOC-001'];
-  const group = ['nl', 'en'].flatMap(lang => feed.map(code => lang + '-' + code));
+  const group = ['nl', 'en', 'fr'].flatMap(lang => feed.map(code => lang + '-' + code));
   assert.deepEqual(changedViews(base, components), group);
   assert(group.every(id => components.views.get(id).includes(marker)));
   assert(components.bundle.includes(marker));
   const clean = build();
   assert.equal(clean.html, base.html);
   assert.equal(clean.bundle, base.bundle);
-  console.log('PASS : 40 vues, identifiants uniques et liens valides. Retouche locale : 2 vues, 38 identiques. Filtre : 10 vues, 30 identiques. Deux aperçus régénérés.');
+  console.log('PASS : 60 vues, identifiants uniques et liens valides. Retouche locale : 3 vues, 57 identiques. Filtre : 15 vues, 45 identiques. Deux aperçus régénérés.');
 } finally {
   fs.rmSync(isolated, { recursive: true, force: true });
 }
