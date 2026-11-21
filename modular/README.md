@@ -20,7 +20,7 @@ Chaque fichier de `screens/` contient les codes, le titre et le HTML d’un écr
 | Partagée par les écrans qui la référencent | Onglets de filtres sur les cinq écrans de fil concernés, indicateur d’en-tête standard sur 19 écrans |
 | Spécifique à un écran | Cloche détaillée de l’accueil web, contenu et CSS propres, sélecteur intégré à l’écran d’arrivée |
 
-Le dictionnaire de traduction et les commandes du visualiseur sont dans `index.html`. Les libellés et interactions représentés restent ceux des maquettes de référence. Des commandes sont purement visuelles. La couverture des traductions est celle de la référence historique et doit être validée séparément pour une livraison bilingue.
+Le dictionnaire de traduction et le rendu sont dans `components/render.mjs`. Les commandes du visualiseur sont dans `index.html`. Les libellés et interactions représentés restent ceux des maquettes de référence. Des commandes sont purement visuelles. La couverture des traductions est celle de la référence historique et doit être validée séparément pour une livraison bilingue.
 
 ## Vérifier
 
@@ -31,3 +31,11 @@ Le dictionnaire de traduction et les commandes du visualiseur sont dans `index.h
 
 La revue bilingue et la procédure de publication sont dans [VALIDATION.md](VALIDATION.md).
 Pour les tests Chromium, générer au préalable `preview-review.html` avec `node tools/bundle-preview.cjs preview-review.html`. Le fichier généré est un aperçu autonome. L’option `--mobile` teste à 390 × 844. En mode `--parity`, le rendu français sur ordinateur est comparé exactement et la structure ainsi que les images sont comparées en NL et EN.
+
+
+## Aperçu mobile hors ligne
+
+Depuis la racine, lancer `node tools/bundle-mobile.mjs BUUURT-maquettes-mobile.html`.
+L’aperçu intègre les 20 écrans en NL et en EN. Il réutilise les fichiers d’écran, les composants et les traductions du visualiseur. Le sommaire et les liens entre maquettes fonctionnent avec des ancres HTML. La langue se choisit en haut du fichier. Les interactions et la conservation des saisies se vérifient avec le visualiseur interactif.
+
+`node tests/verify-mobile.mjs` génère les deux aperçus dans une copie temporaire et vérifie la portée de retouches locales et partagées.

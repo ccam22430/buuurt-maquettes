@@ -17,7 +17,8 @@ const loader = 'const embeddedFiles = ' + payload + ';\nasync function loadJson(
   '  return embeddedFiles[path];\n}';
 const source = read('index.html');
 const html = source.replace('<script type="module">', '<script>')
-  .replace(/import \{ composeScreen \}[^\n]+/, () => read('components/compose.mjs').replace(/^export /, ''))
+  .replace(/import \{ composeScreen \}[^\n]+/, () => read('components/compose.mjs').replace(/^export /gm, ''))
+  .replace(/import \{ codes, screenMarkup \}[^\n]+/, () => read('components/render.mjs').replace(/^export /gm, ''))
   .replace(/async function loadJson\(path\) \{[^}]+\}/, () => loader);
 if (html === source || !html.includes('const embeddedFiles =')) throw new Error('Preview bundle failed');
 const output = process.argv[2];
