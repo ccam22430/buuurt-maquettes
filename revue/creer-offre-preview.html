@@ -5,4 +5,4 @@ const icons=['<svg viewBox="0 0 24 24"><path d="M3 9h18l-2 11H5L3 9ZM8 9l4-6 4 6
 const names=['Offre sur quantité','Réduction en pourcentage','Réduction en euros','Prix promotionnel',"Prix à l’unité",'Autre avantage','Autre'];const box=document.getElementById('types');names.forEach((name,i)=>{const b=document.createElement('button');b.className='type'+(i===0?' selected':'');b.innerHTML=icons[i]+'<span>'+name+'</span>';b.onclick=()=>{document.querySelectorAll('.type').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');document.getElementById('paneltitle').textContent=name;document.getElementById('example').textContent=i===0?'Ex. : 4 croissants achetés, 1 offert':'Renseignez les détails de cette offre.'};box.appendChild(b)});
 
 document.getElementById('lang').onchange=()=>document.getElementById('message').textContent='Sélecteur de langue de démonstration : traduction non intégrée dans cet aperçu.';
-</script></body></html>
+</script><script src="buuurt-review-tools.js"></script></body></html>
