@@ -22,3 +22,13 @@ Autorité de validation : fondateur BUUURT (confirmation explicite dans la conve
 - Cette validation concerne les deux écrans tels qu'approuvés ; elle n'autorise pas une modification des autres pages ni une mise en production de l'application.
 - Conserver les versions approuvées ; effectuer les travaux ultérieurs sur des fichiers/branches séparés et obtenir une nouvelle validation pour tout changement fonctionnel ou visuel significatif.
 - Ce registre atteste la décision métier et les identifiants des fichiers vérifiés ; il ne constitue pas une preuve de tests navigateur exhaustifs.
+
+## VALIDÉE — COM-PUB-DEC-001 — Créer une découverte
+- Confirmation explicite du fondateur : 2026-11-23.
+- Fichier de référence : `revue/creer-decouverte-preview.html`.
+- URL : https://ccam22430.github.io/buuurt-maquettes/revue/creer-decouverte-preview.html
+- Git blob SHA au moment de la validation : `e742023b8edb116f9c6acbb3c12846ec555a468a`.
+- Catégorie officielle : Découverte / Ontdek / Discover (pas une quatrième catégorie).
+- Introduction approuvée : « Faites découvrir votre commerce, vos produits ou services aux habitants de votre quartier. »
+- Étape suivante : page photos `revue/com-pub-003.html`.
+- Statut : APPROUVÉ PAR LE FONDATEUR. Conserver cette version et demander une nouvelle validation avant modification significative.
