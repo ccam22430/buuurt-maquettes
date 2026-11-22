@@ -42,10 +42,10 @@ function syncPreviewFont(){
 }
 preview.addEventListener("load",syncPreviewFont);
 window.addEventListener("buuurt-font-change",syncPreviewFont);
-function show(i){selected=(i+pages.length)%pages.length;const p=pages[selected];document.getElementById('screenTitle').textContent=p.title;document.getElementById('screenCodes').textContent=p.en+' · '+p.fr+' · '+(selected+1)+'/20';if(p.en==="USR-FAV-001"||p.en==="USR-STO-001"){
+function show(i){selected=(i+pages.length)%pages.length;const p=pages[selected];document.getElementById('screenTitle').textContent=p.title;document.getElementById('screenCodes').textContent=p.en+' · '+p.fr+' · '+(selected+1)+'/20';if(p.en==="USR-FAV-001"||p.en==="USR-STO-001"||p.en==="USR-LOC-001"){
  preview.setAttribute("sandbox","allow-same-origin allow-scripts");
  preview.removeAttribute("srcdoc");
- preview.src="revue/hab-vit-001.html?lang="+currentLanguage+(p.en==="USR-FAV-001"?"&examples=1#favoris":"");
+ preview.src="revue/hab-vit-001.html?lang="+currentLanguage+(p.en==="USR-FAV-001"?"&examples=1#favoris":p.en==="USR-LOC-001"?"&view=nearby":"");
 }else{
  preview.setAttribute("sandbox","allow-same-origin");
  preview.removeAttribute("src");
