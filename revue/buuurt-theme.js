@@ -44,5 +44,7 @@
   picker.append(button);
   return button;
  });
- document.body.prepend(picker);
+ const catalogPreview=document.querySelector("iframe#preview");
+ if(catalogPreview)catalogPreview.before(picker);
+ else document.body.prepend(picker);
 })();
