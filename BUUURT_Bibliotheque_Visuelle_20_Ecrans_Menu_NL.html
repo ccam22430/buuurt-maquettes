@@ -35,6 +35,12 @@ function screenMarkup(page,lang){
 document.getElementById('uiLanguage').addEventListener('change',e=>{currentLanguage=e.target.value;show(selected)});
 
 let selected=0;const nav=document.getElementById('nav'),preview=document.getElementById('preview');
-function show(i){selected=(i+pages.length)%pages.length;const p=pages[selected];document.getElementById('screenTitle').textContent=p.title;document.getElementById('screenCodes').textContent=p.en+' · '+p.fr+' · '+(selected+1)+'/20';preview.srcdoc=screenMarkup(p,currentLanguage);for(const [j,b] of [...nav.children].entries()){b.classList.toggle('active',j===selected);b.setAttribute('aria-current',j===selected?'page':'false')}location.hash=p.en}
+function show(i){selected=(i+pages.length)%pages.length;const p=pages[selected];document.getElementById('screenTitle').textContent=p.title;document.getElementById('screenCodes').textContent=p.en+' · '+p.fr+' · '+(selected+1)+'/20';if(p.en==="USR-FAV-001"){
+ preview.removeAttribute("srcdoc");
+ preview.src="revue/hab-vit-001.html?lang="+currentLanguage+"&examples=1#favoris";
+}else{
+ preview.removeAttribute("src");
+ preview.srcdoc=screenMarkup(p,currentLanguage);
+}for(const [j,b] of [...nav.children].entries()){b.classList.toggle('active',j===selected);b.setAttribute('aria-current',j===selected?'page':'false')}location.hash=p.en}
 for(const [i,p] of pages.entries()){const b=document.createElement('button');b.innerHTML='<b>'+p.en+' · '+p.fr+'</b>'+p.title.replace(/^[^—]*—\s*/,'');b.onclick=()=>show(i);nav.appendChild(b)}document.getElementById('prev').onclick=()=>show(selected-1);document.getElementById('next').onclick=()=>show(selected+1);const target=location.hash.slice(1);const found=pages.findIndex(p=>p.en===target||p.fr===target);show(found>=0?found:0);
 </script></body></html>
