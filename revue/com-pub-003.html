@@ -48,6 +48,10 @@ section[lang=nl] .arrival .copy.nl,section[lang=en] .arrival .copy.en,section[la
 .photo-feedback{font-size:12px;margin:0;color:#666}
 .photo-step .photo-retouch{margin-top:-4px}
 .retouch-comparison img{aspect-ratio:1!important;object-fit:contain;background:#eee}
+.retouch-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.retouch-options button{display:grid;gap:5px;padding:5px;border:2px solid #ebd9e1;font-size:12px}
+.retouch-options button[aria-pressed="true"]{border-color:#a60044;background:#fff0f6;color:#880035}
+.retouch-options img{display:block;width:100%;aspect-ratio:4/3;object-fit:contain;border-radius:7px;background:#eee}
 .retouch-actions{display:grid;gap:6px}
 </style></head><body><article class="screen" id="fr-MER-PUB-003" lang="fr"><h3>COM-PUB-003 / MER-PUB-003 — Ajouter une photo</h3><nav class="language screen-language" aria-label="NL / EN / FR"><a href="#nl-MER-PUB-003" lang="nl" >Nederlands</a><a href="#en-MER-PUB-003" lang="en" >English</a><a href="#fr-MER-PUB-003" lang="fr" aria-current="true">Français</a></nav><div class="phone"><div class="status">9:41 ▰ ▰ ▰</div><div class="head"><span class="hamb">☰</span><span class="logo static-logo" role="img" aria-label="BUUURT"></span><span class="right"><span style="display:inline-flex;align-items:center;gap:4px;vertical-align:middle;white-space:nowrap"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/></svg><span>FR</span><svg width="9" height="9" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m2.5 4.5 3.5 3.5 3.5-3.5"/></svg></span>  <span aria-label='3 notifications non lues' title='3 notifications non lues' style='display:inline-flex;position:relative;align-items:center;justify-content:center;width:27px;height:27px;border:1.5px solid #111;border-radius:50%;background:#fff;color:#111;vertical-align:middle'><svg xmlns='http://www.w3.org/2000/svg' width='17' height='17' viewBox='0 0 24 24' fill='none' stroke='#111' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9'/><path d='M10 21h4'/></svg><span style='position:absolute;top:-7px;right:-8px;min-width:15px;height:15px;padding:0 2px;border-radius:10px;background:#111;color:#fff;font:700 10px/15px Arial,sans-serif;text-align:center'>3</span></span></span></div><main class="photo-step"><h2><a href="com-pub-001.html#fr-MER-PUB-001" aria-label="Back">←</a>Ajouter une photo</h2><p class="template-note">Photo proposée selon la catégorie : Bricolage & Outillage</p><div class="preview"><img data-preview src="mer-pub-003-shop.jpg" alt="Photo illustrative d’un magasin de bricolage"><button type="button" class="reset" data-reset aria-label="Rétablir la photo proposée">×</button></div>
 <button class="photo-choice photo-ai photo-retouch" type="button" data-retouch aria-expanded="false" hidden><span aria-hidden="true">✦</span> Retoucher avec l’IA</button>
@@ -57,6 +61,7 @@ section[lang=nl] .arrival .copy.nl,section[lang=en] .arrival .copy.en,section[la
 <figure><figcaption>Avant</figcaption><img alt="Avant" data-before></figure>
 <figure><figcaption>Après</figcaption><img alt="Après" data-after></figure>
 </div>
+<div class="retouch-options" role="group" aria-label="Aperçu de la retouche"><button class="photo-choice" type="button" data-retouch-option="0" aria-pressed="false"><img alt=""><span>Naturelle</span></button><button class="photo-choice" type="button" data-retouch-option="1" aria-pressed="false"><img alt=""><span>Plus lumineuse</span></button><button class="photo-choice" type="button" data-retouch-option="2" aria-pressed="false"><img alt=""><span>Plus nette</span></button><button class="photo-choice" type="button" data-retouch-option="3" aria-pressed="false"><img alt=""><span>Tons chauds</span></button></div>
 <div class="retouch-actions"><button class="photo-choice photo-ai" type="button" data-accept-retouch>Utiliser la photo retouchée</button>
 <button class="photo-choice" type="button" data-keep-original>Garder l’originale</button></div>
 </section>
@@ -77,6 +82,7 @@ section[lang=nl] .arrival .copy.nl,section[lang=en] .arrival .copy.en,section[la
 <figure><figcaption>Voor</figcaption><img alt="Voor" data-before></figure>
 <figure><figcaption>Na</figcaption><img alt="Na" data-after></figure>
 </div>
+<div class="retouch-options" role="group" aria-label="Voorbeeld van de bewerking"><button class="photo-choice" type="button" data-retouch-option="0" aria-pressed="false"><img alt=""><span>Natuurlijk</span></button><button class="photo-choice" type="button" data-retouch-option="1" aria-pressed="false"><img alt=""><span>Helderder</span></button><button class="photo-choice" type="button" data-retouch-option="2" aria-pressed="false"><img alt=""><span>Scherper</span></button><button class="photo-choice" type="button" data-retouch-option="3" aria-pressed="false"><img alt=""><span>Warme tinten</span></button></div>
 <div class="retouch-actions"><button class="photo-choice photo-ai" type="button" data-accept-retouch>Bewerkte foto gebruiken</button>
 <button class="photo-choice" type="button" data-keep-original>Origineel behouden</button></div>
 </section>
@@ -97,6 +103,7 @@ section[lang=nl] .arrival .copy.nl,section[lang=en] .arrival .copy.en,section[la
 <figure><figcaption>Before</figcaption><img alt="Before" data-before></figure>
 <figure><figcaption>After</figcaption><img alt="After" data-after></figure>
 </div>
+<div class="retouch-options" role="group" aria-label="Retouch preview"><button class="photo-choice" type="button" data-retouch-option="0" aria-pressed="false"><img alt=""><span>Natural</span></button><button class="photo-choice" type="button" data-retouch-option="1" aria-pressed="false"><img alt=""><span>Brighter</span></button><button class="photo-choice" type="button" data-retouch-option="2" aria-pressed="false"><img alt=""><span>Sharper</span></button><button class="photo-choice" type="button" data-retouch-option="3" aria-pressed="false"><img alt=""><span>Warm tones</span></button></div>
 <div class="retouch-actions"><button class="photo-choice photo-ai" type="button" data-accept-retouch>Use retouched photo</button>
 <button class="photo-choice" type="button" data-keep-original>Keep original</button></div>
 </section>
@@ -148,7 +155,7 @@ function choosePhoto(src,original=null){
  });
 }
 
-function retouchPixels(frame){
+function retouchPixels(frame,strength=1){
  const pixels=frame.data;
  const histogram=new Uint32Array(256);
  const neutral=[0,0,0];
@@ -207,11 +214,31 @@ function retouchPixels(frame){
    const light=lightness[i];
    const surrounding=(lightness[i-1]+lightness[i+1]+lightness[i-width]+lightness[i+width])/4;
    const detail=light-surrounding;
-   const edge=Math.sign(detail)*Math.min(9,Math.max(0,Math.abs(detail)-4)*0.31);
+   const edge=Math.sign(detail)*Math.min(9*strength,Math.max(0,Math.abs(detail)-4)*0.31*strength);
    const contrast=(light-median)*flatness;
    const headroom=Math.min(1,light/32,(255-Math.max(pixels[offset],pixels[offset+1],pixels[offset+2]))/32);
    const adjustment=(edge+contrast)*headroom;
    for(let channel=0;channel<3;channel++)pixels[offset+channel]+=adjustment;
+  }
+ }
+}
+
+function applyRetouchLook(frame,look){
+ const pixels=frame.data;
+ for(let i=0;i<pixels.length;i+=4){
+  const r=pixels[i],g=pixels[i+1],b=pixels[i+2];
+  const light=(0.2126*r+0.7152*g+0.0722*b)/255;
+  const headroom=Math.min(1,(255-Math.max(r,g,b))/38);
+  if(look==="bright"){
+   const lift=24*4*light*(1-light)*headroom;
+   pixels[i]+=lift;
+   pixels[i+1]+=lift;
+   pixels[i+2]+=lift;
+  }else{
+   const warmth=12*4*light*(1-light)*headroom;
+   pixels[i]+=warmth;
+   pixels[i+1]+=warmth*0.22;
+   pixels[i+2]-=warmth*0.56;
   }
  }
 }
@@ -226,6 +253,14 @@ document.querySelectorAll(".photo-step").forEach(root=>{
  let candidate;
  img.src=selectedPhoto;
  const retouch=find("retouch"),retouchPanel=find("retouch-panel");
+ const retouchOptions=[...root.querySelectorAll("[data-retouch-option]")];
+ let variants=[];
+ function selectRetouch(index){
+  retouchedPhoto=variants[index];
+  find("after").src=retouchedPhoto;
+  retouchOptions.forEach((button,i)=>button.setAttribute("aria-pressed",String(i===index)));
+ }
+ retouchOptions.forEach((button,index)=>button.onclick=()=>selectRetouch(index));
  function closeRetouch(){
   retouchPanel.hidden=true;
   retouch.setAttribute("aria-expanded","false");
@@ -256,15 +291,20 @@ document.querySelectorAll(".photo-step").forEach(root=>{
    const context=canvas.getContext("2d");
    context.drawImage(photo,0,0);
    const frame=context.getImageData(0,0,canvas.width,canvas.height);
-   retouchPixels(frame);
-   context.putImageData(frame,0,0);
-   retouchedPhoto=canvas.toDataURL("image/jpeg",0.9);
+   variants=["natural","bright","sharp","warm"].map(look=>{
+    const version=new ImageData(new Uint8ClampedArray(frame.data),frame.width,frame.height);
+    retouchPixels(version,look==="sharp"?2.25:1);
+    if(look==="bright"||look==="warm")applyRetouchLook(version,look);
+    context.putImageData(version,0,0);
+    return canvas.toDataURL("image/jpeg",0.9);
+   });
+   retouchOptions.forEach((button,index)=>button.querySelector("img").src=variants[index]);
+   selectRetouch(0);
    aiPanel.hidden=true;
    libraryPanel.hidden=true;
    ai.setAttribute("aria-expanded","false");
    library.setAttribute("aria-expanded","false");
    find("before").src=source;
-   find("after").src=retouchedPhoto;
    retouchPanel.hidden=false;
    retouch.setAttribute("aria-expanded","true");
   };
