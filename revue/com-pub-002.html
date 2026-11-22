@@ -158,6 +158,8 @@ input[type=range]{width:100%;accent-color:var(--brand)}
 <script>
 document.querySelectorAll(".screen").forEach(screen=>{
  const lang=screen.lang,step=screen.querySelector(".choice-step"),setup=screen.querySelector(".sponsored-setup");
+ const confirmation=screen.querySelector(".free-confirmation");
+ const confirmCopy={fr:["Annonce prête à être publiée","Vous pourrez retrouver votre annonce dans vos annonces."],nl:["Je bericht is klaar om gepubliceerd te worden","Je kunt je bericht terugvinden bij je eigen berichten."],en:["Your post is ready to publish","You can find your post in your posts."]}[lang]; confirmation.querySelector("h1").textContent=confirmCopy[0];confirmation.querySelector("p").textContent=confirmCopy[1];
  const status=screen.querySelector(".status-message");
  screen.querySelector(".continue").addEventListener("click",()=>{
   const selected=screen.querySelector('input[name="publication-'+lang+'"]:checked')?.value;
