@@ -37,7 +37,7 @@ h1{font-size:23px;line-height:1.22;letter-spacing:-.45px;margin:0 0 8px;font-wei
 .range-value{font-size:25px;font-weight:800;color:var(--brand);margin:4px 0 8px}
 input[type=range]{width:100%;accent-color:var(--brand)}
 .range-labels{display:flex;justify-content:space-between;color:var(--muted);font-size:11px}
-.duration-select{width:100%;padding:12px;border:1px solid var(--line);border-radius:11px;background:#fff;font:inherit}
+.date-label{display:block;font-size:12px;font-weight:650;margin:10px 0}.date-input{display:block;width:100%;margin-top:6px;padding:11px;border:1px solid var(--line);border-radius:11px;background:#fff;font:inherit;color:var(--ink)}
 .estimate{background:#f8f5f7;border-radius:13px;padding:14px;margin-top:15px}.estimate strong{display:block;font-size:15px;margin-bottom:6px}.estimate p{font-size:12px;line-height:1.5;color:var(--muted);margin:0}
 .status-message{font-size:12px;color:#71666e;line-height:1.5;margin-top:10px}
 @media(max-width:430px){body{padding:10px 6px 28px}.phone{border-width:6px;border-radius:33px}.content{padding:16px 15px 22px}}
@@ -75,8 +75,7 @@ input[type=range]{width:100%;accent-color:var(--brand)}
 </div>
 <p class="legend">Choisissez votre zone de diffusion</p>
 <div class="range-wrap"><div class="range-value"><output class="radius-value">1 km</output></div><input class="radius-range" type="range" min="1" max="5" step=".1" value="1" aria-label="Choisissez votre zone de diffusion"/><div class="range-labels"><span>1 km</span><span>5 km</span></div></div>
-<p class="legend">Durée de la campagne</p>
-<select class="duration-select"><option value="3">3 jours</option><option value="7" selected>7 jours</option><option value="14">14 jours</option></select>
+<p class="legend">Période de la campagne</p><label class="date-label">Date de début<input class="date-input" type="date" aria-label="Date de début"></label><label class="date-label">Date de fin<input class="date-input" type="date" aria-label="Date de fin"></label>
 <div class="estimate"><strong>Votre estimation de visibilité</strong><p>Le nombre d’impressions sera calculé selon la disponibilité réelle dans la zone et la période choisies.</p><p class="status-message" style="display:block;margin-top:8px">Le calcul des impressions sera activé après calibration des données du quartier pilote.</p></div>
 <button type="button" class="primary secondary back-choice">Retour au choix de publication</button>
 </div>
@@ -111,8 +110,7 @@ input[type=range]{width:100%;accent-color:var(--brand)}
 </div>
 <p class="legend">Kies je verspreidingsgebied</p>
 <div class="range-wrap"><div class="range-value"><output class="radius-value">1 km</output></div><input class="radius-range" type="range" min="1" max="5" step=".1" value="1" aria-label="Kies je verspreidingsgebied"/><div class="range-labels"><span>1 km</span><span>5 km</span></div></div>
-<p class="legend">Campagneduur</p>
-<select class="duration-select"><option value="3">3 dagen</option><option value="7" selected>7 dagen</option><option value="14">14 dagen</option></select>
+<p class="legend">Campagneperiode</p><label class="date-label">Startdatum<input class="date-input" type="date" aria-label="Startdatum"></label><label class="date-label">Einddatum<input class="date-input" type="date" aria-label="Einddatum"></label>
 <div class="estimate"><strong>Je zichtbaarheidsschatting</strong><p>Het aantal vertoningen wordt berekend op basis van de werkelijke beschikbaarheid in het gekozen gebied en de periode.</p><p class="status-message" style="display:block;margin-top:8px">De berekening van vertoningen wordt geactiveerd nadat de gegevens van de pilotbuurt zijn gekalibreerd.</p></div>
 <button type="button" class="primary secondary back-choice">Terug naar publicatiekeuze</button>
 </div>
@@ -147,8 +145,7 @@ input[type=range]{width:100%;accent-color:var(--brand)}
 </div>
 <p class="legend">Choose your coverage area</p>
 <div class="range-wrap"><div class="range-value"><output class="radius-value">1 km</output></div><input class="radius-range" type="range" min="1" max="5" step=".1" value="1" aria-label="Choose your coverage area"/><div class="range-labels"><span>1 km</span><span>5 km</span></div></div>
-<p class="legend">Campaign duration</p>
-<select class="duration-select"><option value="3">3 days</option><option value="7" selected>7 days</option><option value="14">14 days</option></select>
+<p class="legend">Campaign period</p><label class="date-label">Start date<input class="date-input" type="date" aria-label="Start date"></label><label class="date-label">End date<input class="date-input" type="date" aria-label="End date"></label>
 <div class="estimate"><strong>Your visibility estimate</strong><p>The number of impressions will be calculated based on actual availability in the selected area and period.</p><p class="status-message" style="display:block;margin-top:8px">Impression estimates will be enabled after the pilot neighbourhood data has been calibrated.</p></div>
 <button type="button" class="primary secondary back-choice">Back to publication choice</button>
 </div>
