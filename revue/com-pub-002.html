@@ -27,7 +27,7 @@ h1{font-size:23px;line-height:1.22;letter-spacing:-.45px;margin:0 0 8px;font-wei
 .secondary{background:#fff;color:var(--brand);border:1px solid var(--brand)}
 .footer{flex:none;border-top:1px solid #eee;padding:12px 8px 14px;display:grid;grid-template-columns:repeat(4,1fr);text-align:center;font-size:11px;color:#625b61}
 .footer b{display:block;font-size:20px;font-weight:450;margin-bottom:4px;line-height:22px}.footer .active{color:var(--brand);font-weight:750}
-.sponsored-setup[hidden],.choice-step[hidden],.status-message[hidden]{display:none!important}
+.sponsored-setup[hidden],.choice-step[hidden],.free-confirmation[hidden],.status-message[hidden]{display:none!important}
 .budget-options{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:13px 0 18px}
 .budget-option{border:1px solid var(--line);border-radius:12px;padding:12px 5px;background:#fff;text-align:center;cursor:pointer;color:var(--ink)}
 .budget-option strong{display:block;color:var(--brand);font-size:21px}.budget-option span{font-size:10px;color:var(--muted)}
@@ -59,6 +59,11 @@ input[type=range]{width:100%;accent-color:var(--brand)}
 </fieldset>
 <button type="button" class="primary continue">Continuer</button>
 <p class="status-message" role="status" hidden></p>
+</div>
+<div class="free-confirmation" hidden>
+<h1>Annonce prête à être publiée</h1>
+<p class="intro">Votre annonce gratuite est prête. Vous pourrez la retrouver dans vos annonces.</p>
+<button type="button" class="primary return-choice">Retour à mes choix</button>
 </div>
 <div class="sponsored-setup" hidden>
 <a href="#" class="back back-choice">Retour au choix de publication</a>
@@ -156,11 +161,12 @@ document.querySelectorAll(".screen").forEach(screen=>{
  const status=screen.querySelector(".status-message");
  screen.querySelector(".continue").addEventListener("click",()=>{
   const selected=screen.querySelector('input[name="publication-'+lang+'"]:checked')?.value;
-  if(selected==="free"){status.hidden=false;status.textContent=" ";location.hash=lang+"-MER-PUB-CONF";return;}
+  if(selected==="free"){step.hidden=true;screen.querySelector(".free-confirmation").hidden=false;return;}
   step.hidden=true;setup.hidden=false;screen.querySelector(".content").scrollTop=0;
  });
  const goBack=()=>{setup.hidden=true;step.hidden=false;};
- screen.querySelector(".back-choice").addEventListener("click",goBack);
+ screen.querySelectorAll(".back-choice").forEach(el=>el.addEventListener("click",e=>{e.preventDefault();goBack();}));
+ screen.querySelector(".return-choice").addEventListener("click",()=>{screen.querySelector(".free-confirmation").hidden=true;step.hidden=false;});
  screen.querySelector(".radius-range").addEventListener("input",e=>{screen.querySelector(".radius-value").textContent=Number(e.target.value).toFixed(1).replace(".0","")+" km";});
  screen.querySelector(".language-select").addEventListener("change",e=>{location.hash=e.target.value+"-MER-PUB-002";document.getElementById(e.target.value+"-MER-PUB-002")?.scrollIntoView({behavior:"smooth"});});
 });
