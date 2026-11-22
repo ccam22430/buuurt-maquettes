@@ -52,4 +52,4 @@ function show(i){selected=(i+pages.length)%pages.length;const p=pages[selected];
  preview.srcdoc=screenMarkup(p,currentLanguage);
 }for(const [j,b] of [...nav.children].entries()){b.classList.toggle('active',j===selected);b.setAttribute('aria-current',j===selected?'page':'false')}location.hash=p.en}
 for(const [i,p] of pages.entries()){const b=document.createElement('button');b.innerHTML='<b>'+p.en+' · '+p.fr+'</b>'+p.title.replace(/^[^—]*—\s*/,'');b.onclick=()=>show(i);nav.appendChild(b)}document.getElementById('prev').onclick=()=>show(selected-1);document.getElementById('next').onclick=()=>show(selected+1);const target=location.hash.slice(1);const found=pages.findIndex(p=>p.en===target||p.fr===target);show(found>=0?found:0);
-</script><script src="revue/buuurt-theme.js"></script></body></html>
+</script><script src="revue/buuurt-theme.js?v=3d7670b"></script></body></html>
