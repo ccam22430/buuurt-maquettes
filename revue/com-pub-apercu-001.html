@@ -25,7 +25,7 @@ body{max-width:1000px;margin:auto;padding:14px;background:#f4f4f6;color:#17171d;
 
 <button class="crop-button" type="button" data-open-crop><span>▣</span>Ajuster le cadrage<span class="chevron">›</span></button>
 <section class="crop-panel" data-crop hidden><b>Ajuster la photo</b><label>Zoom<input type="range" min="100" max="160" value="100" data-zoom></label><label>Position horizontale<input type="range" min="0" max="100" value="50" data-position-x></label><label>Position verticale<input type="range" min="0" max="100" value="50" data-position-y></label><button type="button" data-close-crop>Terminer</button></section>
-<button class="continue" type="button" data-continue>Continuer →</button><p class="next-message" hidden>L’étape suivante sera conçue séparément.</p>
+<button class="continue" type="button" data-continue>Continuer →</button>
 </main></div></article><article class="screen" id="nl-MER-PUB-PRV-001" lang="nl">
 <h3>MER-PUB-PRV-001 / COM-PUB-APE-001 — Voorbeeld van de aankondiging</h3>
 <nav class="screen-language"><a href="#nl-MER-PUB-PRV-001">Nederlands</a><a href="#en-MER-PUB-PRV-001">English</a><a href="#fr-COM-PUB-APE-001">Français</a></nav>
@@ -38,7 +38,7 @@ body{max-width:1000px;margin:auto;padding:14px;background:#f4f4f6;color:#17171d;
 
 <button class="crop-button" type="button" data-open-crop><span>▣</span>Foto bijsnijden<span class="chevron">›</span></button>
 <section class="crop-panel" data-crop hidden><b>Foto aanpassen</b><label>Zoom<input type="range" min="100" max="160" value="100" data-zoom></label><label>Horizontale positie<input type="range" min="0" max="100" value="50" data-position-x></label><label>Verticale positie<input type="range" min="0" max="100" value="50" data-position-y></label><button type="button" data-close-crop>Gereed</button></section>
-<button class="continue" type="button" data-continue>Doorgaan →</button><p class="next-message" hidden>De volgende stap wordt afzonderlijk ontworpen.</p>
+<button class="continue" type="button" data-continue>Doorgaan →</button>
 </main></div></article><article class="screen" id="en-MER-PUB-PRV-001" lang="en">
 <h3>MER-PUB-PRV-001 / COM-PUB-APE-001 — Announcement preview</h3>
 <nav class="screen-language"><a href="#nl-MER-PUB-PRV-001">Nederlands</a><a href="#en-MER-PUB-PRV-001">English</a><a href="#fr-COM-PUB-APE-001">Français</a></nav>
@@ -51,7 +51,7 @@ body{max-width:1000px;margin:auto;padding:14px;background:#f4f4f6;color:#17171d;
 
 <button class="crop-button" type="button" data-open-crop><span>▣</span>Adjust photo<span class="chevron">›</span></button>
 <section class="crop-panel" data-crop hidden><b>Adjust photo</b><label>Zoom<input type="range" min="100" max="160" value="100" data-zoom></label><label>Horizontal position<input type="range" min="0" max="100" value="50" data-position-x></label><label>Vertical position<input type="range" min="0" max="100" value="50" data-position-y></label><button type="button" data-close-crop>Done</button></section>
-<button class="continue" type="button" data-continue>Continue →</button><p class="next-message" hidden>The next step will be designed separately.</p>
+<button class="continue" type="button" data-continue>Continue →</button>
 </main></div></article><script>
 const photoLabels={fr:["Photo précédente","Photo suivante","Photo"],nl:["Vorige foto","Volgende foto","Foto"],en:["Previous photo","Next photo","Photo"]};
 const fromPhoto=new URLSearchParams(location.search).get("from")==="photo";
@@ -121,7 +121,7 @@ document.querySelectorAll(".preview-step").forEach(root=>{
   img.style.transform="scale("+scale+")";
  }
  [zoom,positionX,positionY].forEach(control=>control.addEventListener("input",updateCrop));
- root.querySelector("[data-continue]").addEventListener("click",()=>{root.querySelector(".next-message").hidden=false});
+ root.querySelector("[data-continue]").addEventListener("click",()=>{location.href="com-pub-002.html#"+lang+"-MER-PUB-002"});
  show();
 });
 </script></body></html>
