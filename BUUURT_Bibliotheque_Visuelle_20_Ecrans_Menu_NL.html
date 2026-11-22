@@ -40,7 +40,23 @@ function syncPreviewFont(){
  if(preview.hasAttribute("srcdoc"))preview.contentDocument?.documentElement?.setAttribute("data-buuurt-font",font);
  else preview.contentWindow?.postMessage({buuurtFont:font},location.origin);
 }
-preview.addEventListener("load",syncPreviewFont);
+preview.addEventListener("load",()=>{
+ syncPreviewFont();
+ if(pages[selected]?.en!=="USR-LOC-002")return;
+ const menu=preview.contentDocument?.querySelector(".arrival-language");
+ if(!menu)return;
+ menu.addEventListener("click",event=>{
+  if(!event.target.matches('input[name="arrival-lang"]'))return;
+  menu.open=false;
+  menu.querySelector("summary")?.focus({preventScroll:true});
+ });
+ menu.addEventListener("change",event=>{
+  if(event.target.matches('input[name="arrival-lang"]')){
+   menu.open=false;
+   menu.querySelector("summary")?.focus({preventScroll:true});
+  }
+ });
+});
 window.addEventListener("buuurt-font-change",syncPreviewFont);
 function show(i){selected=(i+pages.length)%pages.length;const p=pages[selected];document.getElementById('screenTitle').textContent=p.title;document.getElementById('screenCodes').textContent=p.en+' · '+p.fr+' · '+(selected+1)+'/20';if(p.en==="USR-FAV-001"||p.en==="USR-STO-001"||p.en==="USR-LOC-001"){
  preview.setAttribute("sandbox","allow-same-origin allow-scripts");
