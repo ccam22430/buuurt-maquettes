@@ -39,8 +39,13 @@ q('#sort option[value="distance"]').textContent=byDistance;
 q('#sort option[value="recent"]').textContent=byDate;
 q("#all-store").textContent=t[22]+" ›";
 q("#close").textContent=t[18];
+const examples=new URLSearchParams(location.search).get("examples")==="1";
+const exampleFavorites=[0,4,5];
+const removedExamples=new Set();
+const isExample=id=>examples&&exampleFavorites.includes(id)&&!removedExamples.has(id);
+const isSaved=id=>favorites.includes(id)||isExample(id);
 function markup(post,feature){
- const saved=favorites.includes(post.id);
+ const saved=isSaved(post.id);
  const categoryTag='<span class="tag">'+t[8+post.type]+'</span>';
  const image='<div class="picture"><img src="'+post.src+'" alt="">'+categoryTag+'</div>';
  const text='<div class="copy"><strong>'+post.shop+'</strong>'+(feature?'<small>'+t[29]+'</small>':post.id===3?'<small class="sponsored">'+t[19]+'</small>':'')+'<h3>'+post.title+'</h3><p>'+post.body+'</p>'+(feature?'<span class="cta">'+t[13]+' →</span>':post.distance==null?"":'<span class="distance" title="'+t[21]+'">'+icon("walk")+post.distance+' m</span>')+'</div>';
@@ -97,9 +102,6 @@ favoriteLink.innerHTML=icon("heart");
 favoriteLink.setAttribute("aria-label",fav[0]);
 favoriteLink.title=fav[0];
 let favoriteCategory=-1;
-const examples=new URLSearchParams(location.search).get("examples")==="1";
-const exampleFavorites=[0,4,5];
-const removedExamples=new Set();
 function renderFavorites(){
  const panel=q("#favorites-page");
  const ids=[...new Set([...favorites,...(examples?exampleFavorites.filter(id=>!removedExamples.has(id)):[])])];
@@ -149,7 +151,7 @@ function renderRoute(){
   if(wasDetail){window.scrollTo(0,returnPosition);returnFocus?.focus({preventScroll:true})}
   return;
  }
- const saved=favorites.includes(post.id);
+ const saved=isSaved(post.id);
  panel.innerHTML='<a href="#" class="detail-back">← '+labels[0]+'</a><div class="detail-cover"><img src="'+post.src+'" alt=""><span class="tag">'+t[8+post.type]+'</span></div><div class="detail-copy"><strong>'+post.shop+'</strong>'+(post.id===3?'<span class="sponsored"> · '+t[19]+'</span>':'')+'<h1 tabindex="-1">'+post.title+'</h1><p>'+post.body+'</p>'+(post.distance?'<p class="distance">'+icon("walk")+post.distance+' m · '+t[21]+'</p>':'')+'<div class="detail-actions"><button type="button" class="dialog-heart" data-heart="'+post.id+'" aria-pressed="'+saved+'">'+icon("heart")+' '+t[saved?15:14]+'</button><button type="button" id="share-post">'+labels[1]+'</button></div><p id="share-status" role="status"></p></div>';
  panel.querySelector(".detail-back").onclick=event=>{
   event.preventDefault();
@@ -181,10 +183,11 @@ document.addEventListener("click",event=>{
  }
  if(!heart)return;
  const id=Number(heart.dataset.heart);
- if(location.hash==="#favoris"&&examples&&exampleFavorites.includes(id)&&!favorites.includes(id)){
+ if(isExample(id)&&!favorites.includes(id)){
   removedExamples.add(id);
-  renderFavorites();
-  q("#favorites-title").focus({preventScroll:true});
+  if(location.hash==="#favoris"){renderFavorites();q("#favorites-title").focus({preventScroll:true})}
+  else if(location.hash.startsWith("#annonce-"))renderRoute();
+  renderFeed();
   return;
  }
  if(!signed){
@@ -195,8 +198,8 @@ document.addEventListener("click",event=>{
  }
  favorites=favorites.includes(id)?favorites.filter(value=>value!==id):[...favorites,id];
  saveFavorites();
+ if(examples&&!favorites.includes(id))removedExamples.add(id);
  if(location.hash==="#favoris"){
-  if(examples)removedExamples.add(id);
   renderFavorites();
   q("#favorites-title").focus({preventScroll:true});
  }
