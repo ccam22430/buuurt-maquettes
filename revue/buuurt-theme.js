@@ -48,3 +48,6 @@
  if(catalogPreview)catalogPreview.before(picker);
  else document.body.prepend(picker);
 })();
+
+/* buuurt-header-auto-loader: future review pages using the theme inherit the approved header automatically. */
+(()=>{function ensureHeader(){if(document.querySelector('script[src$="buuurt-shared-header.js"]'))return;if(!document.querySelector('.phone header,.phone .head,.phone .header,.screen header,.screen .header,body>main>header'))return;const script=document.createElement('script');script.src='buuurt-shared-header.js';document.head.append(script)}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',ensureHeader,{once:true});else ensureHeader()})();
