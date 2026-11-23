@@ -22,7 +22,7 @@ const style=document.createElement('style');style.id='buuurt-official-header-css
 document.head.append(style);
 function init(){
  const sample=new URLSearchParams(location.search).get('notifications');
- const headers=[...document.querySelectorAll('.phone header,.phone .head,.phone .header,.screen header,.screen .header')];
+ const headers=[...document.querySelectorAll('.phone header,.phone .head,.phone .header,.screen header,.screen .header,body>main>header')];
  for(const head of headers){
   if(head.dataset.buuurtOfficial==='1')continue;
   const menu=head.querySelector('#menu,.menu,.hamb,button[aria-label="Menu"],[aria-label="Menu"]');
@@ -34,7 +34,7 @@ function init(){
   if(!menu.matches('button,a')){menu.setAttribute('role','button');menu.tabIndex=0;menu.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();menu.click()}})}
   menu.setAttribute('aria-label','Menu');
   logo.classList.add('buuurt-official-logo');
-  let right=head.querySelector('.actions,.right');
+  let right=head.querySelector('.actions,.right')||(select.parentElement?.parentElement===head&&select.parentElement.tagName==='DIV'?select.parentElement:null);
   if(!right){right=document.createElement('span');head.append(right)}
   right.classList.add('buuurt-official-right');
   let lang=select.closest('.language-switch,.buuurt-global-lang,.buuurt-official-language');
