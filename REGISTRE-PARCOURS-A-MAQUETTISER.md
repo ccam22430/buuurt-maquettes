@@ -39,3 +39,16 @@ Mise à jour : 2026-11-23. Ce registre réserve les identifiants de parcours ; *
 | HAB-INVIT-001 | Invitation d'un commerce absent, distincte du suivi et du parrainage commerçant | **À ÉTUDIER — NON VALIDÉ** |
 
 **Rappel de revue pour le fondateur** : les lignes marquées À REVOIR, À CONCEVOIR ou À RETROUVER doivent rester visibles dans le registre jusqu'à présentation de la maquette, décision explicite et mise à jour de leur statut. Ne pas déclarer ces écrans validés ni modifier le HTML public sur la seule base de ce registre.
+
+## Fichiers HTML provisoires créés le 23/11/2026
+
+| ID | Fichier réel | Statut |
+|---|---|---|
+| HAB-SUIVI-001 | `revue/hab-suivi-001.html` | **À VÉRIFIER — HTML créé, non validé** |
+| HAB-SUIVI-002 | `revue/hab-suivi-002.html` | **À VÉRIFIER — HTML créé, non validé** |
+| HAB-SUIVI-003 | `revue/hab-suivi-003.html` | **À VÉRIFIER — HTML créé, non validé** |
+| HAB-FICHE-001 | `revue/hab-fiche-001.html` | **À VÉRIFIER — HTML créé, non validé** |
+| HAB-NOTIF-001 | `revue/hab-notif-001.html` | **À VÉRIFIER — HTML créé, non validé** |
+| HAB-INVIT-001 | `revue/hab-invit-001.html` | **À VÉRIFIER — HTML créé, non validé** |
+
+Les pages existantes restent conservées sans écrasement. Le sélecteur de typographies est partagé par les maquettes chargeant `buuurt-theme.js` et `buuurt-theme.css`. Les pages historiques qui ne chargent pas ces ressources devront être recensées séparément. Les contenus et interactions des nouvelles pages sont des prototypes, pas une implémentation applicative. Les 6 nouveaux écrans sont à revoir un par un avec le fondateur.
