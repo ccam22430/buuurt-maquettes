@@ -37,3 +37,11 @@ Statut : VALIDÉ PAR LE FONDATEUR — base de travail V1, sans engagement commer
 - À finaliser : logo officiel, couleurs et police de référence, menus/onglets, cloche et notifications, sélecteur de langue et traductions intégrales NL/EN (NL par défaut dans l'application), interactions/curseurs testés.
 - La carte actuellement illustrative doit être remplacée dans l'application réelle par une carte géographique centrée sur l'adresse exacte enregistrée du commerce ; rayon autorisé selon paramètre d'administration.
 - Maintenir le statut « maquette officielle en cours de finalisation » jusqu'à consultation et validation visuelle de la version complète par le fondateur.
+
+## Nouvelle exigence validée — assistant IA de création d'annonces (23 novembre 2026)
+- Décision du fondateur : intégrer au cahier des charges BUUURT la possibilité de créer une annonce par dialogue vocal avec un assistant IA spécialisé exclusivement dans la création d'annonces.
+- L'assistant pose uniquement les questions nécessaires, exploite les informations existantes du profil commerce, identifie Aanbieding/Evenement/Ontdek, prépare titre, description et champs utiles ; peut guider la sélection, retouche ou génération d'image. Il ne doit jamais inventer prix, promotions, disponibilité ni faits commerciaux.
+- Parcours manuel maintenu. Les deux modes rejoignent le même aperçu final, validation explicite du commerçant, puis COM-PUB-002 (gratuit ou sponsorisé) ; aucune publication automatique.
+- Langues de l'application : NL/EN, NL par défaut. Interface et accès micro mobiles à tester.
+- Validation acquise : principe et inscription au cahier des charges. Non validés : fournisseur, technologie vocale, plafonds d'usage, budget, mise en œuvre V1 et déploiement. Prototype isolé et étude de coûts réels requis avant engagement.
+- Garder la création d'annonces gratuite ; limiter les coûts IA par durée, questions utiles, réutilisation des données et protections anti-abus. Aucune dépense sans approbation.
