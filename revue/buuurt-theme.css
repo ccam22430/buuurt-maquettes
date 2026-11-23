@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400..800&family=Inter:wght@400..800&family=Nunito:wght@400..800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700;800&family=Bricolage+Grotesque:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&family=Urbanist:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700;800&family=Rubik:wght@400;500;600;700;800&family=Syne:wght@400;500;600;700;800&family=Archivo+Black:wght@400;500;600;700;800&family=Fraunces:wght@400;500;600;700;800&family=Nunito:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap");
 
 :root {
   --buuurt-font: "Inter", system-ui, sans-serif;
@@ -18,3 +18,20 @@ body, button, input, select, textarea { font-family: var(--buuurt-font) !importa
 .buuurt-font-picker { display:flex; align-items:center; gap:8px; flex-wrap:wrap; max-width:460px; margin:0 auto; padding:8px 14px; background:#f7f5f6; color:#19161b; font-size:12px; }
 .buuurt-font-picker button { color:#19161b; border:1px solid #e1d8dd; border-radius:8px; background:white; padding:4px 8px; font-size:12px; cursor:pointer; }
 .buuurt-font-picker button[aria-pressed="true"] { background:var(--buuurt-pink-tint); border-color:var(--buuurt-pink-dark); font-weight:750; }
+
+/* Shared typography review, all mockups using the theme */
+html[data-buuurt-font="outfit"]{--buuurt-font:"Outfit",system-ui,sans-serif}
+html[data-buuurt-font="space-grotesk"]{--buuurt-font:"Space Grotesk",system-ui,sans-serif}
+html[data-buuurt-font="bricolage-grotesque"]{--buuurt-font:"Bricolage Grotesque",system-ui,sans-serif}
+html[data-buuurt-font="plus-jakarta-sans"]{--buuurt-font:"Plus Jakarta Sans",system-ui,sans-serif}
+html[data-buuurt-font="sora"]{--buuurt-font:"Sora",system-ui,sans-serif}
+html[data-buuurt-font="manrope"]{--buuurt-font:"Manrope",system-ui,sans-serif}
+html[data-buuurt-font="urbanist"]{--buuurt-font:"Urbanist",system-ui,sans-serif}
+html[data-buuurt-font="dm-sans"]{--buuurt-font:"DM Sans",system-ui,sans-serif}
+html[data-buuurt-font="rubik"]{--buuurt-font:"Rubik",system-ui,sans-serif}
+html[data-buuurt-font="syne"]{--buuurt-font:"Syne",system-ui,sans-serif}
+html[data-buuurt-font="archivo-black"]{--buuurt-font:"Archivo Black",system-ui,sans-serif}
+html[data-buuurt-font="fraunces"]{--buuurt-font:"Fraunces",system-ui,sans-serif}
+html[data-buuurt-font="nunito"]{--buuurt-font:"Nunito",system-ui,sans-serif}
+html[data-buuurt-font="inter"]{--buuurt-font:"Inter",system-ui,sans-serif}
+.phone,.phone input,.phone button,.phone textarea,.phone select,.phone label,.phone p,.phone h1,.phone h2,.phone h3{font-family:var(--buuurt-font),system-ui,sans-serif!important}
