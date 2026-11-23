@@ -52,3 +52,13 @@ Mise à jour : 2026-11-23. Ce registre réserve les identifiants de parcours ; *
 | HAB-INVIT-001 | `revue/hab-invit-001.html` | **À VÉRIFIER — HTML créé, non validé** |
 
 Les pages existantes restent conservées sans écrasement. Le sélecteur de typographies est partagé par les maquettes chargeant `buuurt-theme.js` et `buuurt-theme.css`. Les pages historiques qui ne chargent pas ces ressources devront être recensées séparément. Les contenus et interactions des nouvelles pages sont des prototypes, pas une implémentation applicative. Les 6 nouveaux écrans sont à revoir un par un avec le fondateur.
+
+## Règles globales / spécifiques — audit du 23 novembre 2026
+
+**GLOBAL — composant « badge catégorie sur photo »** : badge entièrement contenu dans sa photo avec marge intérieure, largeur maximale calculée à partir du conteneur, texte multilingue adaptable sur plusieurs lignes, police stable et lisible ; ne pas chevaucher le statut sponsorisé (dans la zone texte de l'annonce). À appliquer aux cartes de fil, carrousels, détails d'annonces et prévisualisations utilisant le même motif. CSS commun : `revue/buuurt-theme.css` ; correctif de défense locale : `revue/hab-vit-001.html`. Les pages ne chargeant pas la feuille commune doivent être qualifiées avant déclaration de conformité.
+
+**GLOBAL — en-tête commun** : menu cliquable, logo officiel, choix NL/EN/FR, cloche avec compteur cliquable ; ne pas ajouter de cœur global non approuvé. Favoris : cœur au niveau de chaque annonce. Composants communs à factoriser ; éviter de recopier des en-têtes contradictoires.
+
+**SPÉCIFIQUE — HAB-VIT-001** : ordre du fil post-scan, commerce scanné, carrousel des annonces, CTA Suivre. **SPÉCIFIQUE — HAB-FICHE-001** : fiche commerce complète et panneau de notifications par commerce. Les règles globales ne doivent pas modifier les fonctions propres à une page.
+
+**Audit initial par fichier (lecture de code, pas test visuel)** : `hab-vit-001.html` : tag catégorie généré dans `.picture`, correctif appliqué ; `com-pub-apercu-001.html` : badges `merchant-tag` à examiner séparément ; `com-pub-spon-001.html` : badge de carte à examiner séparément ; les autres pages de création/publication sont à examiner selon leurs composants et les futures variantes de contenu. **À vérifier** : 320/375/390/430 px, NL/EN/FR, textes longs, sponsorisé, carrousel et détail, sans chevauchement. Aucune certification visuelle globale à ce stade.
