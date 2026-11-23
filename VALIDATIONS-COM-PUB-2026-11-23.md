@@ -53,3 +53,14 @@ Autorité de validation : fondateur BUUURT (confirmation explicite dans la conve
 - Version approuvée : étape photo et commandes communes telles que présentées lors de la validation, avec police de référence Nunito.
 - Cette confirmation remplace le statut provisoire « corrections récentes à revoir » de l'inventaire. Ne pas modifier visuellement ou fonctionnellement cette page sans nouvelle approbation.
 - Validation métier distincte d'une vérification automatisée exhaustive des interactions.
+
+## Parcours de publication commerçant — décision du 23 novembre 2026
+
+- Le commerçant choisit Offre, Événement ou Découverte, puis la langue du contenu en début de formulaire, avant la rédaction. Le globe règle la langue de l’interface indépendamment de la langue de l’annonce.
+- Après la saisie du contenu, le commerçant passe par l’étape photo COM-PUB-003, puis choisit le mode de diffusion dans COM-PUB-002. Publication gratuite est sélectionnée par défaut. L’étape photo conserve ses règles déjà approuvées.
+- En gratuit, « Voir l’aperçu » mène à l’aperçu de l’annonce, puis une action explicite « Publier gratuitement » confirme la publication. Cette séquence prévaut sur l’ordre antérieur de l’aperçu et du choix du mode pour le parcours gratuit.
+- Pour le sponsorisé, appliquer les conditions d’activation et le parcours budget, zone, durée et récapitulatif déjà validés dans l’addendum du 22 novembre. En production, afficher l’option selon l’activation du périmètre.
+- Le retour à une étape précédente conserve la langue du contenu, la saisie et les photos. Le changement de langue de l’interface préserve le brouillon et sa langue.
+- Critères de recette à exécuter en environnement isolé. Sur une offre fictive « Coupe à 25 € », choisir la langue de l’annonce, saisir le titre et le prix, ajouter une photo, puis vérifier l’arrivée sur COM-PUB-002 avec Gratuit sélectionné. Vérifier les retours, le changement de langue de l’interface et la fidélité du titre, du prix, du texte et de la photo dans l’aperçu. Vérifier qu’aucune publication n’a lieu avant la confirmation, et qu’une double action ou une reprise après erreur ne crée pas de doublon. Après validation de ce parcours, vérifier les mêmes transitions sur Événement et Découverte en conservant leurs règles propres.
+
+Statut : séquence approuvée par le fondateur. Implémentation et recette à réaliser. Les validations individuelles des maquettes figurent ci-dessus.
