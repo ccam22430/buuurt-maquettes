@@ -1,12 +1,12 @@
 (() => {
- const fonts={"dm-sans":"DM Sans",inter:"Inter",nunito:"Nunito"};
+ const fonts={"outfit":"Outfit","space-grotesk":"Space Grotesk","bricolage-grotesque":"Bricolage Grotesque","plus-jakarta-sans":"Plus Jakarta Sans","sora":"Sora","manrope":"Manrope","urbanist":"Urbanist","dm-sans":"DM Sans","rubik":"Rubik","syne":"Syne","archivo-black":"Archivo Black","fraunces":"Fraunces","nunito":"Nunito","inter":"Inter"};
  const key="buuurt-mockup-font";
  const url=new URL(location.href);
  let saved;
  try{saved=localStorage.getItem(key)}catch{}
  const valid=value=>Object.hasOwn(fonts,value);
  const requested=url.searchParams.get("font");
- const initial=valid(requested)?requested:requested==="compare"?"dm-sans":valid(saved)?saved:"inter";
+ const initial=valid(requested)?requested:requested==="compare"?"outfit":valid(saved)?saved:"outfit";
  const root=document.documentElement;
  const apply=font=>{root.dataset.buuurtFont=font};
  apply(initial);
