@@ -41,3 +41,8 @@ Autorité de validation : fondateur BUUURT (confirmation explicite dans la conve
 - Périmètre : date et heures de l'événement, passage automatique au lendemain pour une heure de fin antérieure à l'heure de début, informations pratiques, début de publication immédiat ou programmé, fin par défaut à la fin de l'événement ou programmée avant celle-ci. Pas de champ lieu.
 - Sélecteur NL/EN/FR : script `revue/buuurt-event-i18n.js` ajouté après validation pour corriger la traduction. Contrôle visuel navigateur non encore confirmé.
 - Statut : maquette fonctionnelle VALIDÉE par le fondateur, correction i18n enregistrée en attente de vérification visuelle.
+
+### Confirmation finale — COM-PUB-EVT-001 (2026-11-23)
+- Validation explicite du fondateur après correction multilingue : « Très bien, je valide la page COM PUB EVT 001 ».
+- Version approuvée : blob `b145dd76e3ab789837474cb685960bb3f2e25fc0` ; commit correctif `695429835809a3aa929ab47a71704287f2ae4f44`.
+- Traductions NL/EN/FR intégrées directement au HTML. Ne pas modifier la maquette validée sans nouvelle décision.
