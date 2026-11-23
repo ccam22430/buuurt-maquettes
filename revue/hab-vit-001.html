@@ -139,12 +139,6 @@ function renderScannedShop(){
  if(!matches.length&&!aroundMe){q("#scanned-shop").hidden=false;track.innerHTML="<p>"+({nl:"Geen berichten van deze winkel in deze categorie.",en:"No posts from this shop in this category.",fr:"Aucune annonce de ce commerce dans cette catégorie."}[locale])+"</p>";}
 }
 renderScannedShop();
-if(false) data.slice(0,3).forEach((post,i)=>{
- const button=document.createElement("button");
- button.type="button";button.setAttribute("aria-label",post.title);
- button.onclick=()=>track.scrollTo({left:track.children[i].offsetLeft-track.children[0].offsetLeft,behavior:"smooth"});
- dots.append(button);
-});
 function activeDot(){
  const offsets=[...track.children].map(card=>Math.abs(card.offsetLeft-track.children[0].offsetLeft-track.scrollLeft));
  const current=offsets.indexOf(Math.min(...offsets));
