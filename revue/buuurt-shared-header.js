@@ -40,6 +40,9 @@ function init(){
   let lang=select.closest('.language-switch,.buuurt-global-lang,.buuurt-official-language');
   if(!lang){lang=document.createElement('span');select.before(lang);lang.append(select)}
   lang.classList.add('buuurt-official-language');
+  // Existing merchant headers already contain their own globe and chevron.
+  // Remove only decorative siblings; preserve the native select and its listeners.
+  [...lang.children].filter(el=>el!==select&&!el.classList.contains('buuurt-official-globe')).forEach(el=>el.remove());
   if(!lang.querySelector('.buuurt-official-globe')){const icon=document.createElement('span');icon.className='buuurt-official-globe';icon.innerHTML=globeSvg;lang.prepend(icon)}
   if(lang.parentElement!==right)right.prepend(lang);
   [...select.options].forEach(o=>{if(['nl','en','fr'].includes(o.value.toLowerCase()))o.textContent=o.value.toUpperCase()});
