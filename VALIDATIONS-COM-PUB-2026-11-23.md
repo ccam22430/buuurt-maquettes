@@ -32,3 +32,12 @@ Autorité de validation : fondateur BUUURT (confirmation explicite dans la conve
 - Introduction approuvée : « Faites découvrir votre commerce, vos produits ou services aux habitants de votre quartier. »
 - Étape suivante : page photos `revue/com-pub-003.html`.
 - Statut : APPROUVÉ PAR LE FONDATEUR. Conserver cette version et demander une nouvelle validation avant modification significative.
+
+## VALIDÉE — COM-PUB-EVT-001 — Créer un événement
+- Validation explicite du fondateur : 2026-11-23 ; anomalie de traduction signalée à corriger.
+- Fichier : `revue/creer-evenement-preview.html`.
+- URL : https://ccam22430.github.io/buuurt-maquettes/revue/creer-evenement-preview.html
+- Blob SHA après correction linguistique : `79c642cc8d1f0967c7103a8d11401580d7670063`.
+- Périmètre : date et heures de l'événement, passage automatique au lendemain pour une heure de fin antérieure à l'heure de début, informations pratiques, début de publication immédiat ou programmé, fin par défaut à la fin de l'événement ou programmée avant celle-ci. Pas de champ lieu.
+- Sélecteur NL/EN/FR : script `revue/buuurt-event-i18n.js` ajouté après validation pour corriger la traduction. Contrôle visuel navigateur non encore confirmé.
+- Statut : maquette fonctionnelle VALIDÉE par le fondateur, correction i18n enregistrée en attente de vérification visuelle.
