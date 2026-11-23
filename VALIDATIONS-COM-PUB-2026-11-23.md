@@ -46,3 +46,10 @@ Autorité de validation : fondateur BUUURT (confirmation explicite dans la conve
 - Validation explicite du fondateur après correction multilingue : « Très bien, je valide la page COM PUB EVT 001 ».
 - Version approuvée : blob `b145dd76e3ab789837474cb685960bb3f2e25fc0` ; commit correctif `695429835809a3aa929ab47a71704287f2ae4f44`.
 - Traductions NL/EN/FR intégrées directement au HTML. Ne pas modifier la maquette validée sans nouvelle décision.
+
+### Confirmation finale — COM-PUB-003 / MER-PUB-003 (2026-11-23)
+- Validation explicite du fondateur : « je valide la page COM-PUB-003 / MER-PUB-003 — Ajouter une photo ».
+- Fichier : `revue/com-pub-003.html` ; blob au moment de la confirmation : `5928dc6aa9aa41345736fe8ee3b363865db0e50b`.
+- Version approuvée : étape photo et commandes communes telles que présentées lors de la validation, avec police de référence Nunito.
+- Cette confirmation remplace le statut provisoire « corrections récentes à revoir » de l'inventaire. Ne pas modifier visuellement ou fonctionnellement cette page sans nouvelle approbation.
+- Validation métier distincte d'une vérification automatisée exhaustive des interactions.
