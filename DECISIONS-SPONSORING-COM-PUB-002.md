@@ -45,3 +45,11 @@ Statut : VALIDÉ PAR LE FONDATEUR — base de travail V1, sans engagement commer
 - Langues de l'application : NL/EN, NL par défaut. Interface et accès micro mobiles à tester.
 - Validation acquise : principe et inscription au cahier des charges. Non validés : fournisseur, technologie vocale, plafonds d'usage, budget, mise en œuvre V1 et déploiement. Prototype isolé et étude de coûts réels requis avant engagement.
 - Garder la création d'annonces gratuite ; limiter les coûts IA par durée, questions utiles, réutilisation des données et protections anti-abus. Aucune dépense sans approbation.
+
+## Validation complémentaire — prototype vocal spécialisé (23 novembre 2026)
+- Le fondateur confirme que l'assistant conversationnel de création d'annonces est indispensable au produit et approuve la recommandation d'un prototype isolé de conversation de 2 à 3 minutes, avant toute intégration ou dépense.
+- Mission strictement limitée à la création et à la modification d'annonces BUUURT. Pour une question sans rapport : refus bref et recentrage poli sur l'annonce, sans discussion générale. Les corrections liées à l'annonce restent permises.
+- Appliquer une défense en profondeur : consignes de mission, outils et données accessibles restreints, validation structurée des champs, contrôles logiciels déterministes, plafonds de durée et de consommation, aucun pouvoir de publication ni de paiement sans validation explicite.
+- Prototype à évaluer : NL/EN, usage sur smartphone, temps de création, qualité des questions, exactitude des champs, résistance aux dérives, coût par session et démonstration commerçant.
+- Ne pas promettre une impossibilité absolue de dérive du modèle ; tester les cas hors sujet et malveillants. Conserver le parcours manuel et le même aperçu final puis choix gratuit/sponsorisé.
+- Statut : exigences approuvées, prototype autorisé en environnement isolé sans frais nouveaux ; aucun déploiement en production autorisé.
