@@ -2,7 +2,7 @@
 .phone .head{gap:8px;padding:16px 12px 12px;justify-content:space-between}
 .phone .head #menu,.phone .head .buuurt-global-bell{width:37px;height:37px;min-width:37px;min-height:37px;border:1px solid #dedde1;border-radius:18px;background:#fff;color:#27242a;padding:0;display:inline-grid;place-items:center;flex-shrink:0}
 .phone .head #menu{font-size:0}
-.phone .head #menu::before{content:"";display:block;width:16px;height:12px;background:linear-gradient(to bottom,#27242a 0 1.5px,transparent 1.5px 5.25px,#27242a 5.25px 6.75px,transparent 6.75px 10.5px,#27242a 10.5px 12px);background-repeat:no-repeat;margin:auto}
+.phone .head #menu::before{content:none!important}.phone .head #menu{display:inline-flex;align-items:center;justify-content:center;line-height:1}.phone .head #menu svg{display:block;flex:none;width:18px;height:18px}
 .phone .head .logo{flex:1;min-width:0;text-align:center}
 .phone .head .logo img{width:100%;max-width:130px;max-height:58px}
 .phone .head .buuurt-global-lang{border:1px solid #dedde1;border-radius:13px;min-height:37px;padding:0 7px;display:inline-flex;align-items:center;gap:4px;color:#27242a;background:#fff;flex-shrink:0}
@@ -10,4 +10,4 @@
 .phone .head .buuurt-global-lang svg{width:16px;height:16px;stroke-width:1.6}
 .phone .head .buuurt-global-bell svg{width:19px;height:19px;stroke-width:1.6}
 .phone .head .buuurt-global-count{top:-6px;right:-6px}
-</style><script src="buuurt-shared-header.js"></script><script>document.querySelector('#font-select').onchange=e=>{document.documentElement.dataset.buuurtFont=e.target.value;localStorage.setItem('buuurt-mockup-font',e.target.value)};document.querySelector('#language').onchange=e=>{document.documentElement.lang=e.target.value;const labels={nl:'Voorlopige maquette · Te controleren',en:'Draft mockup · Review required',fr:'Maquette provisoire · À vérifier'};document.querySelector('.body>.muted').textContent=labels[e.target.value];};</script></body></html>
+</style><script src="buuurt-shared-header.js"></script><script>document.addEventListener('DOMContentLoaded',()=>{const menu=document.querySelector('.phone .head #menu');if(menu){menu.textContent='';menu.insertAdjacentHTML('afterbegin',"<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#27242a\" stroke-width=\"1.7\" stroke-linecap=\"round\" aria-hidden=\"true\"><path d=\"M5 7h14M5 12h14M5 17h14\"/></svg>");}});</script><script>document.querySelector('#font-select').onchange=e=>{document.documentElement.dataset.buuurtFont=e.target.value;localStorage.setItem('buuurt-mockup-font',e.target.value)};document.querySelector('#language').onchange=e=>{document.documentElement.lang=e.target.value;const labels={nl:'Voorlopige maquette · Te controleren',en:'Draft mockup · Review required',fr:'Maquette provisoire · À vérifier'};document.querySelector('.body>.muted').textContent=labels[e.target.value];};</script></body></html>
