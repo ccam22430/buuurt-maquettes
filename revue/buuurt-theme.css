@@ -35,3 +35,10 @@ html[data-buuurt-font="fraunces"]{--buuurt-font:"Fraunces",system-ui,sans-serif}
 html[data-buuurt-font="nunito"]{--buuurt-font:"Nunito",system-ui,sans-serif}
 html[data-buuurt-font="inter"]{--buuurt-font:"Inter",system-ui,sans-serif}
 .phone,.phone input,.phone button,.phone textarea,.phone select,.phone label,.phone p,.phone h1,.phone h2,.phone h3{font-family:var(--buuurt-font),system-ui,sans-serif!important}
+
+/* BUUURT GLOBAL RULE: announcement category labels stay inside their own media. */
+.picture{min-width:0;max-width:100%}
+.picture>.tag,.picture>[class*="tag-"],.detail-cover>.tag{box-sizing:border-box;max-width:calc(100% - 14px);width:max-content;min-width:0;white-space:normal;overflow-wrap:break-word;word-break:normal;line-height:1.18;display:inline-flex;align-items:center;gap:4px;flex-wrap:wrap;inset-inline-start:7px;inset-inline-end:auto;top:7px}
+.picture>.tag>span,.detail-cover>.tag>span{min-width:0;max-width:100%;overflow-wrap:anywhere}
+/* Sponsorship status belongs to content, never layered over category badge. */
+.copy>.sponsored{position:static;max-width:100%;overflow-wrap:anywhere}
