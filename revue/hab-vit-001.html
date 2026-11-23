@@ -128,7 +128,7 @@ function markup(post,feature,showShopLink=true){
  const sponsor=!feature&&post.id===3;
  const sponsorTag=sponsor?'<small class="sponsored">'+t[20]+'</small>':'';
  const discount=sponsor?'<span class="offer-discount">'+(locale==="fr"?"−20 %":"−20%")+'</span>':'';
- const street=post.street?'<span class="post-street" title="'+post.street+'">'+icon("store")+'<span>'+post.street+'</span></span>':'';
+ const street=post.street?'<span class="post-street" title="'+post.street+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10h18l-2-6H5l-2 6Zm2 0v10h14V10M9 20v-7h6v7M3 10c0 3 4 3 5 0 1 3 7 3 8 0 1 3 5 3 5 0"/></svg><span>'+post.street+'</span></span>':'';
  const distance=post.distance==null?"":'<span class="distance" title="'+(aroundMe?aroundLabels[2]:t[21])+'">'+icon("walk")+'<span>'+post.distance+' m</span></span>';
  const locationLine='<span class="post-location">'+street+distance+'</span>';
  const text='<div class="copy">'+sponsorTag+'<strong>'+post.shop+'</strong>'+(feature?'<small>'+t[30]+'</small>':'')+'<div class="post-message"><h3>'+post.title+'</h3><p>'+discount+post.body+'</p></div>'+(feature?'<span class="cta">'+offerActions[locale][post.type]+' →</span>':'')+locationLine+'</div>';
