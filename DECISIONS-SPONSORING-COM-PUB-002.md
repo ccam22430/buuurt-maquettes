@@ -30,3 +30,10 @@ Statut : VALIDÉ PAR LE FONDATEUR — base de travail V1, sans engagement commer
 
 ## Statut d'exécution
 - Décisions documentées. Implémentation et tests de l'interrupteur d'administration, de la carte et du calcul des impressions : NON ENCORE RÉALISÉS.
+
+## Validation de principe — COM-PUB-SPON-001 (23 novembre 2026)
+- Le fondateur valide le principe fonctionnel et la présentation générale de la maquette COM-PUB-SPON-001 « Configuration de la campagne sponsorisée ».
+- Validation fonctionnelle ne signifie PAS validation graphique définitive ni mise en production.
+- À finaliser : logo officiel, couleurs et police de référence, menus/onglets, cloche et notifications, sélecteur de langue et traductions intégrales NL/EN (NL par défaut dans l'application), interactions/curseurs testés.
+- La carte actuellement illustrative doit être remplacée dans l'application réelle par une carte géographique centrée sur l'adresse exacte enregistrée du commerce ; rayon autorisé selon paramètre d'administration.
+- Maintenir le statut « maquette officielle en cours de finalisation » jusqu'à consultation et validation visuelle de la version complète par le fondateur.
