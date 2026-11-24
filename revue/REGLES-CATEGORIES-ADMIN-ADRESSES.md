@@ -15,3 +15,8 @@
 - Étudier un fournisseur d’adresses adapté aux Pays-Bas, sans engagement financier.
 
 Aucune modification de maquette ni intégration réelle dans cette décision.
+
+## Précisions validées par le fondateur
+- Recherche dynamique des catégories existantes pendant la saisie libre, sélection directe et fermeture du champ Autre.
+- Une nouvelle catégorie ne bloque jamais la poursuite de la création de la fiche ; contrôle administratif a posteriori.
+- Proposition et notification administrative à conserver ; maquette locale uniquement, pas de notification réelle à ce stade.
