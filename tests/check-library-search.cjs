@@ -1,0 +1,22 @@
+// BUUURT mockup library: dependency-free checks. Run: node tests/check-library-search.cjs
+const fs = require('node:fs');
+const assert = require('node:assert/strict');
+const path = require('node:path');
+const html = fs.readFileSync(path.join(__dirname, '..', 'BUUURT_Bibliotheque_Recherche_Codes.html'), 'utf8');
+const match = html.match(/const pages=(\[.*?\]);const search=/s);
+assert.ok(match, 'Catalog data not found');
+const pages = JSON.parse(match[1]);
+const filter = (query) => pages.filter(p => (p.fr + ' ' + p.en).toUpperCase().includes(query.trim().toUpperCase()));
+assert.equal(pages.length, 20);
+assert.equal(new Set(pages.map(p => p.fr)).size, 20);
+assert.equal(new Set(pages.map(p => p.en)).size, 20);
+assert.equal(filter('').length, 20);
+assert.equal(filter('HAB').length, 12);
+assert.deepEqual(filter('HAB-CAI').map(p => p.fr), ['HAB-CAI-001']);
+assert.deepEqual(filter('HAB-MAN').map(p => p.fr), ['HAB-MAN-001', 'HAB-MAN-002', 'HAB-MAN-003']);
+assert.deepEqual(filter('003').map(p => p.fr), ['HAB-MAN-003', 'COM-003']);
+assert.deepEqual(filter('usr-pos').map(p => p.fr), ['HAB-CAI-001']);
+assert.equal(filter('NONEXISTENT').length, 0);
+assert.ok(html.includes('search.addEventListener(\'input\',render)'), 'Instant filtering missing');
+assert.ok(html.includes('encodeURIComponent(p.en)'), 'Link navigation missing');
+console.log('PASS: 11 library search checks');
