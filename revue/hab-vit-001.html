@@ -43,6 +43,7 @@ header select{appearance:none;border:1px solid #e3dce0;border-radius:25px;paddin
 .feature .post-location,.feature .post-location .post-street,.feature .post-location .distance,.feature .post-location .distance svg{color:#fff!important;stroke:#fff;text-shadow:0 1px 2px #000a}.nearby .post-location{color:#342e33;padding:0}
 @media(max-width:350px){.post-location{gap:5px;font-size:10px}.post-street,.post-location .distance{font-size:10px}.post-location svg{width:13px;height:13px;flex-basis:13px}}
 .detail-text h2{font-size:15px;margin:12px 0 4px}.detail-text p{margin:0;line-height:1.5}.detail-location{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px 12px;margin:14px 0;padding:10px 12px;border:1px solid #e7e0e3;border-radius:10px}.detail-location a{color:#a30136;font-weight:700;text-underline-offset:3px}
+.shop-actions a{display:inline-flex;align-items:center;padding:8px 10px;border:1px solid #e7e0e3;border-radius:9px;color:#a30136;font-weight:700;text-decoration:none}.shop-actions{flex-wrap:wrap}.demo-call-status:empty{display:none}
 </style><link rel="stylesheet" href="buuurt-theme.css"></head><body><main><header><a id="menu" aria-label="BUUURT">☰</a><span class="static-logo" role="img" aria-label="BUUURT"></span><div><select id="lang" aria-label="Language"><option value="nl">NL</option><option value="en">EN</option><option value="fr">FR</option></select><span id="bell"></span></div></header><div id="storefront"><div class="area"><span id="area-icon"></span><div><small id="area-label"></small><strong id="area-name">Amsterdam · De Pijp</strong></div><a id="change-area"></a></div><div id="categories" class="categories"></div><section id="scanned-shop" aria-labelledby="here"><h2 id="here"></h2><div id="track" class="track"></div><div id="dots" class="dots"></div><button id="all-store" class="store-all" type="button"></button></section><h2 id="banner"></h2><div class="feed-controls"><label class="filter"><svg class="filter-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3 7h7m4 0h7M3 17h3m4 0h11"/><circle cx="12" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg><span id="sort-label"></span><span id="sort-value" aria-hidden="true"></span><svg class="filter-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 6 4 4 4-4"/></svg><select id="sort" aria-labelledby="sort-label"><option value="distance"></option><option value="recent"></option></select></label><label class="nearby-radius" id="radius-control" hidden><span id="radius-label"></span><select id="nearby-radius"><option value="500">500 m</option><option value="1000" selected>1 km</option><option value="2000">2 km</option></select></label></div><div id="feed"></div></div><article id="post-detail" hidden></article><section id="favorites-page" hidden aria-labelledby="favorites-title"></section><a id="favorites-link" href="#favoris" hidden tabindex="-1" aria-hidden="true"></a></main><dialog aria-labelledby="dialog-title"><button id="close" type="button"></button><h2 id="dialog-title"></h2><div id="dialog-content"></div></dialog><script>
 const translations={"nl":["Huidige wijk","Wijzig wijk","Je bent hier","Ontdek de berichten van winkels om je heen.","Alles","Aanbiedingen","Evenementen","Ontdek","Aanbieding","Evenement","Ontdek","Filters · Afstand","Alle afstanden","Bekijk bericht","Bewaren","Verwijderen uit favorieten","Inloggen om dit bericht te bewaren","Inloggen","Sluiten","Geen berichten voor deze filters.","Gesponsord","vanaf de gescande winkel","Foto","Bekijk alle berichten","€25 korting","vanaf €100 besteding","Gereedschapsdemo","Kom zaterdag langs","Nieuwe verfcollectie","Ontdek de nieuwe kleuren","Doe-het-zelf & gereedschap"],"en":["Current neighborhood","Change neighborhood","You are here","Discover posts from local businesses around you.","All","Offers","Events","Discover","Offer","Event","Discover","Filters · Distance","Any distance","View post","Save","Remove from favorites","Sign in to save this post","Sign in","Close","No posts match these filters.","Sponsored","from the scanned shop","Photo","View all posts","€25 off","on purchases of €100 or more","Tool demonstration","Visit us on Saturday","New paint collection","Discover the new colors","DIY & tools"],"fr":["Quartier actuel","Changer de quartier","Vous êtes ici","Découvrez les annonces des commerces autour de vous.","Tout","Offres","Événements","Découvertes","Offre","Événement","Découverte","Filtres · Proximité","Toutes les distances","Voir l’annonce","Ajouter aux favoris","Retirer des favoris","Connectez-vous pour ajouter cette annonce aux favoris","Se connecter","Fermer","Aucune annonce pour ces filtres.","Sponsorisé","de la vitrine scannée","Photo","Voir toutes les annonces","25 € de remise","dès 100 € d’achat","Démonstration d’outillage","Passez samedi","Nouvelle collection de peintures","Découvrez les nouvelles couleurs","Bricolage & Outillage"]};
 const photos=["shop","tools","paint","paint-alt","tools-alt","hardware"];
@@ -187,6 +188,20 @@ const detailLabels={fr:["Retour aux annonces","Partager","Lien copié","Copier l
 const labels=detailLabels[locale];
 const detailContent={"fr":{"labels":["Description","Conditions","Adresse indicative","Itinéraire"],"descriptions":["Préparez vos prochains travaux avec une sélection d’outils et de fournitures de bricolage en boutique.","Passez en boutique samedi pour découvrir les outils en démonstration et poser vos questions.","Découvrez la nouvelle palette de peintures en boutique et comparez les couleurs avant de faire votre choix.","Faites une pause gourmande et découvrez les desserts proposés par la boulangerie.","Découvrez les gestes de base pour entretenir votre vélo lors d’une démonstration gratuite samedi.","Explorez la sélection d’automne de Vintage by Sanne, avec de nouvelles pièces à découvrir en boutique."],"conditions":["25 € de remise dès 100 € d’achat.","Réduction de 20 % sur tous les desserts."]},"nl":{"labels":["Beschrijving","Voorwaarden","Indicatief adres","Route"],"descriptions":["Bereid uw volgende klus voor met een selectie gereedschap en klusbenodigdheden in de winkel.","Kom zaterdag langs voor een demonstratie en stel uw vragen over het gereedschap.","Ontdek het nieuwe verfpalet in de winkel en vergelijk de kleuren voordat u kiest.","Neem een pauze en ontdek de desserts van de bakkerij.","Leer zaterdag de basis van fietsonderhoud tijdens een gratis demonstratie.","Ontdek de herfstcollectie van Vintage by Sanne, met nieuwe vintagestukken in de winkel."],"conditions":["€ 25 korting vanaf € 100 besteding.","20% korting op alle desserts."]},"en":{"labels":["Description","Terms","Approximate address","Directions"],"descriptions":["Get ready for your next project with a selection of tools and DIY supplies in store.","Visit the store on Saturday to see the tools demonstrated and ask questions.","Discover the new paint palette in store and compare the colours before choosing.","Take a break and discover the desserts on offer at the bakery.","Learn the basics of bicycle maintenance at a free demonstration on Saturday.","Explore the Vintage by Sanne autumn collection, with new vintage pieces to discover in store."],"conditions":["€25 off when you spend €100 or more.","20% off all desserts."]}};
 const {labels:contentLabels,descriptions,conditions}=detailContent[locale];
+const shopActions={
+ fr:["Appeler","Voir la fiche du commerce","Toutes ses annonces","Appel simulé. Aucun numéro réel n’est associé à ce commerce dans la maquette."],
+ nl:["Bellen","Winkelprofiel bekijken","Alle berichten","Gesimuleerd gesprek. In dit prototype is geen echt nummer aan deze winkel gekoppeld."],
+ en:["Call","View shop profile","All posts","Simulated call. This shop has no real phone number in the prototype."]
+}[locale];
+
+function renderShopActions(post,profile=false){
+ return '<div class="detail-actions shop-actions"><button type="button" data-demo-call>'+shopActions[0]+'</button>'+
+  (profile?'':'<a href="#fiche-'+post.id+'">'+shopActions[1]+' →</a>')+
+  '<a href="#commerce-'+post.id+'">'+shopActions[2]+' →</a></div><p class="demo-call-status" role="status"></p>';
+}
+q("#post-detail").addEventListener("click",event=>{
+ if(event.target.closest("[data-demo-call]"))q("#post-detail .demo-call-status").textContent=shopActions[3];
+});
 
 function renderAddress(post){
  if(!post.street)return "";
@@ -243,24 +258,30 @@ function renderRoute(){
  const match=location.hash.match(/^#annonce-([0-5])$/);
  const post=match?data[Number(match[1])]:null;
  const panel=q("#post-detail"),feed=q("#storefront");
- const shopMatch=location.hash.match(/^#commerce-([3-5])$/);
- const shop=shopMatch?data[Number(shopMatch[1])].shop:null;
+ const shopMatch=location.hash.match(/^#(commerce|fiche)-([0-5])$/);
+ const shopPost=shopMatch?data[Number(shopMatch[2])]:null;
  const wasDetail=!panel.hidden;
  const favoritePage=q("#favorites-page");
  const showFavorites=location.hash==="#favoris";
- panel.hidden=!post&&!shop;
+ panel.hidden=!post&&!shopPost;
  favoritePage.hidden=!showFavorites;
  favoriteLink.toggleAttribute("aria-current",showFavorites);
  if(showFavorites)favoriteLink.setAttribute("aria-current","page");
- feed.hidden=!!post||!!shop||showFavorites;
+ feed.hidden=!!post||!!shopPost||showFavorites;
  if(showFavorites){
   renderFavorites();
   if(!wasDetail)window.scrollTo(0,0);
   else{window.scrollTo(0,returnPosition);const buttonId=returnFocus?.dataset.open;favoritePage.querySelector('[data-open="'+buttonId+'"]')?.focus({preventScroll:true})}
   return;
  }
- if(shop){
-  panel.innerHTML='<a href="#" class="detail-back">← '+fav[1]+'</a><h1 tabindex="-1">'+shop+'</h1><h2>'+t[23]+'</h2>'+data.filter(entry=>entry.shop===shop).map(entry=>markup(entry,false,false)).join("");
+ if(shopPost){
+  const profile=shopMatch[1]==="fiche";
+  const shop=shopPost.shop;
+  const shopPosts=data.filter(entry=>entry.shop===shop);
+  panel.innerHTML='<a href="#annonce-'+shopPost.id+'" class="detail-back">← '+labels[0]+'</a>'+
+   (profile?'<div class="detail-cover"><img src="'+shopPosts[0].src+'" alt=""></div>':'')+
+   '<h1 tabindex="-1">'+shop+'</h1>'+
+   (profile?renderAddress(shopPost)+renderShopActions(shopPost,true):'<h2>'+shopActions[2]+'</h2>'+shopPosts.map(entry=>markup(entry,false,false)).join(""));
   window.scrollTo(0,0);
   panel.querySelector("h1").focus({preventScroll:true});
   return;
@@ -270,7 +291,7 @@ function renderRoute(){
   return;
  }
  const saved=isSaved(post.id);
- panel.innerHTML='<a href="#" class="detail-back">← '+labels[0]+'</a><div class="detail-cover"><img src="'+post.src+'" alt="">'+postTag(post.type)+'</div><div class="detail-copy"><strong>'+post.shop+'</strong>'+(post.id===3?'<span class="sponsored"> · '+t[20]+'</span>':'')+'<h1 tabindex="-1">'+post.title+'</h1><p>'+(post.id===3?'<span class="offer-discount">'+(locale==="fr"?"−20 %":"−20%")+'</span>':'')+post.body+'</p>'+renderPostDescription(post)+(post.distance?'<p class="distance">'+icon("walk")+post.distance+' m · '+(aroundMe?aroundLabels[2]:t[21])+'</p>':'')+'<div class="detail-actions"><button type="button" class="dialog-heart" data-heart="'+post.id+'" aria-pressed="'+saved+'">'+icon("heart")+' '+t[saved?15:14]+'</button><button type="button" id="share-post">'+labels[1]+'</button></div><p id="share-status" role="status"></p></div>';
+ panel.innerHTML='<a href="#" class="detail-back">← '+labels[0]+'</a><div class="detail-cover"><img src="'+post.src+'" alt="">'+postTag(post.type)+'</div><div class="detail-copy"><strong>'+post.shop+'</strong>'+(post.id===3?'<span class="sponsored"> · '+t[20]+'</span>':'')+'<h1 tabindex="-1">'+post.title+'</h1><p>'+(post.id===3?'<span class="offer-discount">'+(locale==="fr"?"−20 %":"−20%")+'</span>':'')+post.body+'</p>'+renderPostDescription(post)+renderShopActions(post)+(post.distance?'<p class="distance">'+icon("walk")+post.distance+' m · '+(aroundMe?aroundLabels[2]:t[21])+'</p>':'')+'<div class="detail-actions"><button type="button" class="dialog-heart" data-heart="'+post.id+'" aria-pressed="'+saved+'">'+icon("heart")+' '+t[saved?15:14]+'</button><button type="button" id="share-post">'+labels[1]+'</button></div><p id="share-status" role="status"></p></div>';
  panel.querySelector(".detail-back").onclick=event=>{
   event.preventDefault();
   if(returnFocus)history.back();
