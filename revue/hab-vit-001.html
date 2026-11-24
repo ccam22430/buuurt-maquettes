@@ -44,6 +44,30 @@ header select{appearance:none;border:1px solid #e3dce0;border-radius:25px;paddin
 @media(max-width:350px){.post-location{gap:5px;font-size:10px}.post-street,.post-location .distance{font-size:10px}.post-location svg{width:13px;height:13px;flex-basis:13px}}
 .detail-text h2{font-size:15px;margin:12px 0 4px}.detail-text p{margin:0;line-height:1.5}.detail-location{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px 12px;margin:14px 0;padding:10px 12px;border:1px solid #e7e0e3;border-radius:10px}.detail-location a{color:#a30136;font-weight:700;text-underline-offset:3px}
 .shop-actions a{display:inline-flex;align-items:center;padding:8px 10px;border:1px solid #e7e0e3;border-radius:9px;color:#a30136;font-weight:700;text-decoration:none}.shop-actions{flex-wrap:wrap}.demo-call-status:empty{display:none}
+
+.post-detail-content{display:grid;gap:13px;padding:12px 0 calc(20px + env(safe-area-inset-bottom))}
+.post-detail-heading,.post-detail-content .detail-text,.post-merchant-card{border-radius:15px;padding:14px}
+.post-detail-heading{background:var(--pink-tint);border:1px solid var(--pink-border)}
+.post-detail-heading>strong{font-size:13px;font-weight:750}
+.post-detail-content .post-detail-heading h1{font-size:clamp(23px,7vw,30px);font-weight:800;margin:5px 0;color:var(--brand-dark);overflow-wrap:anywhere}
+.post-detail-heading p{margin:0;font-size:15px}
+.post-detail-content .detail-text{border:1px solid #eae3e7}
+.post-detail-content .detail-text h2{margin:0 0 5px;font-size:15px;font-weight:750}
+.post-detail-content .detail-text p{margin:0;font-size:14px}
+.post-detail-content .detail-terms{background:#faf8f9}
+.post-merchant-card{border:1px solid #eae3e7}
+.post-merchant-card .detail-location{margin:0;padding:0 0 12px;border:0;border-bottom:1px solid #eae3e7;border-radius:0;font-size:14px}
+.detail-address{display:flex;align-items:flex-start;gap:8px}
+.detail-address svg{width:19px;height:19px;color:var(--brand-dark)}
+.post-merchant-card .detail-location a{display:inline-flex;align-items:center;min-height:44px;padding:0 10px;background:var(--pink-tint);color:var(--brand-dark);border-radius:9px;text-decoration:none}
+.post-merchant-card .shop-actions{display:grid;gap:6px;margin-top:10px}
+.post-merchant-card .shop-actions>*{min-height:44px;justify-content:flex-start;text-align:left}
+.post-merchant-card .shop-actions button{display:flex;align-items:center;gap:8px;background:var(--brand-dark);color:white;padding-inline:11px}
+.post-merchant-card .shop-actions a{color:var(--brand-dark);background:white}
+.post-detail-content .post-save-share{border-top:1px solid #eae3e7;padding-top:12px}
+.post-detail-content .post-save-share button{flex:1 1 auto;min-height:44px;background:white}
+.post-detail-content #share-status:empty{display:none}
+.post-detail-content .distance{margin:0}
 </style><link rel="stylesheet" href="buuurt-theme.css"></head><body><main><header><a id="menu" aria-label="BUUURT">☰</a><span class="static-logo" role="img" aria-label="BUUURT"></span><div><select id="lang" aria-label="Language"><option value="nl">NL</option><option value="en">EN</option><option value="fr">FR</option></select><span id="bell"></span></div></header><div id="storefront"><div class="area"><span id="area-icon"></span><div><small id="area-label"></small><strong id="area-name">Amsterdam · De Pijp</strong></div><a id="change-area"></a></div><div id="categories" class="categories"></div><section id="scanned-shop" aria-labelledby="here"><h2 id="here"></h2><div id="track" class="track"></div><div id="dots" class="dots"></div><button id="all-store" class="store-all" type="button"></button></section><h2 id="banner"></h2><div class="feed-controls"><label class="filter"><svg class="filter-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3 7h7m4 0h7M3 17h3m4 0h11"/><circle cx="12" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg><span id="sort-label"></span><span id="sort-value" aria-hidden="true"></span><svg class="filter-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 6 4 4 4-4"/></svg><select id="sort" aria-labelledby="sort-label"><option value="distance"></option><option value="recent"></option></select></label><label class="nearby-radius" id="radius-control" hidden><span id="radius-label"></span><select id="nearby-radius"><option value="500">500 m</option><option value="1000" selected>1 km</option><option value="2000">2 km</option></select></label></div><div id="feed"></div></div><article id="post-detail" hidden></article><section id="favorites-page" hidden aria-labelledby="favorites-title"></section><a id="favorites-link" href="#favoris" hidden tabindex="-1" aria-hidden="true"></a></main><dialog aria-labelledby="dialog-title"><button id="close" type="button"></button><h2 id="dialog-title"></h2><div id="dialog-content"></div></dialog><script>
 const translations={"nl":["Huidige wijk","Wijzig wijk","Je bent hier","Ontdek de berichten van winkels om je heen.","Alles","Aanbiedingen","Evenementen","Ontdek","Aanbieding","Evenement","Ontdek","Filters · Afstand","Alle afstanden","Bekijk bericht","Bewaren","Verwijderen uit favorieten","Inloggen om dit bericht te bewaren","Inloggen","Sluiten","Geen berichten voor deze filters.","Gesponsord","vanaf de gescande winkel","Foto","Bekijk alle berichten","€25 korting","vanaf €100 besteding","Gereedschapsdemo","Kom zaterdag langs","Nieuwe verfcollectie","Ontdek de nieuwe kleuren","Doe-het-zelf & gereedschap"],"en":["Current neighborhood","Change neighborhood","You are here","Discover posts from local businesses around you.","All","Offers","Events","Discover","Offer","Event","Discover","Filters · Distance","Any distance","View post","Save","Remove from favorites","Sign in to save this post","Sign in","Close","No posts match these filters.","Sponsored","from the scanned shop","Photo","View all posts","€25 off","on purchases of €100 or more","Tool demonstration","Visit us on Saturday","New paint collection","Discover the new colors","DIY & tools"],"fr":["Quartier actuel","Changer de quartier","Vous êtes ici","Découvrez les annonces des commerces autour de vous.","Tout","Offres","Événements","Découvertes","Offre","Événement","Découverte","Filtres · Proximité","Toutes les distances","Voir l’annonce","Ajouter aux favoris","Retirer des favoris","Connectez-vous pour ajouter cette annonce aux favoris","Se connecter","Fermer","Aucune annonce pour ces filtres.","Sponsorisé","de la vitrine scannée","Photo","Voir toutes les annonces","25 € de remise","dès 100 € d’achat","Démonstration d’outillage","Passez samedi","Nouvelle collection de peintures","Découvrez les nouvelles couleurs","Bricolage & Outillage"]};
 const photos=["shop","tools","paint","paint-alt","tools-alt","hardware"];
@@ -195,7 +219,7 @@ const shopActions={
 }[locale];
 
 function renderShopActions(post,profile=false){
- return '<div class="detail-actions shop-actions"><button type="button" data-demo-call>'+shopActions[0]+'</button>'+
+ return '<div class="detail-actions shop-actions"><button type="button" data-demo-call><span aria-hidden="true">☎</span> '+shopActions[0]+'</button>'+
   (profile?'':'<a href="#fiche-'+post.id+'">'+shopActions[1]+' →</a>')+
   '<a href="#commerce-'+post.id+'">'+shopActions[2]+' →</a></div><p class="demo-call-status" role="status"></p>';
 }
@@ -207,14 +231,13 @@ function renderAddress(post){
  if(!post.street)return "";
  const address=post.street+", Amsterdam";
  const url="https://www.google.com/maps/dir/?api=1&destination="+encodeURIComponent(address);
- return '<div class="detail-location"><div><strong>'+contentLabels[2]+'</strong><br>'+address+'</div><a href="'+url+'" target="_blank" rel="noopener">'+contentLabels[3]+' ↗</a></div>';
+ return '<div class="detail-location"><div class="detail-address"><span aria-hidden="true">'+icon("pin")+'</span><div><strong>'+contentLabels[2]+'</strong><br>'+address+'</div></div><a href="'+url+'" target="_blank" rel="noopener">'+contentLabels[3]+' ↗</a></div>';
 }
 
 function renderPostDescription(post){
  const terms=post.id===0?conditions[0]:post.id===3?conditions[1]:null;
  return '<section class="detail-text"><h2>'+contentLabels[0]+'</h2><p>'+descriptions[post.id]+'</p></section>'+
-  (terms?'<section class="detail-text"><h2>'+contentLabels[1]+'</h2><p>'+terms+'</p></section>':'')+
-  renderAddress(post);
+  (terms?'<section class="detail-text detail-terms"><h2>'+contentLabels[1]+'</h2><p>'+terms+'</p></section>':'');
 }
 const favoriteLabels={
  fr:["Mes annonces favorites","Retour au fil","Aucun favori pour l’instant.","Aucun favori dans cette catégorie.","Explorer les annonces","Voir des favoris d’exemple","1 annonce enregistrée"," annonces enregistrées","Exemples de favoris"],
@@ -291,7 +314,7 @@ function renderRoute(){
   return;
  }
  const saved=isSaved(post.id);
- panel.innerHTML='<a href="#" class="detail-back">← '+labels[0]+'</a><div class="detail-cover"><img src="'+post.src+'" alt="">'+postTag(post.type)+'</div><div class="detail-copy"><strong>'+post.shop+'</strong>'+(post.id===3?'<span class="sponsored"> · '+t[20]+'</span>':'')+'<h1 tabindex="-1">'+post.title+'</h1><p>'+(post.id===3?'<span class="offer-discount">'+(locale==="fr"?"−20 %":"−20%")+'</span>':'')+post.body+'</p>'+renderPostDescription(post)+renderShopActions(post)+(post.distance?'<p class="distance">'+icon("walk")+post.distance+' m · '+(aroundMe?aroundLabels[2]:t[21])+'</p>':'')+'<div class="detail-actions"><button type="button" class="dialog-heart" data-heart="'+post.id+'" aria-pressed="'+saved+'">'+icon("heart")+' '+t[saved?15:14]+'</button><button type="button" id="share-post">'+labels[1]+'</button></div><p id="share-status" role="status"></p></div>';
+ panel.innerHTML='<a href="#" class="detail-back">← '+labels[0]+'</a><div class="detail-cover"><img src="'+post.src+'" alt="">'+postTag(post.type)+'</div><div class="detail-copy post-detail-content"><div class="post-detail-heading"><strong>'+post.shop+'</strong>'+(post.id===3?'<span class="sponsored"> · '+t[20]+'</span>':'')+'<h1 tabindex="-1">'+post.title+'</h1><p>'+(post.id===3?'<span class="offer-discount">'+(locale==="fr"?"−20 %":"−20%")+'</span>':'')+post.body+'</p></div>'+renderPostDescription(post)+'<section class="post-merchant-card">'+renderAddress(post)+renderShopActions(post)+'</section>'+(post.distance?'<p class="distance">'+icon("walk")+post.distance+' m · '+(aroundMe?aroundLabels[2]:t[21])+'</p>':'')+'<div class="detail-actions post-save-share"><button type="button" class="dialog-heart" data-heart="'+post.id+'" aria-pressed="'+saved+'">'+icon("heart")+' '+t[saved?15:14]+'</button><button type="button" id="share-post">'+labels[1]+'</button></div><p id="share-status" role="status"></p></div>';
  panel.querySelector(".detail-back").onclick=event=>{
   event.preventDefault();
   if(returnFocus)history.back();
