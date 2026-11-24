@@ -263,15 +263,15 @@ function applyRetouchLook(frame,look){
   const light=(0.2126*r+0.7152*g+0.0722*b)/255;
   const headroom=Math.min(1,(255-Math.max(r,g,b))/38);
   if(look==="bright"){
-   const lift=24*4*light*(1-light)*headroom;
+   const lift=62*4*light*(1-light)*headroom;
    pixels[i]+=lift;
    pixels[i+1]+=lift;
    pixels[i+2]+=lift;
   }else{
-   const warmth=12*4*light*(1-light)*headroom;
-   pixels[i]+=warmth;
-   pixels[i+1]+=warmth*0.22;
-   pixels[i+2]-=warmth*0.56;
+   const warmth=4*light*(1-light);
+   pixels[i]+=46*warmth*headroom;
+   pixels[i+1]+=10*warmth*headroom;
+   pixels[i+2]-=38*warmth;
   }
  }
 }
@@ -356,7 +356,7 @@ document.querySelectorAll(".photo-step").forEach(root=>{
    const frame=context.getImageData(0,0,canvas.width,canvas.height);
    variants=["natural","bright","sharp","warm"].map(look=>{
     const version=new ImageData(new Uint8ClampedArray(frame.data),frame.width,frame.height);
-    retouchPixels(version,look==="sharp"?2.25:1);
+    retouchPixels(version,look==="sharp"?5:1);
     if(look==="bright"||look==="warm")applyRetouchLook(version,look);
     context.putImageData(version,0,0);
     return canvas.toDataURL("image/jpeg",0.9);
