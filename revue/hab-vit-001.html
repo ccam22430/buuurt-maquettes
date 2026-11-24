@@ -377,7 +377,16 @@ function renderRoute(){
  const followAction=renderFollowAction(post);
  const favoriteAction='<button type="button" class="dialog-heart" data-heart="'+post.id+'" aria-pressed="'+saved+'">'+icon("heart")+' '+t[saved?15:14]+'</button>';
  panel.innerHTML='<a href="'+backHref+'" class="detail-back">← '+backLabel+'</a>'+renderPostGallery(post)+'<div class="detail-copy post-detail-content"><div class="post-detail-heading"><strong>'+post.shop+'</strong>'+(post.id===3?'<span class="sponsored"> · '+t[20]+'</span>':'')+'<h1 tabindex="-1">'+post.title+'</h1><p>'+(post.id===3?'<span class="offer-discount">'+(locale==="fr"?"−20 %":"−20%")+'</span>':'')+post.body+'</p><div class="detail-actions post-engagement">'+favoriteAction+followAction+'</div></div>'+renderPostDescription(post)+'<section class="post-merchant-card">'+renderAddress(post)+renderShopActions(post)+renderLoyaltyLink(post)+'</section>'+(post.distance?'<p class="distance">'+icon("walk")+post.distance+' m · '+(aroundMe?aroundLabels[2]:t[21])+'</p>':'')+'<div class="detail-actions post-save-share"><button type="button" id="share-post">'+labels[1]+'</button></div><p id="share-status" role="status"></p></div>';
- if(!fromProfile)panel.querySelector(".detail-back").onclick=event=>{
+ panel.querySelector(".detail-back").onclick=event=>{
+  if(fromProfile){
+   const profileUrl=new URL(backHref,location.href);
+   const referrer=document.referrer?new URL(document.referrer):null;
+   if(referrer?.origin===profileUrl.origin&&referrer.pathname===profileUrl.pathname&&locale===(referrer.searchParams.get("lang")||"fr")){
+    event.preventDefault();
+    history.back();
+   }
+   return;
+  }
   event.preventDefault();
   if(returnFocus)history.back();
   else location.hash="";
