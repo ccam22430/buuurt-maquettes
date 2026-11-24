@@ -68,6 +68,7 @@ header select{appearance:none;border:1px solid #e3dce0;border-radius:25px;paddin
 .post-detail-content .post-save-share button{flex:1 1 auto;min-height:44px;background:white}
 .post-detail-content #share-status:empty{display:none}
 .post-detail-content .distance{margin:0}
+.loyalty-link,.loyalty-section{border:1px solid var(--buuurt-pink-border);border-radius:12px;background:var(--buuurt-pink-tint);padding:12px}.loyalty-link{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:3px 8px;margin-top:10px;color:var(--brand-dark);text-decoration:none}.loyalty-link strong{font-size:14px}.loyalty-link span:not(.loyalty-arrow){grid-column:1;font-size:13px}.loyalty-arrow{grid-column:2;grid-row:1 / span 2}.loyalty-section{margin:14px 0}.loyalty-section h2{margin:0;font-size:18px}.loyalty-section button{min-height:44px;border:1px solid var(--brand-dark);border-radius:9px;background:var(--brand-dark);color:#fff;padding:8px 12px;font-weight:700;cursor:pointer}.loyalty-section [role="status"]:empty{display:none}
 </style><link rel="stylesheet" href="buuurt-theme.css"></head><body><main><header><a id="menu" aria-label="BUUURT">☰</a><span class="static-logo" role="img" aria-label="BUUURT"></span><div><select id="lang" aria-label="Language"><option value="nl">NL</option><option value="en">EN</option><option value="fr">FR</option></select><span id="bell"></span></div></header><div id="storefront"><div class="area"><span id="area-icon"></span><div><small id="area-label"></small><strong id="area-name">Amsterdam · De Pijp</strong></div><a id="change-area"></a></div><div id="categories" class="categories"></div><section id="scanned-shop" aria-labelledby="here"><h2 id="here"></h2><div id="track" class="track"></div><div id="dots" class="dots"></div><button id="all-store" class="store-all" type="button"></button></section><h2 id="banner"></h2><div class="feed-controls"><label class="filter"><svg class="filter-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3 7h7m4 0h7M3 17h3m4 0h11"/><circle cx="12" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg><span id="sort-label"></span><span id="sort-value" aria-hidden="true"></span><svg class="filter-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 6 4 4 4-4"/></svg><select id="sort" aria-labelledby="sort-label"><option value="distance"></option><option value="recent"></option></select></label><label class="nearby-radius" id="radius-control" hidden><span id="radius-label"></span><select id="nearby-radius"><option value="500">500 m</option><option value="1000" selected>1 km</option><option value="2000">2 km</option></select></label></div><div id="feed"></div></div><article id="post-detail" hidden></article><section id="favorites-page" hidden aria-labelledby="favorites-title"></section><a id="favorites-link" href="#favoris" hidden tabindex="-1" aria-hidden="true"></a></main><dialog aria-labelledby="dialog-title"><button id="close" type="button"></button><h2 id="dialog-title"></h2><div id="dialog-content"></div></dialog><script>
 const translations={"nl":["Huidige wijk","Wijzig wijk","Je bent hier","Ontdek de berichten van winkels om je heen.","Alles","Aanbiedingen","Evenementen","Ontdek","Aanbieding","Evenement","Ontdek","Filters · Afstand","Alle afstanden","Bekijk bericht","Bewaren","Verwijderen uit favorieten","Inloggen om dit bericht te bewaren","Inloggen","Sluiten","Geen berichten voor deze filters.","Gesponsord","vanaf de gescande winkel","Foto","Bekijk alle berichten","€25 korting","vanaf €100 besteding","Gereedschapsdemo","Kom zaterdag langs","Nieuwe verfcollectie","Ontdek de nieuwe kleuren","Doe-het-zelf & gereedschap"],"en":["Current neighborhood","Change neighborhood","You are here","Discover posts from local businesses around you.","All","Offers","Events","Discover","Offer","Event","Discover","Filters · Distance","Any distance","View post","Save","Remove from favorites","Sign in to save this post","Sign in","Close","No posts match these filters.","Sponsored","from the scanned shop","Photo","View all posts","€25 off","on purchases of €100 or more","Tool demonstration","Visit us on Saturday","New paint collection","Discover the new colors","DIY & tools"],"fr":["Quartier actuel","Changer de quartier","Vous êtes ici","Découvrez les annonces des commerces autour de vous.","Tout","Offres","Événements","Découvertes","Offre","Événement","Découverte","Filtres · Proximité","Toutes les distances","Voir l’annonce","Ajouter aux favoris","Retirer des favoris","Connectez-vous pour ajouter cette annonce aux favoris","Se connecter","Fermer","Aucune annonce pour ces filtres.","Sponsorisé","de la vitrine scannée","Photo","Voir toutes les annonces","25 € de remise","dès 100 € d’achat","Démonstration d’outillage","Passez samedi","Nouvelle collection de peintures","Découvrez les nouvelles couleurs","Bricolage & Outillage"]};
 const photos=["shop","tools","paint","paint-alt","tools-alt","hardware"];
@@ -218,6 +219,30 @@ const shopActions={
  en:["Call","View shop profile","All posts","Simulated call. This shop has no real phone number in the prototype."]
 }[locale];
 
+const demoLoyaltyShop="Doe-het-zelf";
+const demoLoyaltyKey="buuurt-vitrine-demo-loyalty-hardware";
+let demoCardActive=false;
+try{demoCardActive=sessionStorage.getItem(demoLoyaltyKey)==="1"}catch{}
+const loyaltyCopy={
+ fr:["Fidélité","Carte de fidélité disponible","Voir les avantages","Voir ma carte de fidélité","Activer ma carte","Carte de démonstration activée","Exemple de récompense : un bon de 5 € après cinq achats éligibles. Programme fictif."],
+ nl:["Klantenkaart","Klantenkaart beschikbaar","Bekijk de voordelen","Bekijk mijn klantenkaart","Activeer mijn kaart","Demokaart geactiveerd","Voorbeeldbeloning: een bon van € 5 na vijf in aanmerking komende aankopen. Fictief programma."],
+ en:["Loyalty","Loyalty card available","View benefits","View my loyalty card","Activate my card","Demo card activated","Example reward: a €5 voucher after five qualifying purchases. Fictional programme."]
+}[locale];
+
+function renderLoyaltyLink(post){
+ if(post.shop!==demoLoyaltyShop)return "";
+ return '<a class="loyalty-link" href="#fiche-'+post.id+'-fidelite">'+
+  (demoCardActive?'<strong>'+loyaltyCopy[3]+'</strong>':'<strong>'+loyaltyCopy[1]+'</strong><span>'+loyaltyCopy[2]+'</span>')+
+  '<span class="loyalty-arrow" aria-hidden="true">→</span></a>';
+}
+
+function renderLoyaltySection(post){
+ if(post.shop!==demoLoyaltyShop)return "";
+ return '<section class="loyalty-section" aria-labelledby="loyalty-heading"><h2 id="loyalty-heading" tabindex="-1">'+loyaltyCopy[0]+'</h2>'+
+  '<p>'+loyaltyCopy[6]+'</p><p data-loyalty-status role="status">'+(demoCardActive?loyaltyCopy[5]:'')+'</p>'+
+  (demoCardActive?'':'<button type="button" data-activate-loyalty>'+loyaltyCopy[4]+'</button>')+'</section>';
+}
+
 function renderShopActions(post,profile=false){
  return '<div class="detail-actions shop-actions"><button type="button" data-demo-call><span aria-hidden="true">☎</span> '+shopActions[0]+'</button>'+
   (profile?'':'<a href="#fiche-'+post.id+'">'+shopActions[1]+' →</a>')+
@@ -225,6 +250,14 @@ function renderShopActions(post,profile=false){
 }
 q("#post-detail").addEventListener("click",event=>{
  if(event.target.closest("[data-demo-call]"))q("#post-detail .demo-call-status").textContent=shopActions[3];
+ const activate=event.target.closest("[data-activate-loyalty]");
+ if(activate){
+  demoCardActive=true;
+  try{sessionStorage.setItem(demoLoyaltyKey,"1")}catch{}
+  q("[data-loyalty-status]").textContent=loyaltyCopy[5];
+  q("#loyalty-heading").focus({preventScroll:true});
+  activate.remove();
+ }
 });
 
 function renderAddress(post){
@@ -281,8 +314,8 @@ function renderRoute(){
  const match=location.hash.match(/^#annonce-([0-5])$/);
  const post=match?data[Number(match[1])]:null;
  const panel=q("#post-detail"),feed=q("#storefront");
- const shopMatch=location.hash.match(/^#(commerce|fiche)-([0-5])$/);
- const shopPost=shopMatch?data[Number(shopMatch[2])]:null;
+ const shopMatch=location.hash.match(/^#(?:(commerce)-([0-5])|(fiche)-([0-5])(-fidelite)?)$/);
+ const shopPost=shopMatch?data[Number(shopMatch[2]??shopMatch[4])]:null;
  const wasDetail=!panel.hidden;
  const favoritePage=q("#favorites-page");
  const showFavorites=location.hash==="#favoris";
@@ -298,15 +331,17 @@ function renderRoute(){
   return;
  }
  if(shopPost){
-  const profile=shopMatch[1]==="fiche";
+  const profile=shopMatch[3]==="fiche";
   const shop=shopPost.shop;
   const shopPosts=data.filter(entry=>entry.shop===shop);
   panel.innerHTML='<a href="#annonce-'+shopPost.id+'" class="detail-back">← '+labels[0]+'</a>'+
    (profile?'<div class="detail-cover"><img src="'+shopPosts[0].src+'" alt=""></div>':'')+
    '<h1 tabindex="-1">'+shop+'</h1>'+
-   (profile?renderAddress(shopPost)+renderShopActions(shopPost,true):'<h2>'+shopActions[2]+'</h2>'+shopPosts.map(entry=>markup(entry,false,false)).join(""));
+   (profile?renderAddress(shopPost)+renderShopActions(shopPost,true)+renderLoyaltySection(shopPost):'<h2>'+shopActions[2]+'</h2>'+shopPosts.map(entry=>markup(entry,false,false)).join(""));
   window.scrollTo(0,0);
-  panel.querySelector("h1").focus({preventScroll:true});
+  const loyaltyHeading=shopMatch[5]?panel.querySelector("#loyalty-heading"):null;
+  if(loyaltyHeading)loyaltyHeading.focus();
+  else panel.querySelector("h1").focus({preventScroll:true});
   return;
  }
  if(!post){
@@ -314,7 +349,7 @@ function renderRoute(){
   return;
  }
  const saved=isSaved(post.id);
- panel.innerHTML='<a href="#" class="detail-back">← '+labels[0]+'</a><div class="detail-cover"><img src="'+post.src+'" alt="">'+postTag(post.type)+'</div><div class="detail-copy post-detail-content"><div class="post-detail-heading"><strong>'+post.shop+'</strong>'+(post.id===3?'<span class="sponsored"> · '+t[20]+'</span>':'')+'<h1 tabindex="-1">'+post.title+'</h1><p>'+(post.id===3?'<span class="offer-discount">'+(locale==="fr"?"−20 %":"−20%")+'</span>':'')+post.body+'</p></div>'+renderPostDescription(post)+'<section class="post-merchant-card">'+renderAddress(post)+renderShopActions(post)+'</section>'+(post.distance?'<p class="distance">'+icon("walk")+post.distance+' m · '+(aroundMe?aroundLabels[2]:t[21])+'</p>':'')+'<div class="detail-actions post-save-share"><button type="button" class="dialog-heart" data-heart="'+post.id+'" aria-pressed="'+saved+'">'+icon("heart")+' '+t[saved?15:14]+'</button><button type="button" id="share-post">'+labels[1]+'</button></div><p id="share-status" role="status"></p></div>';
+ panel.innerHTML='<a href="#" class="detail-back">← '+labels[0]+'</a><div class="detail-cover"><img src="'+post.src+'" alt="">'+postTag(post.type)+'</div><div class="detail-copy post-detail-content"><div class="post-detail-heading"><strong>'+post.shop+'</strong>'+(post.id===3?'<span class="sponsored"> · '+t[20]+'</span>':'')+'<h1 tabindex="-1">'+post.title+'</h1><p>'+(post.id===3?'<span class="offer-discount">'+(locale==="fr"?"−20 %":"−20%")+'</span>':'')+post.body+'</p></div>'+renderPostDescription(post)+'<section class="post-merchant-card">'+renderAddress(post)+renderShopActions(post)+renderLoyaltyLink(post)+'</section>'+(post.distance?'<p class="distance">'+icon("walk")+post.distance+' m · '+(aroundMe?aroundLabels[2]:t[21])+'</p>':'')+'<div class="detail-actions post-save-share"><button type="button" class="dialog-heart" data-heart="'+post.id+'" aria-pressed="'+saved+'">'+icon("heart")+' '+t[saved?15:14]+'</button><button type="button" id="share-post">'+labels[1]+'</button></div><p id="share-status" role="status"></p></div>';
  panel.querySelector(".detail-back").onclick=event=>{
   event.preventDefault();
   if(returnFocus)history.back();
