@@ -72,6 +72,7 @@ header select{appearance:none;border:1px solid #e3dce0;border-radius:25px;paddin
 .post-engagement .follow-shop{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:8px 10px;border:1px solid var(--buuurt-pink-border);border-radius:10px;background:var(--buuurt-pink-tint);color:var(--brand-dark);text-decoration:none;font-weight:700;font-size:13px}.post-engagement{display:grid;grid-template-columns:minmax(0,1fr) max-content;gap:8px;margin-top:12px}.post-engagement button{min-height:44px;background:#fff;font-size:13px}.post-engagement .follow-shop{background:var(--brand-dark);color:white}
 .card-actions{position:absolute;top:7px;right:7px;z-index:3;display:flex;align-items:center;gap:5px}.card-actions>.heart,.nearby .card-actions>.heart{position:static;flex:none}.card-actions .follow-shop{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:0 8px;border:1px solid #ddd;border-radius:999px;background:#fff;color:var(--brand-dark);font-size:12px;font-weight:750;white-space:nowrap;text-decoration:none}
 .nearby .picture>.tag{max-width:calc(100% - 132px)}.nearby .picture>.tag>span{white-space:normal}
+.detail-cover[data-card-gallery]{touch-action:pan-y}.detail-cover[data-card-gallery] img{user-select:none}.detail-photo-arrow{position:absolute;top:50%;transform:translateY(-50%);display:grid;place-items:center;width:44px;height:44px;padding:0;border:1px solid #dedde1;border-radius:50%;background:#fff;color:var(--brand-dark);font-size:25px;cursor:pointer}.detail-photo-arrow.prev{left:8px}.detail-photo-arrow.next{right:8px}.detail-photo-arrow:disabled{opacity:.5;cursor:default}.detail-photo-pager{width:auto;margin:4px 0 0}
 </style><link rel="stylesheet" href="buuurt-theme.css"></head><body><main><header><a id="menu" aria-label="BUUURT">☰</a><span class="static-logo" role="img" aria-label="BUUURT"></span><div><select id="lang" aria-label="Language"><option value="nl">NL</option><option value="en">EN</option><option value="fr">FR</option></select><span id="bell"></span></div></header><div id="storefront"><div class="area"><span id="area-icon"></span><div><small id="area-label"></small><strong id="area-name">Amsterdam · De Pijp</strong></div><a id="change-area"></a></div><div id="categories" class="categories"></div><section id="scanned-shop" aria-labelledby="here"><h2 id="here"></h2><div id="track" class="track"></div><div id="dots" class="dots"></div><button id="all-store" class="store-all" type="button"></button></section><h2 id="banner"></h2><div class="feed-controls"><label class="filter"><svg class="filter-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3 7h7m4 0h7M3 17h3m4 0h11"/><circle cx="12" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg><span id="sort-label"></span><span id="sort-value" aria-hidden="true"></span><svg class="filter-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 6 4 4 4-4"/></svg><select id="sort" aria-labelledby="sort-label"><option value="distance"></option><option value="recent"></option></select></label><label class="nearby-radius" id="radius-control" hidden><span id="radius-label"></span><select id="nearby-radius"><option value="500">500 m</option><option value="1000" selected>1 km</option><option value="2000">2 km</option></select></label></div><div id="feed"></div></div><article id="post-detail" hidden></article><section id="favorites-page" hidden aria-labelledby="favorites-title"></section><a id="favorites-link" href="#favoris" hidden tabindex="-1" aria-hidden="true"></a></main><dialog aria-labelledby="dialog-title"><button id="close" type="button"></button><h2 id="dialog-title"></h2><div id="dialog-content"></div></dialog><script src="buuurt-demo-account.js"></script><script>
 const translations={"nl":["Huidige wijk","Wijzig wijk","Je bent hier","Ontdek de berichten van winkels om je heen.","Alles","Aanbiedingen","Evenementen","Ontdek","Aanbieding","Evenement","Ontdek","Filters · Afstand","Alle afstanden","Bekijk bericht","Bewaren","Verwijderen uit favorieten","Inloggen om dit bericht te bewaren","Inloggen","Sluiten","Geen berichten voor deze filters.","Gesponsord","vanaf de gescande winkel","Foto","Bekijk alle berichten","€25 korting","vanaf €100 besteding","Gereedschapsdemo","Kom zaterdag langs","Nieuwe verfcollectie","Ontdek de nieuwe kleuren","Doe-het-zelf & gereedschap"],"en":["Current neighborhood","Change neighborhood","You are here","Discover posts from local businesses around you.","All","Offers","Events","Discover","Offer","Event","Discover","Filters · Distance","Any distance","View post","Save","Remove from favorites","Sign in to save this post","Sign in","Close","No posts match these filters.","Sponsored","from the scanned shop","Photo","View all posts","€25 off","on purchases of €100 or more","Tool demonstration","Visit us on Saturday","New paint collection","Discover the new colors","DIY & tools"],"fr":["Quartier actuel","Changer de quartier","Vous êtes ici","Découvrez les annonces des commerces autour de vous.","Tout","Offres","Événements","Découvertes","Offre","Événement","Découverte","Filtres · Proximité","Toutes les distances","Voir l’annonce","Ajouter aux favoris","Retirer des favoris","Connectez-vous pour ajouter cette annonce aux favoris","Se connecter","Fermer","Aucune annonce pour ces filtres.","Sponsorisé","de la vitrine scannée","Photo","Voir toutes les annonces","25 € de remise","dès 100 € d’achat","Démonstration d’outillage","Passez samedi","Nouvelle collection de peintures","Découvrez les nouvelles couleurs","Bricolage & Outillage"]};
 const photos=["shop","tools","paint","paint-alt","tools-alt","hardware"];
@@ -153,13 +154,24 @@ function renderFollowAction(post){
  const merchantKey=["hardware","hardware","hardware","bakery","fietsen-de-pijp","vintage-sanne"][post.id];
  return '<a class="follow-shop" href="hab-suivi-002.html?suivre='+merchantKey+'">'+followLabel+'</a>';
 }
+function renderPhotoPager(gallery,current,extraClass=""){
+ if(gallery.length<2)return "";
+ return '<div class="card-pager'+extraClass+'" role="group" aria-label="'+photoLabel+'">'+gallery.map((_,i)=>'<button type="button" data-card-photo="'+i+'" aria-label="'+photoLabel+' '+(i+1)+' / '+gallery.length+'" aria-current="'+(i===current)+'"></button>').join("")+'</div>';
+}
+function renderPostGallery(post){
+ const photos=cardPhotos(post);
+ const current=cardPhotoIndex.get(post.id)||0;
+ const [previous,next]=({fr:["Photo précédente","Photo suivante"],nl:["Vorige foto","Volgende foto"],en:["Previous photo","Next photo"]})[locale];
+ const controls=photos.length>1?'<button class="detail-photo-arrow prev" type="button" data-card-step="-1" aria-label="'+previous+'"'+(current===0?" disabled":"")+'>‹</button><button class="detail-photo-arrow next" type="button" data-card-step="1" aria-label="'+next+'"'+(current===photos.length-1?" disabled":"")+'>›</button>':"";
+ return '<div class="detail-cover"'+(photos.length>1?' data-card-gallery="'+post.id+'"':'')+'><img src="'+photos[current]+'" alt="" draggable="false">'+postTag(post.type)+controls+'</div>'+renderPhotoPager(photos,current," detail-photo-pager");
+}
 function markup(post,feature,showShopLink=true){
  const saved=isSaved(post.id);
  const categoryTag=postTag(post.type);
  const gallery=feature?[post.src]:cardPhotos(post);
  const current=feature?0:(cardPhotoIndex.get(post.id)||0);
  const image='<div class="picture"'+(gallery.length>1?' data-card-gallery="'+post.id+'"':'')+'><img src="'+gallery[current]+'" alt="" draggable="false">'+categoryTag+'</div>';
- const pager=gallery.length>1?'<div class="card-pager" aria-label="'+photoLabel+'">'+gallery.map((_,i)=>'<button type="button" data-card-photo="'+i+'" aria-label="'+photoLabel+' '+(i+1)+' / '+gallery.length+'" aria-current="'+(i===current)+'"></button>').join("")+'</div>':"";
+ const pager=renderPhotoPager(gallery,current);
  const sponsor=!feature&&post.id===3;
  const sponsorTag=sponsor?'<small class="sponsored">'+t[20]+'</small>':'';
  const discount=sponsor?'<span class="offer-discount">'+(locale==="fr"?"−20 %":"−20%")+'</span>':'';
@@ -361,7 +373,7 @@ function renderRoute(){
  const saved=isSaved(post.id);
  const followAction=renderFollowAction(post);
  const favoriteAction='<button type="button" class="dialog-heart" data-heart="'+post.id+'" aria-pressed="'+saved+'">'+icon("heart")+' '+t[saved?15:14]+'</button>';
- panel.innerHTML='<a href="#" class="detail-back">← '+labels[0]+'</a><div class="detail-cover"><img src="'+post.src+'" alt="">'+postTag(post.type)+'</div><div class="detail-copy post-detail-content"><div class="post-detail-heading"><strong>'+post.shop+'</strong>'+(post.id===3?'<span class="sponsored"> · '+t[20]+'</span>':'')+'<h1 tabindex="-1">'+post.title+'</h1><p>'+(post.id===3?'<span class="offer-discount">'+(locale==="fr"?"−20 %":"−20%")+'</span>':'')+post.body+'</p><div class="detail-actions post-engagement">'+favoriteAction+followAction+'</div></div>'+renderPostDescription(post)+'<section class="post-merchant-card">'+renderAddress(post)+renderShopActions(post)+renderLoyaltyLink(post)+'</section>'+(post.distance?'<p class="distance">'+icon("walk")+post.distance+' m · '+(aroundMe?aroundLabels[2]:t[21])+'</p>':'')+'<div class="detail-actions post-save-share"><button type="button" id="share-post">'+labels[1]+'</button></div><p id="share-status" role="status"></p></div>';
+ panel.innerHTML='<a href="#" class="detail-back">← '+labels[0]+'</a>'+renderPostGallery(post)+'<div class="detail-copy post-detail-content"><div class="post-detail-heading"><strong>'+post.shop+'</strong>'+(post.id===3?'<span class="sponsored"> · '+t[20]+'</span>':'')+'<h1 tabindex="-1">'+post.title+'</h1><p>'+(post.id===3?'<span class="offer-discount">'+(locale==="fr"?"−20 %":"−20%")+'</span>':'')+post.body+'</p><div class="detail-actions post-engagement">'+favoriteAction+followAction+'</div></div>'+renderPostDescription(post)+'<section class="post-merchant-card">'+renderAddress(post)+renderShopActions(post)+renderLoyaltyLink(post)+'</section>'+(post.distance?'<p class="distance">'+icon("walk")+post.distance+' m · '+(aroundMe?aroundLabels[2]:t[21])+'</p>':'')+'<div class="detail-actions post-save-share"><button type="button" id="share-post">'+labels[1]+'</button></div><p id="share-status" role="status"></p></div>';
  panel.querySelector(".detail-back").onclick=event=>{
   event.preventDefault();
   if(returnFocus)history.back();
@@ -381,13 +393,19 @@ function renderRoute(){
  panel.querySelector("h1").focus({preventScroll:true});
 }
 window.addEventListener("hashchange",renderRoute);
-function showCardPhoto(article,id,index){
+function showCardPhoto(id,index){
  const images=cardPhotos(data[id]);
  const selected=Math.max(0,Math.min(images.length-1,index));
  cardPhotoIndex.set(id,selected);
- article.querySelector("[data-card-gallery] img").src=images[selected];
- for(const button of article.querySelectorAll("[data-card-photo]")){
-  button.setAttribute("aria-current",String(Number(button.dataset.cardPhoto)===selected));
+ for(const gallery of document.querySelectorAll('[data-card-gallery="'+id+'"]')){
+  gallery.querySelector("img").src=images[selected];
+  const article=gallery.closest("article");
+  for(const button of article.querySelectorAll("[data-card-photo]")){
+   button.setAttribute("aria-current",String(Number(button.dataset.cardPhoto)===selected));
+  }
+  gallery.querySelectorAll("[data-card-step]").forEach(button=>{
+   button.disabled=button.dataset.cardStep==="-1"?selected===0:selected===images.length-1;
+  });
  }
 }
 let cardDrag,swipedCard;
@@ -410,7 +428,7 @@ document.addEventListener("pointerup",event=>{
  const article=image.closest("article");
  if(!article)return;
  swipedCard=article;
- showCardPhoto(article,id,(cardPhotoIndex.get(id)||0)+(delta<0?1:-1));
+ showCardPhoto(id,(cardPhotoIndex.get(id)||0)+(delta<0?1:-1));
 });
 document.addEventListener("click",event=>{
  const shopLink=event.target.closest(".shop-posts-link");
@@ -419,10 +437,12 @@ document.addEventListener("click",event=>{
   returnFocus=shopLink;
   return;
  }
- const dot=event.target.closest("[data-card-photo]");
- if(dot){
-  const article=dot.closest("article");
-  showCardPhoto(article,Number(article.querySelector("[data-card-gallery]").dataset.cardGallery),Number(dot.dataset.cardPhoto));
+ const photoControl=event.target.closest("[data-card-photo], [data-card-step]");
+ if(photoControl){
+  const gallery=photoControl.closest("article").querySelector("[data-card-gallery]");
+  const id=Number(gallery.dataset.cardGallery);
+  const index=photoControl.dataset.cardPhoto??((cardPhotoIndex.get(id)||0)+Number(photoControl.dataset.cardStep));
+  showCardPhoto(id,Number(index));
   return;
  }
  const open=event.target.closest("[data-open]");
