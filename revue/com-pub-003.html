@@ -295,13 +295,19 @@ document.querySelectorAll(".photo-step").forEach(root=>{
  const framing=find("framing"), framingFormat=find("framing-format"), framingFrame=find("framing-frame"), framingImage=find("framing-image");
  const framingControls=[find("framing-zoom"),find("framing-x"),find("framing-y")];
 
- function paintFraming(){
-  const [scale,x,y]=framingControls.map(control=>control.value);
+ const defaultFraming=["100","50","50"];
+
+ function applyFraming(image,[scale,x,y]){
+
   const position=x+"% "+y+"%";
   const distance=Math.max(Math.abs(x-50),Math.abs(y-50))/50;
-  framingImage.style.objectPosition=position;
-  framingImage.style.transformOrigin=position;
-  framingImage.style.transform="scale("+Math.max(scale/100,1+0.12*distance)+")";
+  image.style.objectPosition=position;
+  image.style.transformOrigin=position;
+  image.style.transform="scale("+Math.max(scale/100,1+0.12*distance)+")";
+ }
+
+ function paintFraming(){
+  applyFraming(framingImage,framingControls.map(control=>control.value));
  }
 
  const framingStatus=find("framing-status");
@@ -310,9 +316,10 @@ document.querySelectorAll(".photo-step").forEach(root=>{
   framingStatus.textContent="";
   const photo=gallery.photos[gallery.active];
   framing.hidden=!photo;
-  if(!photo)return;
   const format=framingFormat.value;
-  const values=photo.crops?.[format]??["100","50","50"];
+  const values=photo?.crops?.[format]??defaultFraming;
+  applyFraming(img,values);
+  if(!photo)return;
   framingFrame.dataset.format=format;
   if(framingImage.getAttribute("src")!==photo.src)framingImage.src=photo.src;
   framingControls.forEach((control,index)=>{control.value=values[index]});
@@ -324,7 +331,7 @@ document.querySelectorAll(".photo-step").forEach(root=>{
   if(!photo)return true;
   const format=framingFormat.value;
   const values=framingControls.map(control=>control.value);
-  const previous=photo.crops?.[format]??["100","50","50"];
+  const previous=photo.crops?.[format]??defaultFraming;
   if(values.every((value,index)=>value===previous[index]))return true;
   const crops={...photo.crops,[format]:values};
   const photos=gallery.photos.map((entry,index)=>index===gallery.active?{...entry,crops}:entry);
