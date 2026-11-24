@@ -1,0 +1,163 @@
+export const codes = ["USR-WEB-001","USR-SEL-001","USR-SEL-002","USR-AUT-001","USR-SEL-003","USR-STR-001","USR-STO-001","USR-POS-001","USR-LOC-001","USR-LOC-002","USR-DIR-001","USR-FAV-001","MER-001","MER-002","MER-003","MER-004","MER-005","MER-006","MER-007","MER-008"];
+
+const translations={"Tout":["Alles","All"],"Offres":["Aanbiedingen","Offers"],"Événements":["Evenementen","Events"],"Autour de moi":["Bij mij in de buurt","Near me"],"Autour de moi · Amsterdam":["Bij mij in de buurt · Amsterdam","Near me · Amsterdam"],"Choisir mon quartier":["Kies mijn buurt","Choose my neighborhood"],"Choisir mes quartiers":["Kies mijn buurten","Choose my neighborhoods"],"Voir les quartiers disponibles":["Bekijk beschikbare buurten","Explore available neighborhoods"],"Choisissez les quartiers que vous souhaitez découvrir.":["Kies de buurten die je wilt ontdekken.","Choose the neighborhoods you want to explore."],"Bienvenue sur BUUURT":["Welkom bij BUUURT","Welcome to BUUURT"],"Découvrez les annonces des commerçants et artisans de votre quartier.":["Ontdek berichten van winkels en ondernemers in jouw buurt.","Discover updates from local shops and businesses in your neighborhood."],"Découvrez les commerces et artisans de votre quartier":["Ontdek winkels en ondernemers in jouw buurt","Discover shops and local businesses in your neighborhood"],"Se connecter":["Inloggen","Sign in"],"Créer un compte":["Account aanmaken","Create an account"],"Se connecter · Créer un compte":["Inloggen · Account aanmaken","Sign in · Create an account"],"Se connecter ou créer un compte":["Inloggen of een account aanmaken","Sign in or create an account"],"Installer BUUURT sur mon téléphone":["BUUURT op mijn telefoon installeren","Install BUUURT on my phone"],"Rechercher un quartier…":["Zoek een buurt…","Search for a neighborhood…"],"Sélectionnez un ou plusieurs quartiers d’Amsterdam.":["Selecteer een of meer buurten in Amsterdam.","Select one or more neighborhoods in Amsterdam."],"Voir les annonces (3 quartiers)":["Bekijk berichten (3 buurten)","View posts (3 neighborhoods)"],"Vos 3 quartiers":["Jouw 3 buurten","Your 3 neighborhoods"],"Enregistrer cette sélection":["Deze selectie opslaan","Save this selection"],"Continuer sans enregistrer":["Doorgaan zonder op te slaan","Continue without saving"],"Vous pouvez consulter les annonces sans compte. Pour enregistrer plusieurs sélections et les retrouver sur d’autres appareils, connectez-vous.":["Je kunt berichten bekijken zonder account. Log in om meerdere selecties op te slaan en op andere apparaten terug te vinden.","You can browse posts without an account. Sign in to save multiple selections and access them on other devices."],"Adresse e-mail":["E-mailadres","Email address"],"Mot de passe":["Wachtwoord","Password"],"Google / Facebook : options à vérifier avant intégration":["Google / Facebook: opties controleren vóór integratie","Google / Facebook: options to verify before integration"],"Mes favoris ♡":["Mijn favorieten ♡","My favorites ♡"],"Retrouvez les annonces enregistrées.":["Bekijk je opgeslagen berichten.","Find your saved posts."],"Contrôle de sécurité gratuit":["Gratis veiligheidscontrole","Free safety check"],"Contrôle de sécurité gratuit du vélo":["Gratis veiligheidscontrole voor fietsen","Free bicycle safety check"],"Contrôle vélo gratuit · De Baarsjes":["Gratis fietscontrole · De Baarsjes","Free bike check · De Baarsjes"],"Nouvelle collection":["Nieuwe collectie","New collection"],"Nouvelle collection · De Pijp":["Nieuwe collectie · De Pijp","New collection · De Pijp"],"Cette semaine":["Deze week","This week"],"Publié il y a 2 jours":["2 dagen geleden geplaatst","Posted 2 days ago"],"Nouveauté":["Nieuw","New"],"Nouveaux outils en magasin":["Nieuw gereedschap in de winkel","New tools in store"],"25 € de remise dès 100 € d’achat":["€ 25 korting bij besteding vanaf € 100","€25 off purchases of €100 or more"],"Commerce scanné · Doe-het-zelf":["Gescande winkel · Doe-het-zelf","Scanned shop · Doe-het-zelf"],"Annonces de Doe-het-zelf":["Berichten van Doe-het-zelf","Posts from Doe-het-zelf"],"Mon commerce":["Mijn winkel","My business"],"Espace commerçant":["Ondernemersomgeving","Merchant area"],"Nom du commerce":["Naam van de winkel","Business name"],"Adresse":["Adres","Address"],"Quartier":["Buurt","Neighborhood"],"Description":["Beschrijving","Description"],"Horaires":["Openingstijden","Opening hours"],"Réseaux sociaux":["Sociale media","Social media"],"Enregistrer le profil":["Profiel opslaan","Save profile"],"Tableau de bord":["Dashboard","Dashboard"],"Créer une annonce":["Bericht maken","Create a post"],"Créer / modifier une annonce":["Bericht maken / bewerken","Create / edit a post"],"Type : Offre / News / Événement":["Type: Aanbieding / Nieuws / Evenement","Type: Offer / News / Event"],"Titre":["Titel","Title"],"Visuels":["Afbeeldingen","Images"],"Validité":["Geldigheid","Validity"],"Enregistrer le brouillon":["Concept opslaan","Save draft"],"Publier":["Publiceren","Publish"],"Comment publier ?":["Hoe wil je publiceren?","How would you like to publish?"],"Choisissez votre mode de publication.":["Kies hoe je wilt publiceren.","Choose how you want to publish."],"Publier gratuitement":["Gratis publiceren","Publish for free"],"Sponsoriser cette annonce":["Dit bericht sponsoren","Sponsor this post"],"Sponsoriser mon annonce":["Mijn bericht sponsoren","Sponsor my post"],"La configuration, les conditions et les prix sont à reprendre des spécifications commerciales approuvées.":["De instellingen, voorwaarden en prijzen moeten uit de goedgekeurde commerciële specificaties worden overgenomen.","Settings, terms and prices must follow the approved commercial specifications."],"Aucun paiement ou campagne n’est lancé par cette maquette.":["Deze maquette start geen betaling of campagne.","This mockup does not start any payment or campaign."],"Voir le récapitulatif":["Overzicht bekijken","View summary"],"Gérez vos annonces":["Beheer je berichten","Manage your posts"],"Mes annonces":["Mijn berichten","My posts"],"Actives":["Actief","Active"],"Brouillons":["Concepten","Drafts"],"Terminées":["Afgelopen","Ended"],"Annonce active":["Actief bericht","Active post"],"Offre de la semaine":["Aanbieding van de week","Offer of the week"],"Offre commerciale active":["Actieve aanbieding","Active offer"],"Supprimées : corbeille 30 jours":["Verwijderd: prullenbak 30 dagen","Deleted: 30-day trash"],"Corbeille : restauration possible pendant 30 jours":["Prullenbak: herstellen mogelijk binnen 30 dagen","Trash: restore within 30 days"],"Partager mon annonce":["Mijn bericht delen","Share my post"],"Partage depuis les applications installées sur le téléphone.":["Delen via apps die op de telefoon zijn geïnstalleerd.","Share using apps installed on the phone."],"Ouvrir le partage natif":["Deelfunctie openen","Open native sharing"],"Les liens de réseaux sociaux ne donnent pas d’autorisation de publication automatique.":["Links naar sociale media geven geen toestemming voor automatisch publiceren.","Social media links do not authorize automatic posting."],"Voir l’offre →":["Bekijk de aanbieding →","View offer →"],"Sponsorisé":["Gesponsord","Sponsored"],"Nouveau brunch · Bos en Lommer":["Nieuwe brunch · Bos en Lommer","New brunch · Bos en Lommer"],"10 % sur les fromages":["10% korting op kaas","10% off cheese"],"20 % sur les desserts":["20% korting op desserts","20% off desserts"],"Favorieten":["Favorieten","Favorites"],"Winkels":["Winkels","Shops"],"Account":["Account","Account"],"Home":["Home","Home"],"NL":["NL","NL"],"FR":["FR","FR"],"EN":["EN","EN"],"Peintures et accessoires disponibles en magasin":["Verf en accessoires verkrijgbaar in de winkel","Paint and accessories available in store"],"Amsterdam · 3 quartiers sélectionnés":["Amsterdam · 3 buurten geselecteerd","Amsterdam · 3 neighborhoods selected"],"Mes quartiers : 3 sélectionnés ▾":["Mijn buurten: 3 geselecteerd ▾","My neighborhoods: 3 selected ▾"],"2 bouquets pour 15 € · De Baarsjes":["2 boeketten voor € 15 · De Baarsjes","2 bouquets for €15 · De Baarsjes"],"Offre valable cette semaine":["Aanbieding geldig deze week","Offer valid this week"],"Publié aujourd’hui":["Vandaag geplaatst","Posted today"],"Publié hier":["Gisteren geplaatst","Posted yesterday"],"Proximité : 1 km ▾":["Afstand: 1 km ▾","Distance: 1 km ▾"],"Annonces de Doe-het-zelf ▾":["Berichten van Doe-het-zelf ▾","Posts from Doe-het-zelf ▾"],"🔧 Doe-het-zelf":["🔧 Doe-het-zelf","🔧 Doe-het-zelf"],"-10 % sur les fromages":["10% korting op kaas","10% off cheese"],"-20 % sur les desserts":["20% korting op desserts","20% off desserts"],"Amsterdam · De Baarsjes · QR de rue":["Amsterdam · De Baarsjes · QR-code op straat","Amsterdam · De Baarsjes · street QR code"],"⌕ Rechercher un quartier…":["⌕ Zoek een buurt…","⌕ Search for a neighborhood…"],"📣 Sponsorisé":["📣 Gesponsord","📣 Sponsored"],"25 € de remise":["€ 25 korting","€25 discount"],"dès 100 € d’achat":["bij besteding vanaf € 100","on purchases of €100 or more"]};
+const sharedLabels = {
+  "Rejoignez BUUURT avec votre commerce !": ["Sluit je met je winkel aan bij BUUURT!", "Join BUUURT with your business!"],
+  "Publiez vos offres, news et événements.": ["Plaats je aanbiedingen, nieuws en evenementen.", "Publish your offers, news and events."],
+  "Touchez les habitants de votre quartier.": ["Bereik de bewoners van je buurt.", "Reach people in your neighborhood."],
+  "Gérez votre profil en toute simplicité.": ["Beheer eenvoudig je profiel.", "Manage your profile with ease."],
+  "Créer mon compte commerce": ["Maak mijn bedrijfsaccount aan", "Create my business account"],
+  "J’ai déjà un compte": ["Ik heb al een account", "I already have an account"],
+
+  "Home": [
+    "Home",
+    "Home"
+  ],
+  "Winkels": [
+    "Winkels",
+    "Shops"
+  ],
+  "Favorieten": [
+    "Favorieten",
+    "Favorites"
+  ],
+  "Hoofdnavigatie": [
+    "Hoofdnavigatie",
+    "Main navigation"
+  ],
+  "3 ongelezen meldingen": [
+    "3 ongelezen meldingen",
+    "3 unread notifications"
+  ],
+  "◎ NL⌄": [
+    "◎ NL⌄",
+    "◎ EN⌄"
+  ],
+  "◎ NL⌄  ♧": [
+    "◎ NL⌄  ♧",
+    "◎ EN⌄  ♧"
+  ],
+  "News": [
+    "Nieuws",
+    "News"
+  ],
+  "2 bouquets pour 15 €": [
+    "2 boeketten voor € 15",
+    "2 bouquets for €15"
+  ]
+};
+const screenTitles = {
+  "USR-WEB-001": [
+    "Welkom op BUUURT.nl",
+    "BUUURT.nl home"
+  ],
+  "USR-SEL-001": [
+    "Buurten kiezen",
+    "Choose neighborhoods"
+  ],
+  "USR-SEL-002": [
+    "Bevestigen en opslaan",
+    "Confirm and save"
+  ],
+  "USR-AUT-001": [
+    "Inloggen of een account aanmaken",
+    "Sign in or create an account"
+  ],
+  "USR-SEL-003": [
+    "Berichten uit gekozen buurten",
+    "Posts from selected neighborhoods"
+  ],
+  "USR-STR-001": [
+    "Berichten na een straat-QR-scan",
+    "Feed after a street QR scan"
+  ],
+  "USR-STO-001": [
+    "Berichten na een etalage-QR-scan",
+    "Feed after a storefront QR scan"
+  ],
+  "USR-POS-001": [
+    "Berichten van de winkel – kassa",
+    "Shop posts – checkout"
+  ],
+  "USR-LOC-001": [
+    "Bij mij in de buurt",
+    "Near me"
+  ],
+  "USR-LOC-002": [
+    "Geen lokale berichten",
+    "No local posts"
+  ],
+  "USR-DIR-001": [
+    "Direct openen zonder context",
+    "Direct entry without context"
+  ],
+  "USR-FAV-001": [
+    "Favorieten",
+    "Favorites"
+  ],
+  "MER-001": [
+    "Toegang voor ondernemers",
+    "Merchant access"
+  ],
+  "MER-002": [
+    "Winkelprofiel",
+    "Shop profile"
+  ],
+  "MER-003": [
+    "Ondernemersdashboard",
+    "Merchant dashboard"
+  ],
+  "MER-004": [
+    "Bericht maken of bewerken",
+    "Create or edit a post"
+  ],
+  "MER-005": [
+    "Gratis of gesponsord publiceren",
+    "Publish free or sponsored"
+  ],
+  "MER-006": [
+    "Sponsoring instellen",
+    "Configure sponsorship"
+  ],
+  "MER-007": [
+    "Beheer en prullenbak",
+    "Manage posts and trash"
+  ],
+  "MER-008": [
+    "Bericht delen",
+    "Share a post"
+  ]
+};
+function translateMarkup(markup, lang, labels) {
+  const index = lang === 'nl' ? 0 : 1;
+  return markup.replace(/>([^<>]+)</g, (whole, raw) => {
+    const source = raw.trim();
+    const text = source.replace(/&amp;/g, '&');
+    const parts = text.match(/^([\s◷☷⌖·▾📣]*)(.*?)([\s]*)$/su);
+    const lookup = value => Object.hasOwn(labels, value) ? labels[value][index] : undefined;
+    const label = lookup(text) ?? (parts && lookup(parts[2]));
+    if (label == null) return whole;
+    const translated = lookup(text) != null ? label : parts[1] + label + parts[3];
+    return '>' + raw.replace(source, () => translated.replace(/&/g, '&amp;')) + '<';
+  });
+}
+
+export function screenMarkup(page, lang) {
+  let markup = page.html;
+  const arrival = page.en === 'USR-LOC-002';
+  if (arrival) {
+    const checked = { fr: 'lfr', nl: 'lnl', en: 'len' }[lang];
+    markup = markup.replace(/(<input id="l(?:fr|nl|en)" type="radio" name="arrival-lang")( checked)?>/g,
+      (_, prefix) => prefix + (prefix.includes('id="' + checked + '"') ? ' checked' : '') + '>');
+  }
+  if (lang === 'fr') return markup
+    .replace(/(<span class="right">◎ )NL⌄/g, '$1FR⌄')
+    .replace(/3 ongelezen meldingen/g, '3 notifications non lues');
+  const index = lang === 'nl' ? 0 : 1;
+  const labels = arrival ? sharedLabels : { ...translations, ...sharedLabels };
+  return translateMarkup(markup, lang, labels)
+    .replace(/<title>[^<]*<\/title>/, () => '<title>' + page.fr + ' — ' + screenTitles[page.en][index] + '</title>')
+    .replace(/(aria-label|title)=(["'])(Hoofdnavigatie|3 ongelezen meldingen)\2/g,
+      (_, attr, quote, label) => attr + '=' + quote + sharedLabels[label][index] + quote)
+    .replace('<html lang="fr"', '<html lang="' + lang + '"');
+}

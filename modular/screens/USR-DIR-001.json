@@ -1,0 +1,22 @@
+{
+  "fr": "HAB-DIR-001",
+  "en": "USR-DIR-001",
+  "title": "HAB-DIR-001 — Entrée directe sans contexte",
+  "html": [
+    "<!DOCTYPE html>\n<html lang=\"fr\">",
+    "<meta charset=\"utf-8\"/>",
+    "<meta content=\"width=device-width,initial-scale=1\" name=\"viewport\"/>",
+    "<title>HAB-DIR-001 — Entrée directe sans contexte</title>{{base-styles}}<div class=\"phone\">",
+    "<div class=\"status\">9:41 ▰ ▰ ▰</div>",
+    "<div class=\"head\">{{header-menu}}{{brand-logo}}{{standard-header-indicator}}</div>",
+    "<div class=\"section\">",
+    "<h2>Bienvenue sur BUUURT</h2>",
+    "<p>Choisissez les quartiers que vous souhaitez découvrir.</p>",
+    "</div>",
+    "<a class=\"button\" href=\"HAB-MAN-001.html\">Choisir mes quartiers</a>",
+    "<a class=\"button secondary\" href=\"HAB-LOC-001.html\">Autour de moi</a>{{bottom-navigation}}</div>",
+    "<div class=\"reference\">",
+    "<b>HAB-DIR-001</b> — Entrée directe sans contexte<br/>Statut : proposition à valider<br/>Reprendre sélection mémorisée sinon demander un quartier ou une localisation.</div>",
+    "</html>"
+  ]
+}

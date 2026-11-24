@@ -1,0 +1,22 @@
+{
+  "fr": "COM-006",
+  "en": "MER-006",
+  "title": "COM-006 — Configuration sponsorisation",
+  "html": [
+    "<!DOCTYPE html>\n<html lang=\"fr\">",
+    "<meta charset=\"utf-8\"/>",
+    "<meta content=\"width=device-width,initial-scale=1\" name=\"viewport\"/>",
+    "<title>COM-006 — Configuration sponsorisation</title>{{base-styles}}<div class=\"phone\">",
+    "<div class=\"status\">9:41 ▰ ▰ ▰</div>",
+    "<div class=\"head\">{{header-menu}}{{brand-logo}}{{standard-header-indicator}}</div>",
+    "<div class=\"section\">",
+    "<h2>Sponsoriser mon annonce</h2>",
+    "<p>La configuration, les conditions et les prix sont à reprendre des spécifications commerciales approuvées.</p>",
+    "</div>",
+    "<div class=\"info\">Aucun paiement ou campagne n’est lancé par cette maquette.</div>",
+    "<a class=\"button secondary\">Voir le récapitulatif</a>{{bottom-navigation}}</div>",
+    "<div class=\"reference\">",
+    "<b>COM-006</b> — Configuration sponsorisation<br/>Statut : à consolider<br/>Paramètres et récapitulatif avant paiement, sans prix inventé.</div>",
+    "</html>"
+  ]
+}

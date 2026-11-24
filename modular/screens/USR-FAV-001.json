@@ -1,0 +1,31 @@
+{
+  "fr": "HAB-FAV-001",
+  "en": "USR-FAV-001",
+  "title": "HAB-FAV-001 — Favoris habitant",
+  "html": [
+    "<!DOCTYPE html>\n<html lang=\"fr\">",
+    "<meta charset=\"utf-8\"/>",
+    "<meta content=\"width=device-width,initial-scale=1\" name=\"viewport\"/>",
+    "<title>HAB-FAV-001 — Favoris habitant</title>{{base-styles}}<div class=\"phone\">",
+    "<div class=\"status\">9:41 ▰ ▰ ▰</div>",
+    "<div class=\"head\">{{header-menu}}{{brand-logo}}{{standard-header-indicator}}</div>",
+    "<div class=\"section\">",
+    "<h2>Mes favoris ♡</h2>",
+    "<p>Retrouvez les annonces enregistrées.</p>",
+    "</div>",
+    "<div class=\"card\">",
+    "<div class=\"photo\">🚲</div>",
+    "<div class=\"details\">",
+    "<span class=\"heart\">♡</span>",
+    "<b>Jeroen Fietsen</b>",
+    "<br/>Contrôle de sécurité gratuit<br/>",
+    "<span class=\"muted\">◷ Cette semaine</span>",
+    "<br/>",
+    "<span class=\"dots\">● ● ●</span>",
+    "</div>",
+    "</div>{{bottom-navigation}}</div>",
+    "<div class=\"reference\">",
+    "<b>HAB-FAV-001</b> — Favoris habitant<br/>Statut : à consolider<br/>Retrouver les annonces sauvegardées; pas de publication.</div>",
+    "</html>"
+  ]
+}

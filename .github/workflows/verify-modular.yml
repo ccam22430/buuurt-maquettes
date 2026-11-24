@@ -1,0 +1,45 @@
+name: Verify modular BUUURT screens
+on:
+  pull_request:
+    paths: ['.github/workflows/verify-modular.yml', 'modular/**', 'tests/**', 'tools/**']
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify screen files and components
+        run: node tests/verify-modular.cjs
+      - name: Verify exact migration parity for pull request 2
+        if: github.event.pull_request.number == 2
+        run: node tests/verify-modular.cjs --parity
+      - name: Verify mobile bundle and changes in isolation
+        run: node tests/verify-mobile.mjs
+      - name: Install Chromium for render comparison
+        run: |
+          npm install --no-save --package-lock=false playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Verify the offline mobile preview without JavaScript
+        run: |
+          node tools/bundle-mobile.mjs /tmp/buuurt-mobile.html
+          node tests/verify-mobile-browser.cjs /tmp/buuurt-mobile.html
+      - name: Verify all 20 screens in Dutch, French and English
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 &
+          server_pid=$!
+          trap 'kill "$server_pid"' EXIT
+          for attempt in {1..20}; do
+            if curl -fsS -o /dev/null http://127.0.0.1:8765/; then break; fi
+            sleep 1
+          done
+          node tools/bundle-preview.cjs preview-review.html
+          if [ "$PR_NUMBER" = '2' ]; then
+            node tests/verify-browser.cjs --parity
+            node tests/verify-browser.cjs --parity --mobile
+          else
+            node tests/verify-browser.cjs
+          fi

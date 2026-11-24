@@ -1,0 +1,26 @@
+{
+  "fr": "COM-004",
+  "en": "MER-004",
+  "title": "COM-004 — Créer / modifier une annonce",
+  "html": [
+    "<!DOCTYPE html>\n<html lang=\"fr\">",
+    "<meta charset=\"utf-8\"/>",
+    "<meta content=\"width=device-width,initial-scale=1\" name=\"viewport\"/>",
+    "<title>COM-004 — Créer / modifier une annonce</title>{{base-styles}}<div class=\"phone\">",
+    "<div class=\"status\">9:41 ▰ ▰ ▰</div>",
+    "<div class=\"head\">{{header-menu}}{{brand-logo}}{{standard-header-indicator}}</div>",
+    "<div class=\"section\">",
+    "<h2>Créer une annonce</h2>",
+    "</div>",
+    "<div class=\"field\">Type : Offre / News / Événement</div>",
+    "<div class=\"field\">Titre</div>",
+    "<div class=\"field\">Description</div>",
+    "<div class=\"field\">Visuels</div>",
+    "<div class=\"field\">Validité</div>",
+    "<a class=\"button secondary\">Enregistrer le brouillon</a>",
+    "<a class=\"button\" href=\"COM-005.html\">Publier</a>{{bottom-navigation}}</div>",
+    "<div class=\"reference\">",
+    "<b>COM-004</b> — Créer / modifier une annonce<br/>Statut : à consolider<br/>Contenu, visuels et brouillon.</div>",
+    "</html>"
+  ]
+}

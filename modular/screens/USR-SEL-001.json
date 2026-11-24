@@ -1,0 +1,28 @@
+{
+  "fr": "HAB-MAN-001",
+  "en": "USR-SEL-001",
+  "title": "HAB-MAN-001 — Choix des quartiers",
+  "html": [
+    "<!DOCTYPE html>\n<html lang=\"fr\">",
+    "<meta charset=\"utf-8\"/>",
+    "<meta content=\"width=device-width,initial-scale=1\" name=\"viewport\"/>",
+    "<title>HAB-MAN-001 — Choix des quartiers</title>{{base-styles}}<div class=\"phone\">",
+    "<div class=\"status\">9:41 ▰ ▰ ▰</div>",
+    "<div class=\"head\">{{header-menu}}{{brand-logo}}{{standard-header-indicator}}</div>",
+    "<div class=\"section\">",
+    "<h2>Choisir mes quartiers</h2>",
+    "<p>Sélectionnez un ou plusieurs quartiers d’Amsterdam.</p>",
+    "</div>",
+    "<div class=\"field\">⌕ Rechercher un quartier…</div>",
+    "<div class=\"check on\">☑   De Pijp</div>",
+    "<div class=\"check on\">☑   De Baarsjes</div>",
+    "<div class=\"check on\">☑   Bos en Lommer</div>",
+    "<div class=\"check\">☐   Jordaan</div>",
+    "<div class=\"check\">☐   Oud-West</div>",
+    "<div class=\"check\">☐   Centrum</div>",
+    "<a class=\"button\" href=\"HAB-MAN-002.html\">Voir les annonces (3 quartiers)</a>{{bottom-navigation}}</div>",
+    "<div class=\"reference\">",
+    "<b>HAB-MAN-001</b> — Choix des quartiers<br/>Statut : validé sur le principe<br/>Sélection multiple libre; consultation sans compte.</div>",
+    "</html>"
+  ]
+}

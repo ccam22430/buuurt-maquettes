@@ -1,0 +1,25 @@
+{
+  "fr": "HAB-SIT-001",
+  "en": "USR-WEB-001",
+  "title": "HAB-SIT-001 — Accueil BUUURT.nl",
+  "html": [
+    "<!DOCTYPE html>\n<html lang=\"fr\">",
+    "<meta charset=\"utf-8\"/>",
+    "<meta content=\"width=device-width,initial-scale=1\" name=\"viewport\"/>",
+    "<title>HAB-SIT-001 — Accueil BUUURT.nl</title>{{base-styles}}<div class=\"phone\">",
+    "<div class=\"status\">9:41 ▰ ▰ ▰</div>",
+    "<div class=\"head\">{{header-menu}}{{brand-logo}}{{notification-header-indicator}}",
+    "</div>",
+    "<div class=\"hero\" style=\"background:linear-gradient(120deg,#2e5772,#ca8c70)\">",
+    "<h2>Amsterdam</h2>",
+    "<p>Découvrez les annonces des commerçants et artisans de votre quartier.</p>",
+    "</div>",
+    "<a class=\"button\" href=\"HAB-MAN-001.html\">Choisir mon quartier</a>",
+    "<a class=\"button secondary\" href=\"HAB-LOC-001.html\">Autour de moi</a>",
+    "<div class=\"subtle\">Se connecter · Créer un compte</div>",
+    "<div class=\"subtle\">Installer BUUURT sur mon téléphone</div>{{bottom-navigation}}</div>",
+    "<div class=\"reference\">",
+    "<b>HAB-SIT-001</b> — Accueil BUUURT.nl<br/>Statut : validé<br/>Choisir mon quartier ou Autour de moi; connexion et installation secondaires.</div>",
+    "</html>"
+  ]
+}

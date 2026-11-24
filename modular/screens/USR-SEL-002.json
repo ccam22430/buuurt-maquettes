@@ -1,0 +1,23 @@
+{
+  "fr": "HAB-MAN-002",
+  "en": "USR-SEL-002",
+  "title": "HAB-MAN-002 — Confirmation et sauvegarde",
+  "html": [
+    "<!DOCTYPE html>\n<html lang=\"fr\">",
+    "<meta charset=\"utf-8\"/>",
+    "<meta content=\"width=device-width,initial-scale=1\" name=\"viewport\"/>",
+    "<title>HAB-MAN-002 — Confirmation et sauvegarde</title>{{base-styles}}<div class=\"phone\">",
+    "<div class=\"status\">9:41 ▰ ▰ ▰</div>",
+    "<div class=\"head\">{{header-menu}}{{brand-logo}}{{standard-header-indicator}}</div>",
+    "<div class=\"section\">",
+    "<h2>Vos 3 quartiers</h2>",
+    "<p>De Pijp · De Baarsjes · Bos en Lommer</p>",
+    "</div>",
+    "<div class=\"info\">Vous pouvez consulter les annonces sans compte. Pour enregistrer plusieurs sélections et les retrouver sur d’autres appareils, connectez-vous.</div>",
+    "<a class=\"button\" href=\"HAB-AUT-001.html\">Enregistrer cette sélection</a>",
+    "<a class=\"button secondary\" href=\"HAB-MAN-003.html\">Continuer sans enregistrer</a>{{bottom-navigation}}</div>",
+    "<div class=\"reference\">",
+    "<b>HAB-MAN-002</b> — Confirmation et sauvegarde<br/>Statut : à consolider<br/>Continuer sans enregistrer ou enregistrer via un compte.</div>",
+    "</html>"
+  ]
+}

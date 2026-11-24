@@ -1,0 +1,26 @@
+{
+  "fr": "COM-002",
+  "en": "MER-002",
+  "title": "COM-002 — Profil du commerce",
+  "html": [
+    "<!DOCTYPE html>\n<html lang=\"fr\">",
+    "<meta charset=\"utf-8\"/>",
+    "<meta content=\"width=device-width,initial-scale=1\" name=\"viewport\"/>",
+    "<title>COM-002 — Profil du commerce</title>{{base-styles}}<div class=\"phone\">",
+    "<div class=\"status\">9:41 ▰ ▰ ▰</div>",
+    "<div class=\"head\">{{header-menu}}{{brand-logo}}{{standard-header-indicator}}</div>",
+    "<div class=\"section\">",
+    "<h2>Mon commerce</h2>",
+    "</div>",
+    "<div class=\"field\">Nom du commerce</div>",
+    "<div class=\"field\">Adresse</div>",
+    "<div class=\"field\">Quartier</div>",
+    "<div class=\"field\">Description</div>",
+    "<div class=\"field\">Horaires</div>",
+    "<div class=\"field\">Réseaux sociaux</div>",
+    "<a class=\"button\">Enregistrer le profil</a>{{bottom-navigation}}</div>",
+    "<div class=\"reference\">",
+    "<b>COM-002</b> — Profil du commerce<br/>Statut : à consolider<br/>Identité, zone, informations de commerce et liens sociaux.</div>",
+    "</html>"
+  ]
+}
