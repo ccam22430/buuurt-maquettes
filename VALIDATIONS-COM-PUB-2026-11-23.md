@@ -64,3 +64,11 @@ Autorité de validation : fondateur BUUURT (confirmation explicite dans la conve
 - Critères de recette à exécuter en environnement isolé. Sur une offre fictive « Coupe à 25 € », choisir la langue de l’annonce, saisir le titre et le prix, ajouter une photo, puis vérifier l’arrivée sur COM-PUB-002 avec Gratuit sélectionné. Vérifier les retours, le changement de langue de l’interface et la fidélité du titre, du prix, du texte et de la photo dans l’aperçu. Vérifier qu’aucune publication n’a lieu avant la confirmation, et qu’une double action ou une reprise après erreur ne crée pas de doublon. Après validation de ce parcours, vérifier les mêmes transitions sur Événement et Découverte en conservant leurs règles propres.
 
 Statut : séquence approuvée par le fondateur. Implémentation et recette à réaliser. Les validations individuelles des maquettes figurent ci-dessus.
+
+## Parcours de publication gratuit ou sponsorisé — décision du 25 novembre 2026
+
+- Le commerçant vérifie son annonce dans COM-PUB-APE-001 après les photos, puis choisit le mode de diffusion dans COM-PUB-002. Cette décision actualise l’ordre aperçu / choix du mode consigné le 23 novembre.
+- Gratuit : après « Continuer », afficher le récapitulatif à 0 € avec l’aperçu de l’annonce. La publication est déclenchée par l’action explicite « Publier l’annonce ».
+- Sponsorisé : après « Continuer », le commerçant règle le budget, la zone de diffusion et les dates. Le récapitulatif présente le montant total et l’aperçu avec le badge « Sponsorisé ». L’action explicite « Confirmer et payer » suit ce récapitulatif.
+- Le badge « Sponsorisé » identifie la diffusion payante sur la carte. Le badge du type d’annonce, par exemple « Offre », reste distinct.
+- Statut : principe validé par le fondateur. Récapitulatifs et actions finales à intégrer et à tester dans la maquette. Les conditions d’activation du sponsorisé restent applicables.
