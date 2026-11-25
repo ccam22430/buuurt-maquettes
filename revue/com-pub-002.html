@@ -15,13 +15,26 @@ body{margin:0;padding:18px 10px 40px;background:#f4f2f3;color:var(--ink);font-fa
 .content{padding:17px 17px 24px;flex:1}.back{color:var(--brand);text-decoration:none;font-size:14px;font-weight:650;display:inline-block;margin-bottom:13px}
 h1{font-size:23px;line-height:1.22;letter-spacing:-.45px;margin:0 0 8px;font-weight:760}.intro{font-size:14px;line-height:1.5;color:var(--muted);margin:0 0 23px}
 .legend{font-size:16px;font-weight:750;margin:0 0 13px}
-.choice{display:flex;align-items:flex-start;gap:12px;padding:15px 13px;border:1px solid var(--line);border-radius:15px;margin:11px 0;cursor:pointer;min-height:106px;position:relative;background:#fff}
-.choice:has(input:checked){border:1.7px solid var(--brand);background:color-mix(in srgb,var(--brand) 5%,white)}
-.choice input{width:18px;height:18px;margin:4px 0 0;accent-color:var(--brand);flex:none}
-.choice-icon{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;flex:none}
-.choice-icon.free{background:#eaf8ef;color:#19834a}.choice-icon.paid{background:#fff0f5;color:var(--brand)}
-.choice-copy{display:flex;flex-direction:column;gap:6px;min-width:0;padding-right:3px}
-.choice-copy strong{font-size:15px;font-weight:750}.choice-copy span{font-size:12px;line-height:1.5;color:#696168}
+.choice-step h1{font-size:clamp(23px,6.25vw,29px);line-height:1.15;margin-bottom:18px}
+.publication-options{display:grid;gap:12px;min-width:0;border:0;padding:0;margin:0}
+.choice{display:grid;grid-template-columns:42px minmax(0,1fr) auto;align-items:center;gap:9px 10px;min-width:0;padding:13px;border:2px solid var(--line);border-radius:16px;cursor:pointer;background:#fff}
+.choice--sponsored{background:#fdeaf2;border-color:transparent}
+.choice:has(input:checked){border-color:var(--brand)}
+.choice:focus-within{outline:2px solid #a30136;outline-offset:2px}
+.choice input{width:19px;height:19px;margin:0;accent-color:var(--brand);cursor:pointer}
+.choice-icon{width:42px;height:42px;border-radius:12px;display:grid;place-items:center}
+.choice-icon.free{background:#eaf8ef;color:#19834a}
+.choice-icon.paid{background:#fff;color:#a30136}
+.choice-title{font-size:17px;line-height:1.2;font-weight:780;overflow-wrap:anywhere}
+.choice-copy,.choice-options,.choice-price,.choice-features{grid-column:1/-1}
+.choice-copy,.choice-options{font-size:13px;line-height:1.4;color:#4d454c}
+.choice-copy strong{color:var(--ink)}
+.choice-options{font-size:12px}
+.choice-features{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.choice-features>span{display:grid;place-items:center;gap:4px;background:#fff;border-radius:10px;padding:7px 2px;font-size:11px;font-weight:700;line-height:1.2;text-align:center;overflow-wrap:anywhere}
+.choice-features svg{color:#a30136}
+.choice-price{color:#a30136;font-size:21px;font-weight:800}
+.choice-step .continue{border-radius:24px;background:#df0049}
 .choice-note{margin:14px 0 0;padding:12px;border-radius:12px;background:#f7f4f6;color:#655d63;font-size:12px;line-height:1.45}
 .primary{display:block;width:100%;min-height:48px;border:0;border-radius:11px;background:var(--brand);color:white;font:750 15px var(--buuurt-font,Inter,sans-serif);padding:14px 16px;margin:20px 0 0;cursor:pointer}
 .secondary{background:#fff;color:var(--brand);border:1px solid var(--brand)}
@@ -51,11 +64,23 @@ input[type=range]{width:100%;accent-color:var(--brand)}
 <main class="content">
 <div class="choice-step">
 <a class="back" href="com-pub-001.html#fr-MER-PUB-001">← Retour</a>
-<h1>Comment souhaitez-vous publier votre annonce ?</h1><p class="intro">Choisissez comment vous souhaitez faire découvrir votre annonce.</p>
-<p class="legend">Choisissez votre mode de publication</p>
-<fieldset style="border:0;padding:0;margin:0">
-<label class="choice"><input type="radio" name="publication-fr" value="free" checked/><span class="choice-icon free"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14v12H5zM8 8V5h8v3M8 12h8M8 16h5"/></svg></span><span class="choice-copy"><strong>Publication gratuite</strong><span>Faites découvrir vos offres, découvertes et événements aux habitants qui se trouvent à proximité de votre commerce.</span></span></label>
-<label class="choice"><input type="radio" name="publication-fr" value="sponsored"/><span class="choice-icon paid"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17 10 11l3 3 7-8M14 6h6v6"/></svg></span><span class="choice-copy"><strong>Publication sponsorisée</strong><span>Faites découvrir vos offres, événements et découvertes dans une zone plus large et attirez de nouveaux clients de tout le quartier.</span><span style="font-size:11px;color:var(--brand);font-weight:650">Vous pourrez choisir votre budget, votre zone de diffusion et la durée de votre campagne.</span></span></label>
+<h1>Comment souhaitez-vous publier votre annonce ?</h1>
+<fieldset class="publication-options" aria-label="Choisissez votre mode de publication">
+<label class="choice choice--sponsored">
+  <span class="choice-icon paid" aria-hidden="true"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17 10 11l3 3 7-8M14 6h6v6"/></svg></span>
+  <strong class="choice-title">Publication sponsorisée</strong>
+  <input type="radio" name="publication-fr" value="sponsored"/>
+  <span class="choice-copy"><strong>Donnez un coup de projecteur à votre annonce.</strong> Elle remonte dans le fil, même quand les habitants scannent une vitrine plus éloignée.</span>
+  <span class="choice-options">Vous choisissez le budget, la zone et la durée de votre campagne.</span>
+  <span class="choice-features"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a3 3 0 0 1 3-3h11M20 11h-4a2 2 0 0 0 0 4h4"/></svg>Budget</span><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 5-8 10-8 10s-8-5-8-10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>Zone</span><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg>Durée</span></span>
+</label>
+<label class="choice choice--free">
+  <span class="choice-icon free" aria-hidden="true"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14v12H5zM8 8V5h8v3M8 12h8M8 16h5"/></svg></span>
+  <strong class="choice-title">Publication gratuite</strong>
+  <input type="radio" name="publication-fr" value="free" checked/>
+  <span class="choice-copy">Faites connaître votre annonce dans tout le quartier. Elle apparaît plus haut dans le fil quand le QR code scanné est proche de votre commerce.</span>
+  <span class="choice-price">0 €</span>
+</label>
 </fieldset>
 <button type="button" class="primary continue">Continuer</button>
 <p class="status-message" role="status" hidden></p>
@@ -91,11 +116,23 @@ input[type=range]{width:100%;accent-color:var(--brand)}
 <main class="content">
 <div class="choice-step">
 <a class="back" href="com-pub-001.html#nl-MER-PUB-001">← Terug</a>
-<h1>Hoe wil je je bericht publiceren?</h1><p class="intro">Kies hoe je jouw bericht onder de aandacht wilt brengen.</p>
-<p class="legend">Kies je publicatiemethode</p>
-<fieldset style="border:0;padding:0;margin:0">
-<label class="choice"><input type="radio" name="publication-nl" value="free" checked/><span class="choice-icon free"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14v12H5zM8 8V5h8v3M8 12h8M8 16h5"/></svg></span><span class="choice-copy"><strong>Gratis publicatie</strong><span>Laat je aanbiedingen, ontdekkingen en evenementen zien aan buurtbewoners die zich in de buurt van je winkel bevinden.</span></span></label>
-<label class="choice"><input type="radio" name="publication-nl" value="sponsored"/><span class="choice-icon paid"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17 10 11l3 3 7-8M14 6h6v6"/></svg></span><span class="choice-copy"><strong>Gesponsorde publicatie</strong><span>Laat je aanbiedingen, evenementen en ontdekkingen in een groter gebied zien en trek nieuwe klanten uit de hele buurt aan.</span><span style="font-size:11px;color:var(--brand);font-weight:650">Je kunt je budget, verspreidingsgebied en campagneduur kiezen.</span></span></label>
+<h1>Hoe wil je je bericht publiceren?</h1>
+<fieldset class="publication-options" aria-label="Kies je publicatiemethode">
+<label class="choice choice--sponsored">
+  <span class="choice-icon paid" aria-hidden="true"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17 10 11l3 3 7-8M14 6h6v6"/></svg></span>
+  <strong class="choice-title">Gesponsorde publicatie</strong>
+  <input type="radio" name="publication-nl" value="sponsored"/>
+  <span class="choice-copy"><strong>Zet je bericht in de schijnwerpers.</strong> Het verschijnt hoger in de buurtfeed, ook als bewoners de QR-code van een winkel verderop scannen.</span>
+  <span class="choice-options">Je kiest zelf het budget, het verspreidingsgebied en de looptijd van je campagne.</span>
+  <span class="choice-features"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a3 3 0 0 1 3-3h11M20 11h-4a2 2 0 0 0 0 4h4"/></svg>Budget</span><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 5-8 10-8 10s-8-5-8-10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>Gebied</span><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg>Looptijd</span></span>
+</label>
+<label class="choice choice--free">
+  <span class="choice-icon free" aria-hidden="true"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14v12H5zM8 8V5h8v3M8 12h8M8 16h5"/></svg></span>
+  <strong class="choice-title">Gratis publicatie</strong>
+  <input type="radio" name="publication-nl" value="free" checked/>
+  <span class="choice-copy">Maak je bericht bekend in de hele buurt. Het verschijnt hoger in de buurtfeed als de gescande QR-code dichter bij jouw winkel is.</span>
+  <span class="choice-price">0 €</span>
+</label>
 </fieldset>
 <button type="button" class="primary continue">Doorgaan</button>
 <p class="status-message" role="status" hidden></p>
@@ -126,11 +163,23 @@ input[type=range]{width:100%;accent-color:var(--brand)}
 <main class="content">
 <div class="choice-step">
 <a class="back" href="com-pub-001.html#en-MER-PUB-001">← Back</a>
-<h1>How would you like to publish your post?</h1><p class="intro">Choose how you want people in your neighbourhood to discover your post.</p>
-<p class="legend">Choose your publication method</p>
-<fieldset style="border:0;padding:0;margin:0">
-<label class="choice"><input type="radio" name="publication-en" value="free" checked/><span class="choice-icon free"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14v12H5zM8 8V5h8v3M8 12h8M8 16h5"/></svg></span><span class="choice-copy"><strong>Free publication</strong><span>Introduce your offers, discoveries and events to residents near your business.</span></span></label>
-<label class="choice"><input type="radio" name="publication-en" value="sponsored"/><span class="choice-icon paid"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17 10 11l3 3 7-8M14 6h6v6"/></svg></span><span class="choice-copy"><strong>Sponsored publication</strong><span>Showcase your offers, events and discoveries across a wider area and attract new customers from across the neighbourhood.</span><span style="font-size:11px;color:var(--brand);font-weight:650">You can choose your budget, coverage area and campaign duration.</span></span></label>
+<h1>How would you like to publish your post?</h1>
+<fieldset class="publication-options" aria-label="Choose your publication method">
+<label class="choice choice--sponsored">
+  <span class="choice-icon paid" aria-hidden="true"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17 10 11l3 3 7-8M14 6h6v6"/></svg></span>
+  <strong class="choice-title">Sponsored publication</strong>
+  <input type="radio" name="publication-en" value="sponsored"/>
+  <span class="choice-copy"><strong>Put your post in the spotlight.</strong> It appears higher in the feed, even when residents scan a shop window QR code farther from your business.</span>
+  <span class="choice-options">You choose your campaign budget, coverage area and duration.</span>
+  <span class="choice-features"><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a3 3 0 0 1 3-3h11M20 11h-4a2 2 0 0 0 0 4h4"/></svg>Budget</span><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 5-8 10-8 10s-8-5-8-10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>Area</span><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg>Duration</span></span>
+</label>
+<label class="choice choice--free">
+  <span class="choice-icon free" aria-hidden="true"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14v12H5zM8 8V5h8v3M8 12h8M8 16h5"/></svg></span>
+  <strong class="choice-title">Free publication</strong>
+  <input type="radio" name="publication-en" value="free" checked/>
+  <span class="choice-copy">Share your post across the whole neighbourhood. It appears higher in the feed when the scanned QR code is closer to your business.</span>
+  <span class="choice-price">0 €</span>
+</label>
 </fieldset>
 <button type="button" class="primary continue">Continue</button>
 <p class="status-message" role="status" hidden></p>
