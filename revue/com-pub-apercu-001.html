@@ -300,7 +300,13 @@ document.querySelectorAll(".preview-step").forEach(root=>{
   images[key].style.transformOrigin=position;
   images[key].style.transform="scale("+Math.max(scale/100,1+0.12*distance)+")";
  }
- root.querySelector("[data-continue]").addEventListener("click",()=>{location.href="com-pub-002.html#"+lang+"-MER-PUB-002"});
+ root.querySelector("[data-continue]").addEventListener("click",()=>{
+  const next=new URL("com-pub-002.html",location.href);
+  if(fromPhoto)next.searchParams.set("from","photo");
+  if(bakeryExample)next.searchParams.set("exemple","boulangerie");
+  next.hash=lang+"-MER-PUB-002";
+  location.href=next.href;
+ });
  window.addEventListener("hashchange",show);
  show();
 });
