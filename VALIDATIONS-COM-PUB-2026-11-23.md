@@ -88,3 +88,13 @@ Statut : séquence approuvée par le fondateur. Implémentation et recette à r�
 - La carte sponsorisée apparaît en premier et présente la mise en avant dans le fil avec les réglages Budget, Zone et Durée. La publication gratuite à 0 € reste sélectionnée par défaut.
 - Texte français validé pour le gratuit : « Faites découvrir votre commerce à tout le quartier. Plus la vitrine où l’habitant scanne un QR code est proche de votre commerce, plus votre annonce remonte dans le fil. »
 - Cette validation couvre l’écran de choix. Les récapitulatifs finaux, la publication effective et le paiement restent à intégrer selon la décision de parcours du 25 novembre 2026.
+
+## Codes des écrans après l’aperçu — décision du 25 novembre 2026
+
+| Code | Écran |
+| --- | --- |
+| COM-PUB-002 / MER-PUB-002 | Écran commun de choix du mode de publication après l’aperçu. |
+| COM-PUB-GRA-001 | Confirmation de publication gratuite. |
+| COM-PUB-SPO-001 | Paramétrage de la campagne sponsorisée : budget, zone et durée. |
+
+Statut : nomenclature validée par le fondateur. Le récapitulatif gratuit actuellement présent dans la maquette reste une étape provisoire et ne correspond pas à la confirmation de publication identifiée par COM-PUB-GRA-001.
