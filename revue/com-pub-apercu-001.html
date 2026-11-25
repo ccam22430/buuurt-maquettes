@@ -65,7 +65,7 @@ body{max-width:1000px;margin:auto;padding:14px;background:#f4f4f6;color:#17171d;
 /* Keep the photo overlays in separate rows, even when their text wraps. */
 .large-card .ad-photo {
  display:grid;
- grid-template-columns:minmax(0,1fr);
+ grid-template-columns:minmax(0,1fr) auto;
  grid-template-rows:auto 1fr auto;
  align-items:start;
  gap:6px 8px;
@@ -76,6 +76,7 @@ body{max-width:1000px;margin:auto;padding:14px;background:#f4f4f6;color:#17171d;
 .large-card .merchant-tag,
 .large-card .pink-offer,
 .large-card .offer-cta {position:relative;inset:auto;justify-self:start}
+.large-card .feed-type {grid-area:1 / 2;justify-self:end;margin-top:0}
 .large-card .merchant-tag {grid-area:1 / 1;min-width:0;max-width:100%}
 .large-card .merchant-tag>span:last-child {min-width:0;overflow-wrap:anywhere}
 .large-card .merchant-tag b,.large-card .merchant-tag small {white-space:normal}
@@ -89,7 +90,7 @@ body{max-width:1000px;margin:auto;padding:14px;background:#f4f4f6;color:#17171d;
 <h2 class="page-title"><a href="com-pub-offre-001.html#fr-MER-PUB-OFR-001">←</a>Aperçu de l’annonce</h2>
 <p class="preview-intro">Vérifiez votre annonce avant de la publier.</p>
 <section class="format-preview"><div class="format-heading"><h3>Affichage en annonce principale</h3><p>Si vous choisissez cette annonce comme principale, elle s’affichera en premier après le scan du QR code de votre vitrine.</p></div><div class="ad-card large-card" data-card>
-<div class="ad-photo"><img src="mer-pub-003-shop.jpg" alt="Doe-het-zelf" data-main-image><div class="merchant-tag"><span class="merchant-icon">🔨</span><span><b>Doe-het-zelf</b><small>Bricolage & Outillage</small></span></div><div class="pink-offer"><b data-banner>25 € de remise</b><small data-sub-banner>dès 100 € d’achat</small></div><div class="offer-cta">Voir l’offre　➜</div></div>
+<div class="ad-photo"><img src="mer-pub-003-shop.jpg" alt="Doe-het-zelf" data-main-image><span class="feed-type"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 19 14-14"/><circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="17" r="2.5"/></svg>Offre</span><div class="merchant-tag"><span class="merchant-icon">🔨</span><span><b>Doe-het-zelf</b><small>Bricolage & Outillage</small></span></div><div class="pink-offer"><b data-banner>25 € de remise</b><small data-sub-banner>dès 100 € d’achat</small></div><div class="offer-cta">Voir l’offre　➜</div></div>
 </div>
 <div class="preview-carousel" data-carousel hidden><div class="dots" data-dots></div></div>
 </section>
@@ -128,7 +129,7 @@ body{max-width:1000px;margin:auto;padding:14px;background:#f4f4f6;color:#17171d;
 <h2 class="page-title"><a href="com-pub-offre-001.html#nl-MER-PUB-OFR-001">←</a>Voorbeeld van de aankondiging</h2>
 <p class="preview-intro">Controleer je bericht voordat je het publiceert.</p>
 <section class="format-preview"><div class="format-heading"><h3>Weergave als hoofdbericht</h3><p>Als je dit bericht als hoofdbericht kiest, verschijnt het als eerste na het scannen van de QR-code op je winkelruit.</p></div><div class="ad-card large-card" data-card>
-<div class="ad-photo"><img src="mer-pub-003-shop.jpg" alt="Doe-het-zelf" data-main-image><div class="merchant-tag"><span class="merchant-icon">🔨</span><span><b>Doe-het-zelf</b><small>Doe-het-zelf & Gereedschap</small></span></div><div class="pink-offer"><b data-banner>€25 korting</b><small data-sub-banner>vanaf €100 besteding</small></div><div class="offer-cta">Bekijk aanbieding　➜</div></div>
+<div class="ad-photo"><img src="mer-pub-003-shop.jpg" alt="Doe-het-zelf" data-main-image><span class="feed-type"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 19 14-14"/><circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="17" r="2.5"/></svg>Aanbieding</span><div class="merchant-tag"><span class="merchant-icon">🔨</span><span><b>Doe-het-zelf</b><small>Doe-het-zelf & Gereedschap</small></span></div><div class="pink-offer"><b data-banner>€25 korting</b><small data-sub-banner>vanaf €100 besteding</small></div><div class="offer-cta">Bekijk aanbieding　➜</div></div>
 </div>
 <div class="preview-carousel" data-carousel hidden><div class="dots" data-dots></div></div>
 </section>
@@ -167,7 +168,7 @@ body{max-width:1000px;margin:auto;padding:14px;background:#f4f4f6;color:#17171d;
 <h2 class="page-title"><a href="com-pub-offre-001.html#en-MER-PUB-OFR-001">←</a>Announcement preview</h2>
 <p class="preview-intro">Review your post before publishing it.</p>
 <section class="format-preview"><div class="format-heading"><h3>Main post preview</h3><p>If you set this as your main post, it will appear first after someone scans your shop window QR code.</p></div><div class="ad-card large-card" data-card>
-<div class="ad-photo"><img src="mer-pub-003-shop.jpg" alt="Doe-het-zelf" data-main-image><div class="merchant-tag"><span class="merchant-icon">🔨</span><span><b>Doe-het-zelf</b><small>DIY & Tools</small></span></div><div class="pink-offer"><b data-banner>€25 off</b><small data-sub-banner>on purchases over €100</small></div><div class="offer-cta">View offer　➜</div></div>
+<div class="ad-photo"><img src="mer-pub-003-shop.jpg" alt="Doe-het-zelf" data-main-image><span class="feed-type"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 19 14-14"/><circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="17" r="2.5"/></svg>Offer</span><div class="merchant-tag"><span class="merchant-icon">🔨</span><span><b>Doe-het-zelf</b><small>DIY & Tools</small></span></div><div class="pink-offer"><b data-banner>€25 off</b><small data-sub-banner>on purchases over €100</small></div><div class="offer-cta">View offer　➜</div></div>
 </div>
 <div class="preview-carousel" data-carousel hidden><div class="dots" data-dots></div></div>
 </section>
