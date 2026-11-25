@@ -80,3 +80,11 @@ Statut : séquence approuvée par le fondateur. Implémentation et recette à r�
 - L’aperçu montre le même brouillon en grand format après un scan du QR vitrine s’il devient l’annonce principale, et en petit format dans le fil du quartier.
 - Un seul carrousel, visible à partir de deux photos, synchronise les deux formats. Le badge « Offre » figure dans les deux formats de l’exemple. Le texte « Voir toutes les annonces » est présenté sans navigation dans l’aperçu.
 - « Continuer » mène à COM-PUB-002. Le choix de l’annonce principale relève de « Mes annonces ». Les récapitulatifs de publication et le paiement relèvent de la décision de parcours distincte.
+
+## VALIDÉE — COM-PUB-002 / MER-PUB-002 — Choix du mode de publication
+
+- Validation du fondateur le 25 novembre 2026.
+- Maquette : `revue/com-pub-002.html` (blob `31901ebe03a0a3bc04b0e7cf00b5cba83f19e9ee`).
+- La carte sponsorisée apparaît en premier et présente la mise en avant dans le fil avec les réglages Budget, Zone et Durée. La publication gratuite à 0 € reste sélectionnée par défaut.
+- Texte français validé pour le gratuit : « Faites découvrir votre commerce à tout le quartier. Plus la vitrine où l’habitant scanne un QR code est proche de votre commerce, plus votre annonce remonte dans le fil. »
+- Cette validation couvre l’écran de choix. Les récapitulatifs finaux, la publication effective et le paiement restent à intégrer selon la décision de parcours du 25 novembre 2026.
