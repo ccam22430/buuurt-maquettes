@@ -97,4 +97,12 @@ Statut : séquence approuvée par le fondateur. Implémentation et recette à r�
 | COM-PUB-GRA-001 | Confirmation de publication gratuite. |
 | COM-PUB-SPO-001 | Paramétrage de la campagne sponsorisée : budget, zone et durée. |
 
-Statut : nomenclature validée par le fondateur. Le récapitulatif gratuit actuellement présent dans la maquette reste une étape provisoire et ne correspond pas à la confirmation de publication identifiée par COM-PUB-GRA-001.
+Statut : nomenclature validée par le fondateur. La confirmation de publication gratuite est documentée ci-dessous.
+
+## VALIDÉE — COM-PUB-GRA-001 — Confirmation de publication gratuite
+
+- Validation du fondateur le 25 novembre 2026.
+- Maquette : `revue/com-pub-002.html` (blob `3d85cef7c503259749d8c38987f10eaef8ab25a8`). [Ouvrir la confirmation](https://ccam22430.github.io/buuurt-maquettes/revue/com-pub-002.html?etape=confirmation-gratuite#fr-MER-PUB-002).
+- Après l’aperçu, le bouton « Publier gratuitement » de COM-PUB-002 mène directement à la confirmation. Cette décision remplace le récapitulatif gratuit à 0 € prévu dans la décision antérieure.
+- En-tête BUUURT avec menu, logo officiel, globe de langue et cloche. Actions dans l’ordre : « Créer une nouvelle annonce » (principale), « Accéder à mon tableau de bord » (secondaire), « Voir mon annonce dans le fil » (lien texte).
+- La publication est simulée. Le lien vers le fil ouvre une annonce gratuite d’exemple.
