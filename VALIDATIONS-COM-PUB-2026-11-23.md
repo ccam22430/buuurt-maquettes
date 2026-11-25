@@ -72,3 +72,11 @@ Statut : séquence approuvée par le fondateur. Implémentation et recette à r�
 - Sponsorisé : après « Continuer », le commerçant règle le budget, la zone de diffusion et les dates. Le récapitulatif présente le montant total et l’aperçu avec le badge « Sponsorisé ». L’action explicite « Confirmer et payer » suit ce récapitulatif.
 - Le badge « Sponsorisé » identifie la diffusion payante sur la carte. Le badge du type d’annonce, par exemple « Offre », reste distinct.
 - Statut : principe validé par le fondateur. Récapitulatifs et actions finales à intégrer et à tester dans la maquette. Les conditions d’activation du sponsorisé restent applicables.
+
+## VALIDÉE — COM-PUB-APE-001 / MER-PUB-PRV-001 — Aperçu de l’annonce
+
+- Validation du fondateur le 25 novembre 2026.
+- Maquette : `revue/com-pub-apercu-001.html` (blob `dbf410301802b15e6fec433088e6a49fad691336`).
+- L’aperçu montre le même brouillon en grand format après un scan du QR vitrine s’il devient l’annonce principale, et en petit format dans le fil du quartier.
+- Un seul carrousel, visible à partir de deux photos, synchronise les deux formats. Le badge « Offre » figure dans les deux formats de l’exemple. Le texte « Voir toutes les annonces » est présenté sans navigation dans l’aperçu.
+- « Continuer » mène à COM-PUB-002. Le choix de l’annonce principale relève de « Mes annonces ». Les récapitulatifs de publication et le paiement relèvent de la décision de parcours distincte.
