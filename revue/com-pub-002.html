@@ -42,10 +42,17 @@ h1{font-size:23px;line-height:1.22;letter-spacing:-.45px;margin:0 0 8px;font-wei
 .footer b{display:block;font-size:20px;font-weight:450;margin-bottom:4px;line-height:22px}.footer .active{color:var(--brand);font-weight:750}
 .sponsored-setup[hidden],.choice-step[hidden],.free-confirmation[hidden],.status-message[hidden]{display:none!important}
 .free-confirmation{text-align:center;padding:24px 0}
-.confirmation-code{font-size:12px;color:#655d63;margin:0 0 18px}
+.free-confirmation h1{font-size:clamp(23px,6.5vw,29px);font-weight:800}
 .confirmation-check{display:grid;place-items:center;width:62px;height:62px;margin:0 auto 18px;border-radius:50%;background:#eaf8ef;color:#197344;font-size:34px;font-weight:800}
 .free-confirmation .intro{margin:0 auto 16px;max-width:26ch}
-.confirmation-demo{padding:10px;background:#f7f4f6;border-radius:10px;color:#59535a;font-size:12px}
+.confirmation-demo{color:#59535a;font-size:12px;margin:0 0 22px}
+.confirmation-actions{display:grid;gap:12px}
+.confirmation-actions .primary{display:flex;align-items:center;justify-content:center;gap:9px;margin:0;text-decoration:none;line-height:1.25}
+.confirmation-actions svg{flex:none}
+.confirmation-create{background:#df0049}
+.confirmation-dashboard,.confirmation-feed{color:#a30136}
+.confirmation-feed{display:grid;place-items:center;min-height:44px;font-size:14px;text-underline-offset:3px}
+.confirmation-actions a:focus-visible{outline:2px solid #a30136;outline-offset:3px}
 .budget-options{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:13px 0 18px}
 .budget-option{border:1px solid var(--line);border-radius:12px;padding:12px 5px;background:#fff;text-align:center;cursor:pointer;color:var(--ink)}
 .budget-option strong{display:block;color:var(--brand);font-size:21px}.budget-option span{font-size:10px;color:var(--muted)}
@@ -91,12 +98,15 @@ input[type=range]{width:100%;accent-color:var(--brand)}
 <p class="status-message" role="status" hidden></p>
 </div>
 <section class="free-confirmation" hidden aria-labelledby="fr-COM-PUB-GRA-001">
-<p class="confirmation-code">COM-PUB-GRA-001</p>
 <span class="confirmation-check" aria-hidden="true">✓</span>
 <h1 id="fr-COM-PUB-GRA-001" tabindex="-1">Votre annonce est publiée</h1>
-<p class="intro">Votre annonce est visible dans le fil du quartier.</p>
+<p class="intro">Elle est visible dans le fil du quartier.</p>
 <p class="confirmation-demo">Maquette de démonstration. Publication simulée.</p>
-<button type="button" class="primary secondary return-choice">Retour au choix de publication</button>
+<div class="confirmation-actions">
+ <a class="primary confirmation-create" href="com-pub-001.html#fr-MER-PUB-001"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span>Créer une nouvelle annonce</span></a>
+ <a class="primary secondary confirmation-dashboard" href="../BUUURT_Bibliotheque_Visuelle_20_Ecrans_Menu_NL.html?lang=fr#MER-003"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>Accéder à mon tableau de bord</span></a>
+ <a class="confirmation-feed" href="hab-vit-001.html?lang=fr&amp;exemple=publication-gratuite#publication-gratuite">Voir mon annonce dans le fil</a>
+</div>
 </section>
 <div class="sponsored-setup" hidden>
 <a href="#" class="back back-choice">Retour au choix de publication</a>
@@ -146,12 +156,15 @@ input[type=range]{width:100%;accent-color:var(--brand)}
 <p class="status-message" role="status" hidden></p>
 </div>
 <section class="free-confirmation" hidden aria-labelledby="nl-COM-PUB-GRA-001">
-<p class="confirmation-code">COM-PUB-GRA-001</p>
 <span class="confirmation-check" aria-hidden="true">✓</span>
 <h1 id="nl-COM-PUB-GRA-001" tabindex="-1">Je bericht is gepubliceerd</h1>
-<p class="intro">Je bericht is zichtbaar in de buurtfeed.</p>
+<p class="intro">Het is zichtbaar in de buurtfeed.</p>
 <p class="confirmation-demo">Demonstratie. Publicatie gesimuleerd.</p>
-<button type="button" class="primary secondary return-choice">Terug naar publicatiemethode</button>
+<div class="confirmation-actions">
+ <a class="primary confirmation-create" href="com-pub-001.html#nl-MER-PUB-001"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span>Nieuw bericht maken</span></a>
+ <a class="primary secondary confirmation-dashboard" href="../BUUURT_Bibliotheque_Visuelle_20_Ecrans_Menu_NL.html?lang=nl#MER-003"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>Naar mijn dashboard</span></a>
+ <a class="confirmation-feed" href="hab-vit-001.html?lang=nl&amp;exemple=publication-gratuite#publication-gratuite">Mijn bericht in de buurtfeed bekijken</a>
+</div>
 </section>
 <div class="sponsored-setup" hidden>
 <a href="#" class="back back-choice">Terug naar publicatiekeuze</a>
@@ -201,12 +214,15 @@ input[type=range]{width:100%;accent-color:var(--brand)}
 <p class="status-message" role="status" hidden></p>
 </div>
 <section class="free-confirmation" hidden aria-labelledby="en-COM-PUB-GRA-001">
-<p class="confirmation-code">COM-PUB-GRA-001</p>
 <span class="confirmation-check" aria-hidden="true">✓</span>
 <h1 id="en-COM-PUB-GRA-001" tabindex="-1">Your post is live</h1>
-<p class="intro">Your post is visible in the neighbourhood feed.</p>
+<p class="intro">It’s visible in the neighbourhood feed.</p>
 <p class="confirmation-demo">Demo prototype. Publication simulated.</p>
-<button type="button" class="primary secondary return-choice">Back to publication method</button>
+<div class="confirmation-actions">
+ <a class="primary confirmation-create" href="com-pub-001.html#en-MER-PUB-001"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span>Create a new post</span></a>
+ <a class="primary secondary confirmation-dashboard" href="../BUUURT_Bibliotheque_Visuelle_20_Ecrans_Menu_NL.html?lang=en#MER-003"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>Go to my dashboard</span></a>
+ <a class="confirmation-feed" href="hab-vit-001.html?lang=en&amp;exemple=publication-gratuite#publication-gratuite">See my post in the feed</a>
+</div>
 </section>
 <div class="sponsored-setup" hidden>
 <a href="#" class="back back-choice">Back to publication choice</a>
@@ -228,10 +244,9 @@ input[type=range]{width:100%;accent-color:var(--brand)}
 <script>
 const publicationLabels={"fr":["Publier gratuitement","Continuer"],"nl":["Gratis publiceren","Doorgaan"],"en":["Publish for free","Continue"]};
 const publicationScreens=[];
-function setFreeConfirmation(enabled){
+function showFreeConfirmation(){
  const url=new URL(location.href);
- url.searchParams.delete("etape");
- if(enabled)url.searchParams.set("etape","confirmation-gratuite");
+ url.searchParams.set("etape","confirmation-gratuite");
  history.pushState(null,"",url);
  renderFreeConfirmation();
 }
@@ -257,12 +272,11 @@ document.querySelectorAll(".screen").forEach(screen=>{
  const radiusHint=document.createElement("p");radiusHint.className="status-message";radiusHint.textContent={fr:"Le rayon maximal proposé dépend des paramètres définis par BUUURT pour votre quartier.",nl:"De maximaal beschikbare straal hangt af van de instellingen van BUUURT voor jouw buurt.",en:"The maximum available radius depends on the settings configured by BUUURT for your neighbourhood."}[lang];screen.querySelector(".range-wrap").append(radiusHint);
  const budgetHint=document.createElement("p");budgetHint.className="status-message";budgetHint.textContent={fr:"Budgets indicatifs : les tarifs définitifs seront ajustés selon les données du quartier pilote.",nl:"Indicatieve budgetten: de definitieve tarieven worden afgestemd op de gegevens van de pilotbuurt.",en:"Indicative budgets: final pricing will be calibrated using pilot neighbourhood data."}[lang];screen.querySelector(".budget-options").after(budgetHint);
  action.addEventListener("click",()=>{
-  if(selectedMode()==="free"){setFreeConfirmation(true);confirmation.querySelector("h1").focus();return;}
+  if(selectedMode()==="free"){showFreeConfirmation();confirmation.querySelector("h1").focus();return;}
   step.hidden=true;setup.hidden=false;screen.querySelector(".content").scrollTop=0;
  });
  const goBack=()=>{setup.hidden=true;step.hidden=false;};
  screen.querySelectorAll(".back-choice").forEach(el=>el.addEventListener("click",e=>{e.preventDefault();goBack();}));
- screen.querySelector(".return-choice").addEventListener("click",()=>{setFreeConfirmation(false);action.focus();});
  screen.querySelector(".radius-range").addEventListener("input",e=>{screen.querySelector(".radius-value").textContent=Number(e.target.value).toFixed(1).replace(".0","")+" km";});
  screen.querySelector(".language-select").addEventListener("change",e=>{location.hash=e.target.value+"-MER-PUB-002";document.getElementById(e.target.value+"-MER-PUB-002")?.scrollIntoView({behavior:"smooth"});});
 });
