@@ -8,14 +8,15 @@ Mise à jour : 2026-11-23. Ce registre réserve les identifiants de parcours ; *
 | HAB-SUIVI-002 | Sélection multicommerce et confirmation explicite | À maquettiser — fonction V1 validée | Aucun suivi automatique ; NL/EN |
 | HAB-SUIVI-003 | Mes commerces suivis : consulter, gérer, se désabonner | À maquettiser — fonction V1 validée | Compte habitant gratuit ; distinct des favoris d'annonces |
 | HAB-NOTIF-001 | Préférences de notifications facultatives | À maquettiser — fonction V1 validée | Opt-in habitant ; aucun envoi direct commerçant ; gestion/désactivation |
-| HAB-INVIT-001 | Inviter un commerce absent de BUUURT | À étudier — **non validé pour V1** | Aucun engagement de réalisation sans décision distincte |
+
+HAB-INVIT-001 a été retiré du périmètre actuel le 25 novembre 2026 sur décision du fondateur.
 
 ## Règles de gouvernance
 - Ces IDs sont des références de conception, **pas** des fichiers, routes applicatives ou numéros d'écrans déjà publiés.
 - Vérifier les conventions et identifiants existants avant toute génération pour éviter doublons et collisions.
 - Les maquettes doivent réutiliser le logo officiel BUUURT, la cloche, le sélecteur NL/EN et les composants communs appropriés ; ne pas répliquer des composants sur des pages où ils n'ont pas lieu d'être.
 - Ne pas modifier la bibliothèque publique ni le code applicatif avant la revue des maquettes et les autorisations correspondantes.
-- Garder distincts : favoris d'annonces, suivi de commerces, notifications opt-in, et invitation d'un commerce absent.
+- Garder distincts : favoris d'annonces, suivi de commerces, et notifications opt-in.
 - Suivi technique et critères : https://github.com/ccam22430/buuurt-maquettes/issues/4 ; https://github.com/ccam22430/buuurt-V1/issues/3 .
 
 ## REVUE OBLIGATOIRE — décision validée le 23/11/2026 (fiche commerce et alertes)
@@ -36,7 +37,6 @@ Mise à jour : 2026-11-23. Ce registre réserve les identifiants de parcours ; *
 | HAB-SUIVI-003 | « Mes commerces suivis » dans le compte habitant, accès aux annonces et désabonnement | **À CONCEVOIR** |
 | HAB-FICHE-001 (ID réservé, vérifier correspondance avec la fiche commerce existante) | **Modifier la fiche commerce déjà prévue**, conserver Annonces/À propos/Contact, coordonnées, actions ; ajouter suivi et bloc compact d'alertes | **À RETROUVER ET REVOIR — ne pas dupliquer** |
 | HAB-NOTIF-001 | Panneau de configuration des notifications propre à chaque commerce, ouvert depuis sa fiche ; retirer l'interrupteur global ambigu | **À CONCEVOIR / REVOIR** |
-| HAB-INVIT-001 | Invitation d'un commerce absent, distincte du suivi et du parrainage commerçant | **À ÉTUDIER — NON VALIDÉ** |
 
 **Rappel de revue pour le fondateur** : les lignes marquées À REVOIR, À CONCEVOIR ou À RETROUVER doivent rester visibles dans le registre jusqu'à présentation de la maquette, décision explicite et mise à jour de leur statut. Ne pas déclarer ces écrans validés ni modifier le HTML public sur la seule base de ce registre.
 
@@ -49,9 +49,8 @@ Mise à jour : 2026-11-23. Ce registre réserve les identifiants de parcours ; *
 | HAB-SUIVI-003 | `revue/hab-suivi-003.html` | **À VÉRIFIER — HTML créé, non validé** |
 | HAB-FICHE-001 | `revue/hab-fiche-001.html` | **À VÉRIFIER — HTML créé, non validé** |
 | HAB-NOTIF-001 | `revue/hab-notif-001.html` | **À VÉRIFIER — HTML créé, non validé** |
-| HAB-INVIT-001 | `revue/hab-invit-001.html` | **À VÉRIFIER — HTML créé, non validé** |
 
-Les pages existantes restent conservées sans écrasement. Le sélecteur de typographies est partagé par les maquettes chargeant `buuurt-theme.js` et `buuurt-theme.css`. Les pages historiques qui ne chargent pas ces ressources devront être recensées séparément. Les contenus et interactions des nouvelles pages sont des prototypes, pas une implémentation applicative. Les 6 nouveaux écrans sont à revoir un par un avec le fondateur.
+Les pages existantes restent conservées sans écrasement. Le sélecteur de typographies est partagé par les maquettes chargeant `buuurt-theme.js` et `buuurt-theme.css`. Les pages historiques qui ne chargent pas ces ressources devront être recensées séparément. Les contenus et interactions des nouvelles pages sont des prototypes, pas une implémentation applicative. Les 5 écrans de ce tableau sont à revoir un par un avec le fondateur.
 
 ## Règles globales / spécifiques — audit du 23 novembre 2026
 
