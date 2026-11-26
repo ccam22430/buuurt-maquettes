@@ -112,7 +112,9 @@ window.addEventListener('pageshow', syncValidityDates);
 syncValidityDates();
 document.getElementById('offer-validity').addEventListener('submit', event => {
   event.preventDefault();
-  window.location.href = 'com-pub-003.html#' + language + '-MER-PUB-003';
+  const draft={type:'offer',offerType:selectedOffer,values:fieldGroups.map(g=>g.map(l=>l.querySelector('input').value)),title:title.value,description:description.value,conditions:conditions.value,start:startDate.value,end:noEnd.checked?'':endDate.value,noEnd:noEnd.checked};
+  try{sessionStorage.setItem('buuurt-active-offer',JSON.stringify(draft));}catch{document.getElementById('message').textContent=({fr:'Impossible de conserver votre offre.',nl:'Uw aanbieding kon niet worden opgeslagen.',en:'Could not save your offer.'})[language];return;}
+  window.location.href = 'com-pub-003.html?from=offer#' + language + '-MER-PUB-003';
 });
 
 // Fictional history for the merchant in this prototype.
@@ -204,5 +206,6 @@ languageSelect.addEventListener('change', () => {
   url.searchParams.set('lang', language);
   history.replaceState(history.state, '', url);
 });
+if(new URLSearchParams(location.search).get('resume')==='1'){try{const d=JSON.parse(sessionStorage.getItem('buuurt-active-offer'));if(d?.type==='offer'){selectedOffer=d.offerType;fieldGroups.forEach((g,i)=>g.forEach((l,j)=>l.querySelector('input').value=d.values[i]?.[j]??''));title.value=d.title;description.value=d.description;conditions.value=d.conditions;conditions.closest('details').open=!!d.conditions;startDate.value=d.start;endDate.value=d.end;noEnd.checked=d.noEnd;syncValidityDates();}}catch{}}
 applyLanguage();
 </script><script src="buuurt-theme.js"></script><script src="buuurt-shared-header.js"></script></body></html>
