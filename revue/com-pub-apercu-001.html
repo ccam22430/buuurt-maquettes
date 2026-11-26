@@ -136,7 +136,7 @@ body{max-width:1000px;margin:auto;padding:14px;background:#f4f4f6;color:#17171d;
 
 
 <a class="edit-photos" href="com-pub-003.html?v=universal-3&amp;from=offer#fr-MER-PUB-003">Modifier les photos</a>
-<button class="continue" type="button" data-continue>Continuer →</button>
+<a class="continue" data-continue href="com-pub-002.html?from=photo#fr-MER-PUB-002" style="display:block;text-align:center;text-decoration:none">Continuer →</a>
 </main></div></article><article class="screen" id="nl-MER-PUB-PRV-001" lang="nl">
 <h3>MER-PUB-PRV-001 / COM-PUB-APE-001 — Voorbeeld van de aankondiging</h3>
 <nav class="screen-language"><a href="#nl-MER-PUB-PRV-001">Nederlands</a><a href="#en-MER-PUB-PRV-001">English</a><a href="#fr-COM-PUB-APE-001">Français</a></nav>
@@ -175,7 +175,7 @@ body{max-width:1000px;margin:auto;padding:14px;background:#f4f4f6;color:#17171d;
 
 
 <a class="edit-photos" href="com-pub-003.html?v=universal-3&amp;from=offer#nl-MER-PUB-003">Foto’s bewerken</a>
-<button class="continue" type="button" data-continue>Doorgaan →</button>
+<a class="continue" data-continue href="com-pub-002.html?from=photo#nl-MER-PUB-002" style="display:block;text-align:center;text-decoration:none">Doorgaan →</a>
 </main></div></article><article class="screen" id="en-MER-PUB-PRV-001" lang="en">
 <h3>MER-PUB-PRV-001 / COM-PUB-APE-001 — Announcement preview</h3>
 <nav class="screen-language"><a href="#nl-MER-PUB-PRV-001">Nederlands</a><a href="#en-MER-PUB-PRV-001">English</a><a href="#fr-COM-PUB-APE-001">Français</a></nav>
@@ -214,7 +214,7 @@ body{max-width:1000px;margin:auto;padding:14px;background:#f4f4f6;color:#17171d;
 
 
 <a class="edit-photos" href="com-pub-003.html?v=universal-3&amp;from=offer#en-MER-PUB-003">Edit photos</a>
-<button class="continue" type="button" data-continue>Continue →</button>
+<a class="continue" data-continue href="com-pub-002.html?from=photo#en-MER-PUB-002" style="display:block;text-align:center;text-decoration:none">Continue →</a>
 </main></div></article><script>
 const previewAnchors={fr:"fr-COM-PUB-APE-001",nl:"nl-MER-PUB-PRV-001",en:"en-MER-PUB-PRV-001"};
 for(const screen of document.querySelectorAll(".screen")){
@@ -266,7 +266,7 @@ document.querySelectorAll(".preview-step").forEach(root=>{
  const dialog=document.createElement("dialog");dialog.className="offer-detail-dialog";const heading=document.createElement("h2");heading.textContent=d.title;const close=document.createElement("button");close.type="button";close.textContent={fr:"Fermer",nl:"Sluiten",en:"Close"}[lang];close.onclick=()=>dialog.close();dialog.append(heading,details,close);root.append(dialog);
 
  }
- if(fromPhoto&&previewParams.get("type")==="offer"&&!offerDraft){const warning=document.createElement("p");warning.setAttribute("role","alert");warning.textContent={fr:"Données de l’offre indisponibles. Revenez au formulaire pour les saisir.",nl:"Aanbiedingsgegevens ontbreken. Ga terug naar het formulier.",en:"Offer data unavailable. Return to the form."}[lang];root.prepend(warning);root.querySelector("[data-continue]").disabled=true;}
+ if(fromPhoto&&previewParams.get("type")==="offer"&&!offerDraft){const warning=document.createElement("p");warning.setAttribute("role","alert");warning.textContent={fr:"Données de l’offre indisponibles. Revenez au formulaire pour les saisir.",nl:"Aanbiedingsgegevens ontbreken. Ga terug naar het formulier.",en:"Offer data unavailable. Return to the form."}[lang];root.prepend(warning);root.querySelector("[data-continue]").setAttribute("aria-disabled","true");root.querySelector("[data-continue]").removeAttribute("href");}
  if(bakeryExample){
   const [title,terms]=bakeryCopy[lang];
   const merchant="Bakery De Pijp";
@@ -331,9 +331,11 @@ document.querySelectorAll(".preview-step").forEach(root=>{
   images[key].style.transformOrigin=position;
   images[key].style.transform="scale("+Math.max(scale/100,1+0.12*distance)+")";
  }
- root.querySelector("[data-continue]").addEventListener("click",()=>{
+ root.querySelector("[data-continue]").addEventListener("click",event=>{
+  event.preventDefault();if(event.currentTarget.getAttribute("aria-disabled")==="true")return;
   const next=new URL("com-pub-002.html",location.href);
   if(fromPhoto)next.searchParams.set("from","photo");
+  if(previewParams.has("type"))next.searchParams.set("type",previewParams.get("type"));
   if(bakeryExample)next.searchParams.set("exemple","boulangerie");
   next.hash=lang+"-MER-PUB-002";
   location.href=next.href;
