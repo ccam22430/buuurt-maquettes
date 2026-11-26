@@ -10,3 +10,5 @@ Décision métier validée le 26 novembre 2026.
 - Recette attendue : local sans mention, externe avec mention, gratuit sans mention, langues, mobile, non-régression du scan et des favoris.
 - Autres surfaces à auditer : QR caisse, accueil, fil local, aperçu sponsorisé, favoris et détail.
 - Déclaration de chalandise et alertes : arbitrage distinct, non validé définitivement.
+
+Validation métier de la variante HAB-VIT-001 par le fondateur le 26 novembre 2026. Référence graphique pour les autres écrans concernés. Recette technique distincte, non réalisée.
