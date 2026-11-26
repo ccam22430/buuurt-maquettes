@@ -114,7 +114,7 @@ document.getElementById('offer-validity').addEventListener('submit', event => {
   event.preventDefault();
   const draft={type:'offer',offerType:selectedOffer,values:fieldGroups.map(g=>g.map(l=>l.querySelector('input').value)),title:title.value,description:description.value,conditions:conditions.value,start:startDate.value,end:noEnd.checked?'':endDate.value,noEnd:noEnd.checked};
   try{sessionStorage.setItem('buuurt-active-offer',JSON.stringify(draft));}catch{document.getElementById('message').textContent=({fr:'Impossible de conserver votre offre.',nl:'Uw aanbieding kon niet worden opgeslagen.',en:'Could not save your offer.'})[language];return;}
-  window.location.href = 'com-pub-003.html?from=offer#' + language + '-MER-PUB-003';
+  window.location.href = 'com-pub-003.html?v=offer-flow-2&from=offer#' + language + '-MER-PUB-003';
 });
 
 // Fictional history for the merchant in this prototype.
