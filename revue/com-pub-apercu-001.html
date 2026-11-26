@@ -251,7 +251,7 @@ if(fromPhoto){
 }
 document.querySelectorAll(".preview-step").forEach(root=>{
  const lang=root.dataset.lang,labels=photoLabels[lang],dots=root.querySelector("[data-dots]");
- if(fromPhoto)root.querySelector(".buuurt-back").href="com-pub-003.html"+(offerDraft?"?from=offer":"")+"#"+lang+"-MER-PUB-003";
+ if(fromPhoto)root.querySelector(".buuurt-back").href="com-pub-003.html"+(offerDraft?"?v=offer-flow-2&from=offer":"")+"#"+lang+"-MER-PUB-003";
  if(offerDraft?.type==="offer"){
  const d=offerDraft,v=d.values[d.offerType]||[],money=x=>x?x+" €":"";
  const amounts=[()=>v[0]&&v[1]?v[0]+" + "+v[1]:"",()=>v[0]?"−"+v[0]+" %":"",()=>v[0]?"−"+money(v[0]):"",()=>money(v[1]),()=>money(v[0])+(v[1]?" / "+v[1]:""),()=>v[0]||"",()=>""];
@@ -262,8 +262,9 @@ document.querySelectorAll(".preview-step").forEach(root=>{
  const dates={fr:["Du","au","Conditions"],nl:["Van","tot","Voorwaarden"],en:["From","to","Terms"]}[lang];
  const format=x=>x?new Intl.DateTimeFormat(lang,{dateStyle:"medium",timeZone:"UTC"}).format(new Date(x+"T00:00:00Z")):"";
  details.textContent=[d.description,d.start?dates[0]+" "+format(d.start)+(d.end?" "+dates[1]+" "+format(d.end):""):"",d.conditions?dates[2]+": "+d.conditions:""].filter(Boolean).join("\n\n");
- root.querySelector("[data-feed-title]").closest("div").append(details);
+ root.querySelector(".feed-copy").append(details);const mainDetails=details.cloneNode(true);const heading=document.createElement("strong");heading.textContent=d.title;mainDetails.prepend(heading,document.createElement("br"));root.querySelector(".large-card").append(mainDetails);
  }
+ if(fromPhoto&&previewParams.get("type")==="offer"&&!offerDraft){const warning=document.createElement("p");warning.setAttribute("role","alert");warning.textContent={fr:"Données de l’offre indisponibles. Revenez au formulaire pour les saisir.",nl:"Aanbiedingsgegevens ontbreken. Ga terug naar het formulier.",en:"Offer data unavailable. Return to the form."}[lang];root.prepend(warning);root.querySelector("[data-continue]").disabled=true;root.querySelector(".buuurt-back").href="creer-offre-preview.html?v=offer-flow-2&resume=1&lang="+lang;}
  if(bakeryExample){
   const [title,terms]=bakeryCopy[lang];
   const merchant="Bakery De Pijp";
