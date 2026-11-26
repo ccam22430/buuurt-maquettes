@@ -281,7 +281,7 @@ function applyRetouchLook(frame,look){
 document.querySelectorAll(".photo-step").forEach(root=>{
  const lang=root.closest("article").lang;
  const copy=photoCopy[lang];
- if(new URLSearchParams(location.search).get("from")==="offer")root.querySelector(".buuurt-standard-back").href="creer-offre-preview.html?v=offer-flow-2&resume=1&lang="+lang;
+ if(new URLSearchParams(location.search).get("from")==="offer")root.querySelector(".buuurt-standard-back").href="creer-offre-preview.html?v=universal-3&resume=1&lang="+lang;
  const find=name=>root.querySelector("[data-"+name+"]");
  const img=find("preview"),feedback=find("feedback"),generate=find("generate"),prompt=find("image-prompt");
  const result=find("result"),use=find("use"),progress=find("progress");
@@ -546,8 +546,8 @@ document.querySelectorAll(".photo-step").forEach(root=>{
   if(importing||!saveFraming()||!saveGallery(gallery,view))return;
   const lang=root.closest("article").lang;
   const anchor=lang==="fr"?"fr-COM-PUB-APE-001":lang+"-MER-PUB-PRV-001";
-  if(new URLSearchParams(location.search).get("edit")==="1"){location.href="creer-offre-preview.html?v=visual-1&resume=1&lang="+lang;return;}
-  location.href="com-pub-apercu-001.html?v=offer-flow-2&from=photo"+(new URLSearchParams(location.search).get("from")==="offer"?"&type=offer":"")+"#"+anchor;
+  if(new URLSearchParams(location.search).get("edit")==="1"){location.href="creer-offre-preview.html?v=universal-3&resume=1&lang="+lang;return;}
+  location.href="com-pub-apercu-001.html?v=universal-3&from=photo"+(new URLSearchParams(location.search).get("from")==="offer"?"&type=offer":"")+"#"+anchor;
  };
 });
 </script><script src="buuurt-theme.js"></script><script src="buuurt-review-tools.js"></script><script src="buuurt-shared-header.js"></script></body></html>
