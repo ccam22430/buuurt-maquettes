@@ -61,15 +61,7 @@ body{background:#f5f3f4;color:var(--ink);font-family:system-ui,-apple-system,"Se
 </fieldset>
 <button type="button" class="primary next">Continuer</button>
 </div>
-<form class="editor" hidden>
-<h2 class="title">Les détails de votre annonce</h2>
-<label>Titre de l’annonce<input name="title" type="text" required></label>
-<label>Description<textarea name="description" rows="4" required></textarea></label>
-<label>Ajouter des photos<input name="photos" type="file" accept="image/*" multiple></label>
-<p class="hint">Vous pourrez ajouter jusqu’à 5 photos à votre annonce.</p>
-<button class="primary save" type="button">Enregistrer comme brouillon</button><p class="saved" hidden>Brouillon enregistré.</p>
-<button class="primary publish" type="submit">Continuer →</button>
-</form>
+
 </main>
 <nav class="footer"><div class="active"><b>⌂</b>Accueil</div><div><b>⌕</b>Découvrir</div><div><b>♡</b>Favoris</div><div><b>●</b>Profil</div></nav>
 </div></section>\n
@@ -88,15 +80,7 @@ body{background:#f5f3f4;color:var(--ink);font-family:system-ui,-apple-system,"Se
 </fieldset>
 <button type="button" class="primary next">Doorgaan</button>
 </div>
-<form class="editor" hidden>
-<h2 class="title">De gegevens van je bericht</h2>
-<label>Titel van het bericht<input name="title" type="text" required></label>
-<label>Beschrijving<textarea name="description" rows="4" required></textarea></label>
-<label>Foto’s toevoegen<input name="photos" type="file" accept="image/*" multiple></label>
-<p class="hint">Je kunt maximaal 5 foto’s aan je bericht toevoegen.</p>
-<button class="primary save" type="button">Als concept opslaan</button><p class="saved" hidden>Concept opgeslagen.</p>
-<button class="primary publish" type="submit">Verder →</button>
-</form>
+
 </main>
 <nav class="footer"><div class="active"><b>⌂</b>Home</div><div><b>⌕</b>Ontdekken</div><div><b>♡</b>Favorieten</div><div><b>●</b>Profiel</div></nav>
 </div></section>\n
@@ -115,24 +99,14 @@ body{background:#f5f3f4;color:var(--ink);font-family:system-ui,-apple-system,"Se
 </fieldset>
 <button type="button" class="primary next">Continue</button>
 </div>
-<form class="editor" hidden>
-<h2 class="title">Your post details</h2>
-<label>Post title<input name="title" type="text" required></label>
-<label>Description<textarea name="description" rows="4" required></textarea></label>
-<label>Add photos<input name="photos" type="file" accept="image/*" multiple></label>
-<p class="hint">You can add up to 5 photos to your post.</p>
-<button class="primary save" type="button">Save as draft</button><p class="saved" hidden>Draft saved.</p>
-<button class="primary publish" type="submit">Continue →</button>
-</form>
+
 </main>
 <nav class="footer"><div class="active"><b>⌂</b>Home</div><div><b>⌕</b>Explore</div><div><b>♡</b>Saved</div><div><b>●</b>Profile</div></nav>
 </div></section>
 <script>
 document.querySelectorAll(".screen").forEach(screen=>{
- const types=screen.querySelector(".types"),form=screen.querySelector(".editor"); screen.querySelector(".language-code").textContent=screen.lang.toUpperCase(); const languageSelect=screen.querySelector(".language-select"); languageSelect.value=screen.lang; languageSelect.addEventListener("change",()=>{location.hash=languageSelect.value+"-MER-PUB-001";document.getElementById(languageSelect.value+"-MER-PUB-001")?.scrollIntoView({behavior:"smooth"});});
- screen.querySelector(".next").addEventListener("click",()=>{types.hidden=true;form.hidden=false;});
- screen.querySelector(".save").addEventListener("click",()=>{try{sessionStorage.setItem("buuurt-post-draft",JSON.stringify({type:screen.querySelector('input[type=radio]:checked').value,title:form.title.value,description:form.description.value}));}catch{} form.querySelector(".saved").hidden=false;});
- form.addEventListener("submit",e=>{e.preventDefault();try{sessionStorage.setItem("buuurt-post-draft",JSON.stringify({type:screen.querySelector('input[type=radio]:checked').value,title:form.title.value,description:form.description.value}));}catch{} location.href="com-pub-002.html#"+screen.lang+"-MER-PUB-002";});
+  screen.querySelector(".language-code").textContent=screen.lang.toUpperCase(); const languageSelect=screen.querySelector(".language-select"); languageSelect.value=screen.lang; languageSelect.addEventListener("change",()=>{location.hash=languageSelect.value+"-MER-PUB-001";document.getElementById(languageSelect.value+"-MER-PUB-001")?.scrollIntoView({behavior:"smooth"});});
+ screen.querySelector(".next").addEventListener("click",()=>{const type=screen.querySelector('input[type=radio]:checked')?.value;const routes={offer:"creer-offre-preview.html",event:"creer-evenement-preview.html",discover:"creer-decouverte-preview.html"};if(routes[type])location.href=routes[type]+"?lang="+encodeURIComponent(screen.lang);});
 });
 </script>
 <script src="buuurt-theme.js"></script>
