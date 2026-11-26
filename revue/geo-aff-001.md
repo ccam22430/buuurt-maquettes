@@ -14,3 +14,5 @@ Décision métier validée le 26 novembre 2026.
 Validation métier de la variante HAB-VIT-001 par le fondateur le 26 novembre 2026. Référence graphique pour les autres écrans concernés. Recette technique distincte, non réalisée.
 
 26 novembre 2026 : validation graphique de la variante v1 retirée explicitement par le fondateur. Variante v2 à valider : encart de localisation sur toutes les annonces, gris pour local, rose pour hors territoire. Règle métier hors territoire maintenue. Données de démonstration fictives ; recette visuelle et technique à réaliser.
+
+26 novembre 2026 — Décision fonctionnelle validée : modèle graphique commun aux annonces du commerce scanné, gratuites et sponsorisées. Message commercial principal et action intégrés à la photographie, localisation discrète en bas à droite. Priorité du commerce scanné par positionnement et carrousel, non par traitement graphique privilégié. Maintenir les distinctions sponsorisé et hors territoire. Nouvelle maquette comparative à soumettre à validation graphique avant généralisation.
