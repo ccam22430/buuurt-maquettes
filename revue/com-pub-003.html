@@ -546,6 +546,7 @@ document.querySelectorAll(".photo-step").forEach(root=>{
   if(importing||!saveFraming()||!saveGallery(gallery,view))return;
   const lang=root.closest("article").lang;
   const anchor=lang==="fr"?"fr-COM-PUB-APE-001":lang+"-MER-PUB-PRV-001";
+  if(new URLSearchParams(location.search).get("edit")==="1"){location.href="creer-offre-preview.html?v=visual-1&resume=1&lang="+lang;return;}
   location.href="com-pub-apercu-001.html?v=offer-flow-2&from=photo"+(new URLSearchParams(location.search).get("from")==="offer"?"&type=offer":"")+"#"+anchor;
  };
 });
