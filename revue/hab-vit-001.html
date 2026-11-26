@@ -373,13 +373,12 @@ function renderRoute(){
   return;
  }
  if(shopPost){
-  const profile=shopMatch[3]==="fiche";
+  if(shopMatch[3]==="fiche"){const target=new URL("hab-fiche-001.html",location.href);target.searchParams.set("lang",locale);target.searchParams.set("post",String(shopPost.id));if(shopMatch[5])target.hash="fidelite";location.replace(target.href);return;}
   const shop=shopPost.shop;
   const shopPosts=data.filter(entry=>entry.shop===shop);
   panel.innerHTML='<a href="#annonce-'+shopPost.id+'" class="detail-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6M9 12h12"/></svg>'+labels[0]+'</a>'+
-   (profile?'<div class="detail-cover"><img src="'+shopPosts[0].src+'" alt=""></div>':'')+
    '<h1 tabindex="-1">'+shop+'</h1>'+
-   (profile?renderAddress(shopPost)+renderShopActions(shopPost,true)+renderLoyaltySection(shopPost):'<h2>'+shopActions[2]+'</h2>'+shopPosts.map(entry=>markup(entry,false,false)).join(""));
+   '<h2>'+shopActions[2]+'</h2>'+shopPosts.map(entry=>markup(entry,false,false)).join("");
   window.scrollTo(0,0);
   const loyaltyHeading=shopMatch[5]?panel.querySelector("#loyalty-heading"):null;
   if(loyaltyHeading)loyaltyHeading.focus();
