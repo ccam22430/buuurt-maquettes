@@ -12,3 +12,5 @@ Décision métier validée le 26 novembre 2026.
 - Déclaration de chalandise et alertes : arbitrage distinct, non validé définitivement.
 
 Validation métier de la variante HAB-VIT-001 par le fondateur le 26 novembre 2026. Référence graphique pour les autres écrans concernés. Recette technique distincte, non réalisée.
+
+26 novembre 2026 : validation graphique de la variante v1 retirée explicitement par le fondateur. Variante v2 à valider : encart de localisation sur toutes les annonces, gris pour local, rose pour hors territoire. Règle métier hors territoire maintenue. Données de démonstration fictives ; recette visuelle et technique à réaliser.
