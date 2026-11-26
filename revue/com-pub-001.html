@@ -106,7 +106,7 @@ body{background:#f5f3f4;color:var(--ink);font-family:system-ui,-apple-system,"Se
 <script>
 document.querySelectorAll(".screen").forEach(screen=>{
   screen.querySelector(".language-code").textContent=screen.lang.toUpperCase(); const languageSelect=screen.querySelector(".language-select"); languageSelect.value=screen.lang; languageSelect.addEventListener("change",()=>{location.hash=languageSelect.value+"-MER-PUB-001";document.getElementById(languageSelect.value+"-MER-PUB-001")?.scrollIntoView({behavior:"smooth"});});
- screen.querySelector(".next").addEventListener("click",()=>{const type=screen.querySelector('input[type=radio]:checked')?.value;const routes={offer:"creer-offre-preview.html",event:"creer-evenement-preview.html",discover:"creer-decouverte-preview.html"};if(routes[type])location.href=routes[type]+"?v=offer-flow-2&lang="+encodeURIComponent(screen.lang);});
+ screen.querySelector(".next").addEventListener("click",()=>{const type=screen.querySelector('input[type=radio]:checked')?.value;const routes={offer:"creer-offre-preview.html",event:"creer-evenement-preview.html",discover:"creer-decouverte-preview.html"};if(routes[type])location.href=routes[type]+"?v=visual-1&lang="+encodeURIComponent(screen.lang);});
 });
 </script>
 <script src="buuurt-theme.js"></script>
