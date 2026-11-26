@@ -106,3 +106,6 @@ Statut : nomenclature validée par le fondateur. La confirmation de publication 
 - Après l’aperçu, le bouton « Publier gratuitement » de COM-PUB-002 mène directement à la confirmation. Cette décision remplace le récapitulatif gratuit à 0 € prévu dans la décision antérieure.
 - En-tête BUUURT avec menu, logo officiel, globe de langue et cloche. Actions dans l’ordre : « Créer une nouvelle annonce » (principale), « Accéder à mon tableau de bord » (secondaire), « Voir mon annonce dans le fil » (lien texte).
 - La publication est simulée. Le lien vers le fil ouvre une annonce gratuite d’exemple.
+
+## 26 novembre 2026 — COM-PUB-APE-001 : validation complète
+Le fondateur valide explicitement la version c52c3e4738e64cafbc8acfdf4bfe70d0ea7fd083 : deux aperçus conformes à la référence HAB-VIT-001, sans Suivre ni Favoris, lien toutes annonces centré en principal et à droite dans le fil, actions Voir l’offre et Voir toutes les annonces sans navigation avec message contextuel FR/NL/EN durant quatre secondes. Validation utilisateur acquise ; recette technique indépendante distincte non effectuée.
