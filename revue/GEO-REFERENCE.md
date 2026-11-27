@@ -40,3 +40,24 @@ Regenerate with `python scripts/build-amsterdam-historic.py ARCHIVE.zip` (Shapel
 Dolores lies in Oud-West. The map preselects De Baarsjes (1,732.727 m shared), Westerpark (653.970 m), Centrum (1,446.368 m) and Oud-Zuid (2,431.717 m). The second ring contains Bos en Lommer, Noord, Oost-Watergraafsmeer, Slotervaart, Westpoort, Zeeburg and Zuideramstel. Geuzenveld-Slotermeer, Osdorp and Zuidoost are grey.
 
 The CBS 2025 Amsterdam files remain available for internal GEO-IA work and continue to have regression coverage. The review stores Amsterdam drafts under a dataset-specific scope. Both map modes and the package screen consume the same historical identifiers.
+
+## Proposed extension around Amsterdam
+
+Use one selectable geometry per territory. Keep the fifteen existing Amsterdam IDs. Start with Amstelveen and Diemen. Represent Duivendrecht under Ouder-Amstel and Badhoevedorp and Zwanenburg under Haarlemmermeer while evaluating official locality boundaries. Locate all three in the labels or search alongside Landsmeer and Oostzaan. If locality polygons become selectable, partition their parent municipality into the localities and a named remainder so coverage is continuous and selections cannot double-count. Treat municipalities as geographic units and apply the same shared-boundary rule across their borders. Keep the water mask separate from the selectable geometry and graph. PDOK TOP10NL `waterdeel_vlak` is a candidate for current water display, with its own visible vintage.
+
+The [PDOK CBS 2009 WFS](https://www.pdok.nl/ogc-webservices/-/article/cbs-gebiedsindelingen-1995-2015) serves 2009 municipalities as `gebiedsindelingen:gemeente_gegeneraliseerd`. The [CBS release](https://www.cbs.nl/nl-nl/dossier/nederland-regionaal/geografische-data/wijk-en-buurtkaart-2009) explains the generalisation and allows republication with CBS and Kadaster attribution. Compared in EPSG:28992 against the union of the fifteen municipal boroughs, the WFS layer contains these discrepancies:
+
+| Candidate | Overlap with Amsterdam municipal archive (m²) | Exact shared boundary (m) |
+| --- | ---: | ---: |
+| Amstelveen | 39,615 | 0 |
+| Diemen | 51,510 | 0 |
+| Ouder-Amstel | 56,526 | 0 |
+| Haarlemmermeer | 41,043 | 0 |
+| Landsmeer | 34,664 | 0 |
+| Oostzaan | 21,544 | 0 |
+
+There are also overlaps with Abcoude, Haarlemmerliede en Spaarnwoude, Muiden, Weesp, Zaanstad and Waterland. All twelve candidates have zero exact shared boundary with the municipal Amsterdam union. The Amsterdam municipal union includes 22.998 km² outside the CBS Amsterdam polygon. Conversely, 0.733 km² of the CBS Amsterdam polygon is uncovered by the municipal union and the other CBS municipal polygons in the sample. These figures measure disagreement, without assigning the entire difference to land or water. Check seams and uncovered land against full-resolution data before creating adjacency or assigning colours. In particular, current boundaries incorporate subsequent changes, including Weesp joining Amsterdam in 2022 and Haarlemmerliede en Spaarnwoude merging into Haarlemmermeer in 2019.
+
+Reproduce the comparison by downloading WFS `GetFeature` with `version=2.0.0`, `typeNames=gebiedsindelingen:gemeente_gegeneraliseerd`, `outputFormat=application/json`, `srsName=EPSG:28992`, and `bbox=104000,468000,138000,505000,EPSG:28992`. Run `python scripts/check-amsterdam-municipal-seams.py MUNICIPAL_ARCHIVE.zip WFS_RESPONSE.json`. The bounding box selects entire features. The script rejects mismatched CRS or reference years. The [full-resolution CBS 2010 archive](https://www.cbs.nl/nl-nl/dossier/nederland-regionaal/geografische-data/wijk-en-buurtkaart-2010) is a fallback to compare after checking all intervening changes. The first choice is a full-resolution 2009 Kadaster vector extract with redistribution terms.
+
+For a qualified dataset, add source and vintage metadata and stable feature IDs in configuration, then regenerate the graph and the map from the geometry. The existing runtime already classifies features by IDs and positive-length edges. No municipality-specific code is needed for each added feature.
