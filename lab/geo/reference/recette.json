@@ -1,0 +1,168 @@
+{
+  "at": "2026-11-27T08:32:18.893Z",
+  "browser": "151.0.7922.34",
+  "originalV6Tested": true,
+  "historicalStatus": "Échec : Failed to fetch. Aucune carte fictive affichée.",
+  "results": [
+    {
+      "case": "amsterdam",
+      "profile": "ordinateur",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "home": [
+        "BU0363EM02",
+        "Balboaplein e.o."
+      ],
+      "neighbors": [
+        "BU0363EK03",
+        "BU0363EK04",
+        "BU0363EM01",
+        "BU0363EM04",
+        "BU0363EN01"
+      ],
+      "liveHttp": [
+        {
+          "path": "/bzk/locatieserver/search/v3_1/free",
+          "status": 200
+        },
+        {
+          "path": "/cbs/wijken-en-buurten-2025/ogc/v1/collections/buurten/items",
+          "status": 200
+        },
+        {
+          "path": "/cbs/wijken-en-buurten-2025/ogc/v1/collections/buurten/items",
+          "status": 200
+        },
+        {
+          "path": "/bzk/locatieserver/search/v3_1/free",
+          "status": 200
+        }
+      ],
+      "touch": false,
+      "keyboard": true,
+      "zoom": true,
+      "grayLocked": true,
+      "pageErrors": [],
+      "screenshot": "amsterdam-ordinateur.png"
+    },
+    {
+      "case": "graft",
+      "profile": "ordinateur",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "home": [
+        "BU03611002",
+        "Graft"
+      ],
+      "neighbors": [
+        "BU03610906",
+        "BU03611000",
+        "BU03611001",
+        "BU03611003",
+        "BU03611004"
+      ],
+      "liveHttp": [
+        {
+          "path": "/bzk/locatieserver/search/v3_1/free",
+          "status": 200
+        },
+        {
+          "path": "/cbs/wijken-en-buurten-2025/ogc/v1/collections/buurten/items",
+          "status": 200
+        },
+        {
+          "path": "/cbs/wijken-en-buurten-2025/ogc/v1/collections/buurten/items",
+          "status": 200
+        }
+      ],
+      "touch": false,
+      "keyboard": true,
+      "zoom": true,
+      "grayLocked": true,
+      "pageErrors": [],
+      "screenshot": "graft-ordinateur.png"
+    },
+    {
+      "case": "amsterdam",
+      "profile": "smartphone",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "home": [
+        "BU0363EM02",
+        "Balboaplein e.o."
+      ],
+      "neighbors": [
+        "BU0363EK03",
+        "BU0363EK04",
+        "BU0363EM01",
+        "BU0363EM04",
+        "BU0363EN01"
+      ],
+      "liveHttp": [
+        {
+          "path": "/bzk/locatieserver/search/v3_1/free",
+          "status": 200
+        },
+        {
+          "path": "/cbs/wijken-en-buurten-2025/ogc/v1/collections/buurten/items",
+          "status": 200
+        },
+        {
+          "path": "/cbs/wijken-en-buurten-2025/ogc/v1/collections/buurten/items",
+          "status": 200
+        }
+      ],
+      "touch": true,
+      "keyboard": false,
+      "zoom": true,
+      "grayLocked": true,
+      "pageErrors": [],
+      "screenshot": "amsterdam-smartphone.png"
+    },
+    {
+      "case": "graft",
+      "profile": "smartphone",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "home": [
+        "BU03611002",
+        "Graft"
+      ],
+      "neighbors": [
+        "BU03610906",
+        "BU03611000",
+        "BU03611001",
+        "BU03611003",
+        "BU03611004"
+      ],
+      "liveHttp": [
+        {
+          "path": "/bzk/locatieserver/search/v3_1/free",
+          "status": 200
+        },
+        {
+          "path": "/cbs/wijken-en-buurten-2025/ogc/v1/collections/buurten/items",
+          "status": 200
+        },
+        {
+          "path": "/cbs/wijken-en-buurten-2025/ogc/v1/collections/buurten/items",
+          "status": 200
+        }
+      ],
+      "touch": true,
+      "keyboard": false,
+      "zoom": true,
+      "grayLocked": true,
+      "pageErrors": [],
+      "screenshot": "graft-smartphone.png"
+    }
+  ]
+}

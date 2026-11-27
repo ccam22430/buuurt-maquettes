@@ -1,0 +1,44 @@
+{
+  "national_counts": {
+    "buurten": 14823,
+    "gemeenten": 424,
+    "wijken": 3505
+  },
+  "cases": {
+    "amsterdam": {
+      "volume_pdok": 152,
+      "volume_found_cbs": 152,
+      "absent_cbs_v1": [],
+      "different_names": [],
+      "cbs_home_area": 120096.8095818609,
+      "pdok_home_area": 120096.8095818609,
+      "home_symdiff_m2": 0.0
+    },
+    "graft": {
+      "volume_pdok": 117,
+      "volume_found_cbs": 117,
+      "absent_cbs_v1": [],
+      "different_names": [],
+      "cbs_home_area": 3727884.7295376714,
+      "pdok_home_area": 3727884.7295376714,
+      "home_symdiff_m2": 0.0
+    }
+  },
+  "municipal": {
+    "count": 152,
+    "common_codes": 152,
+    "only_cbs": [],
+    "only_municipal": [],
+    "different_names": [],
+    "home_area": 120096.80976154655,
+    "home_symdiff_m2": 0.4955418895968051,
+    "home_record": {
+      "identificatie": "03630980000150",
+      "naam": "Balboaplein e.o.",
+      "code": "EM02",
+      "cbs_code": "BU0363EM02",
+      "begin_geldigheid": "2022-03-23T23:00:00+00:00",
+      "eind_geldigheid": null
+    }
+  }
+}

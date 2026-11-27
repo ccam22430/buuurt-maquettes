@@ -1,19 +1,373 @@
-<!doctype html><html lang="fr"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BUUURT — Laboratoire GEO</title><style>body{font:16px system-ui;margin:0;background:#f5f5f7;color:#232323}main{max-width:850px;margin:auto;padding:20px}h1{font-size:24px}form{display:flex;gap:8px;flex-wrap:wrap}input{flex:1;min-width:190px;padding:12px;border:1px solid #aaa;border-radius:8px}button{padding:10px;border:0;border-radius:8px;background:#a80048;color:white;cursor:pointer}svg{width:100%;height:auto;background:white;border-radius:12px;touch-action:manipulation} .zone:focus{outline:none;stroke:#222;stroke-width:3}.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:13px}.dot{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px}#status{min-height:44px}#count{font-weight:bold}small{display:block;color:#555}</style><main><h1>BUUURT — GEO-03</h1><p>Laboratoire isolé · quartiers CBS / PDOK · sans IA ni paiement</p><form id="form"><input id="address" aria-label="Adresse" placeholder="Adresse officielle complète, code postal inclus" required><button>Afficher les quartiers</button></form><p id="status" role="status">Saisir une adresse néerlandaise complète, avec code postal.</p><div class="legend"><span><i class="dot" style="background:#83ce87"></i>Quartier gratuit</span><span><i class="dot" style="background:#f6ce45"></i>Éligible sélectionné</span><span><i class="dot" style="background:#fff0b5"></i>Éligible non sélectionné</span><span><i class="dot" style="background:#d4d7db"></i>Non éligible</span></div><svg id="map" viewBox="0 0 760 570" aria-label="Carte interactive des quartiers"></svg><p id="count"></p><small id="source">Aucune donnée de démonstration inventée. Les zones actives BUUURT et GEO-IA ne sont pas connectées : voisinage géométrique uniquement.</small></main><script>
-const $=id=>document.getElementById(id), NS='http://www.w3.org/2000/svg';let run=0;const api='https://api.pdok.nl/cbs/wijkenbuurten/2025/ogc/v1/collections/wijken/items';
-async function json(url){const r=await fetch(url,{signal:AbortSignal.timeout(20000)});if(!r.ok)throw Error('HTTP '+r.status);return r.json()}
-const polys=f=>f.geometry.type==='Polygon'?[f.geometry.coordinates]:f.geometry.type==='MultiPolygon'?f.geometry.coordinates:[];
-const featureId=f=>String(f.properties?.wijkcode??f.id??'');
-async function loadBox(box){let u=api+'?bbox='+box.join(',')+'&limit=100&f=json',pages=0;const found=new Map(),seen=new Set();while(u){if(++pages>30||seen.has(u))throw Error('Pagination incomplète');seen.add(u);const d=await json(u);if(!Array.isArray(d.features))throw Error('Réponse géographique invalide');for(const f of d.features){const id=featureId(f);if(!id||!polys(f).length)throw Error('Identifiant ou géométrie absent');found.set(id,f)}const next=d.links?.find(l=>l.rel==='next')?.href;u=next?new URL(next,u).href:null;if(u&&new URL(u).origin!==new URL(api).origin)throw Error('Origine de pagination inattendue')}return [...found.values()]}
-function inside(p,r){let yes=false;for(let i=0,j=r.length-1;i<r.length;j=i++){const a=r[i],b=r[j];if((a[1]>p[1])!==(b[1]>p[1])&&p[0]<(b[0]-a[0])*(p[1]-a[1])/(b[1]-a[1])+a[0])yes=!yes}return yes}
-function onBoundary(f,p){const scale=Math.cos(p[1]*Math.PI/180)*111320;const project=v=>[(v[0]-p[0])*scale,(v[1]-p[1])*111320];return polys(f).some(q=>q.some(r=>r.slice(1).some((v,i)=>{const a=project(r[i]),b=project(v),dx=b[0]-a[0],dy=b[1]-a[1],l=dx*dx+dy*dy;const t=l?Math.max(0,Math.min(1,-(a[0]*dx+a[1]*dy)/l)):0;return Math.hypot(a[0]+t*dx,a[1]+t*dy)<=0.02})));}
-const contains=(f,p)=>!onBoundary(f,p)&&polys(f).some(q=>inside(p,q[0])&&!q.slice(1).some(r=>inside(p,r)));
-// Shared collinear boundary segments; no point-only adjacency. Tolerance ~ 2 cm in projected local metres.
-function adjacent(a,b,project){const seg=f=>polys(f).flatMap(p=>p.flatMap(r=>r.slice(1).map((v,i)=>[project(r[i]),project(v)])));const A=seg(a),B=seg(b);for(const [p,q] of A){const dx=q[0]-p[0],dy=q[1]-p[1],l=Math.hypot(dx,dy);if(l<.05)continue;for(const [u,v] of B){if(Math.max(u[0],v[0])<Math.min(p[0],q[0])-.02||Math.min(u[0],v[0])>Math.max(p[0],q[0])+.02||Math.max(u[1],v[1])<Math.min(p[1],q[1])-.02||Math.min(u[1],v[1])>Math.max(p[1],q[1])+.02)continue;const cross=w=>Math.abs(dx*(w[1]-p[1])-dy*(w[0]-p[0]))/l;if(cross(u)>.02||cross(v)>.02)continue;const t=w=>((w[0]-p[0])*dx+(w[1]-p[1])*dy)/l; if(Math.min(l,Math.max(t(u),t(v)))-Math.max(0,Math.min(t(u),t(v)))>.05)return true}}return false}
-function el(tag,attrs,parent){const n=document.createElementNS(NS,tag);for(const [k,v] of Object.entries(attrs))n.setAttribute(k,v);parent.append(n);return n}
-const name=f=>f.properties.wijknaam||f.properties.naam||f.properties.statnaam||f.id;
-function render(fs,home,neighbors,point){const svg=$('map');svg.replaceChildren();let chosen=new Set(neighbors);const project=p=>[(p[0]-point[0])*Math.cos(point[1]*Math.PI/180)*111320,(point[1]-p[1])*111320];const pts=[home,...neighbors].flatMap(f=>polys(f).flat(2)).map(project);let extent=Math.max(1000,...pts.map(p=>Math.max(Math.abs(p[0])/350,Math.abs(p[1])/250)*1000))/1000;const xy=p=>{const [x,y]=project(p);return [380+x/extent,285+y/extent]};const count=()=> $('count').textContent=chosen.size+' quartiers voisins sélectionnés (laboratoire)';const labelAt=f=>{let best=null,score=-1;for(const p of polys(f)){const pts=p[0];const xs=pts.map(v=>v[0]),ys=pts.map(v=>v[1]);let loX=Math.min(...xs),hiX=Math.max(...xs),loY=Math.min(...ys),hiY=Math.max(...ys);for(let i=1;i<16;i++)for(let j=1;j<16;j++){let v=[loX+(hiX-loX)*i/16,loY+(hiY-loY)*j/16];if(!contains(f,v))continue;let w=xy(v);if(w[0]<30||w[0]>730||w[1]<20||w[1]>550)continue;let d=Math.min(...pts.map(t=>Math.hypot(...xy(t).map((a,k)=>a-w[k]))));if(d>score){best=w;score=d}}}return best};for(const f of fs){const isHome=f===home,eligible=neighbors.includes(f);const g=el('g',{},svg);const d=polys(f).flatMap(p=>p.map(r=>'M'+r.map(v=>xy(v).join(',')).join('L')+'Z')).join(' ');const path=el('path',{d,'fill-rule':'evenodd',stroke:'#fff','stroke-width':1.5,class:'zone'},g);let ch;const loc=labelAt(f);if(loc){const [x,y]=loc;const t=el('text',{x,y,'text-anchor':'middle','font-size':11,'font-weight':600,fill:'#222',stroke:'#fff','stroke-width':2,'paint-order':'stroke','pointer-events':'none'},g);t.textContent=name(f);if(eligible){el('rect',{x:x-8,y:y+5,width:16,height:16,rx:3,fill:'white',stroke:'#665400','pointer-events':'none'},g);ch=el('text',{x,y:y+18,'text-anchor':'middle','font-size':15,fill:'#665400','pointer-events':'none'},g)}}const refresh=()=>{path.setAttribute('fill',isHome?'#83ce87':eligible?(chosen.has(f)?'#f6ce45':'#fff0b5'):'#d4d7db');if(eligible){path.setAttribute('aria-pressed',chosen.has(f));if(ch)ch.textContent=chosen.has(f)?'✓':''}count()};if(eligible){path.setAttribute('tabindex','0');path.setAttribute('role','button');path.setAttribute('aria-label',name(f));g.style.cursor='pointer';const toggle=()=>{chosen.has(f)?chosen.delete(f):chosen.add(f);refresh()};g.addEventListener('click',toggle);path.addEventListener('keydown',e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();toggle()}})}refresh()}el('circle',{cx:380,cy:285,r:7,fill:'#c00050',stroke:'#fff','stroke-width':2,'pointer-events':'none'},svg);count()}
-function normalizeAddress(s){return String(s??'').normalize('NFKC').toLowerCase().replace(/[,\s]+/g,' ').trim()}
-function selectAddress(docs,query){if(!Array.isArray(docs)||!docs.length)throw Error('Adresse introuvable');const q=normalizeAddress(query);const matches=docs.filter(d=>d.type==='adres'&&normalizeAddress(d.weergavenaam)===q);if(matches.length!==1)throw Error('Adresse non confirmée : saisir le libellé officiel complet, code postal inclus. Suggestions : '+docs.map(d=>d.weergavenaam).filter(Boolean).join(' ; '));return matches[0]}
-$('address').addEventListener('input',()=>{++run;$('map').replaceChildren();$('count').textContent='';$('status').textContent='Adresse modifiée : lancer une nouvelle recherche.'});
-$('form').onsubmit=async e=>{e.preventDefault();const token=++run,query=$('address').value;$('map').replaceChildren();$('count').textContent='';$('status').textContent='Recherche de l’adresse officielle…';try{const g=await json('https://api.pdok.nl/bzk/locatieserver/search/v3_1/free?q='+encodeURIComponent(query)+'&fq=type:adres&rows=5');if(token!==run)return;const a=selectAddress(g.response?.docs,query);const m=a.centroide_ll.match(/POINT\s*\(([-.\d]+)\s+([-.\d]+)\)/);if(!m)throw Error('Coordonnées absentes');const p=m.slice(1).map(Number);if(token!==run)return;$('status').textContent='Adresse trouvée : '+a.weergavenaam+' — chargement des contours…';let fs=await loadBox([p[0]-.09,p[1]-.055,p[0]+.09,p[1]+.055]);if(token!==run)return;if(fs.some(f=>onBoundary(f,p)))throw Error("Adresse sur une frontière : attribution à vérifier");const matches=fs.filter(f=>contains(f,p));if(matches.length!==1)throw Error('Quartier absent ou ambigu');let home=matches[0];const vertices=polys(home).flat(2);const bounds=vertices.reduce((b,v)=>[Math.min(b[0],v[0]),Math.min(b[1],v[1]),Math.max(b[2],v[0]),Math.max(b[3],v[1])],[Infinity,Infinity,-Infinity,-Infinity]);const homeId=featureId(home);fs=await loadBox([bounds[0]-.01,bounds[1]-.01,bounds[2]+.01,bounds[3]+.01]);if(token!==run)return;home=fs.find(f=>featureId(f)===homeId);if(!home)throw Error('Quartier absent de la seconde recherche');if(fs.some(f=>onBoundary(f,p))||fs.filter(f=>contains(f,p)).length!==1||!contains(home,p))throw Error('Attribution incohérente après extension');const proj=v=>[(v[0]-p[0])*Math.cos(p[1]*Math.PI/180)*111320,(v[1]-p[1])*111320];const neighbors=fs.filter(f=>f!==home&&adjacent(home,f,proj));if(!neighbors.length)throw Error('Voisinage non établi');render(fs,home,neighbors,p);$('status').textContent=a.weergavenaam+' — '+name(home)+' · '+neighbors.length+' voisins détectés';$('source').textContent='Source : CBS / PDOK, millésime 2025. Découpage wijk, non encore qualifié pour les noms usuels. Zones actives et IA non connectées.'}catch(err){if(token===run){$('map').replaceChildren();$('count').textContent='';$('status').textContent='Échec : '+err.message+'. Aucune carte fictive affichée.'}}};
-</script></html>
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BUUURT — Laboratoire GEO</title>
+<style>
+  body { font: 16px system-ui, sans-serif; margin: 0; background: #f5f5f7; color: #232323; }
+  main { max-width: 850px; margin: auto; padding: 20px; }
+  h1 { font-size: 24px; }
+  form, .legend, .controls { display: flex; gap: 8px; flex-wrap: wrap; }
+  #address { flex: 1; min-width: min(100%, 14rem); box-sizing: border-box; }
+  #address, button { font: inherit; padding: 10px; border: 1px solid #aaa; border-radius: 8px; }
+  button { background: white; color: #232323; cursor: pointer; }
+  form button { background: #a80048; color: white; border-color: #a80048; }
+  svg { display: block; width: 100%; height: auto; background: white; border-radius: 12px; }
+  .zone:focus-visible { outline: none; stroke: #222; stroke-width: 3; }
+  .legend { font-size: 14px; margin: 12px 0; }
+  .dot { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 5px; }
+  #status { min-height: 44px; }
+  #count { font-weight: bold; }
+  small { display: block; color: #555; }
+  #zones { margin: 12px 0; padding: 8px 12px; border: 1px solid #aaa; }
+  #zones label { display: inline-flex; align-items: center; min-height: 44px; margin-right: 16px; gap: 6px; }
+  .controls { margin-top: 8px; }
+  .controls[hidden] { display: none; }
+  .controls button { min-width: 44px; min-height: 44px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>BUUURT — Laboratoire GEO</h1>
+  <form id="form">
+    <input id="address" aria-label="Adresse du commerce" placeholder="Adresse officielle avec code postal" required>
+    <button>Afficher les quartiers</button>
+  </form>
+  <p id="status" role="status">Saisir une adresse néerlandaise complète, avec code postal.</p>
+  <div class="legend">
+    <span><i class="dot" style="background:#83ce87"></i>Quartier gratuit</span>
+    <span><i class="dot" style="background:#f6ce45"></i>Éligible sélectionné</span>
+    <span><i class="dot" style="background:#fff0b5"></i>Éligible non sélectionné</span>
+    <span><i class="dot" style="background:#d4d7db"></i>Non éligible</span>
+  </div>
+  <svg id="map" viewBox="0 0 760 570" aria-label="Carte interactive des quartiers"></svg>
+  <div class="controls" id="controls" hidden>
+    <button id="zoom-in" aria-label="Agrandir la carte">+</button>
+    <button id="zoom-out" aria-label="Réduire la carte">−</button>
+    <button id="zoom-reset">Vue d’ensemble</button>
+  </div>
+  <p id="count" aria-live="polite"></p>
+  <fieldset id="zones" hidden><legend>Quartiers voisins</legend><div id="choices"></div></fieldset>
+  <small>Sources : CBS et Kadaster, Wijk- en Buurtkaart 2025 via <a href="https://api.pdok.nl/cbs/wijken-en-buurten-2025/ogc/v1?f=html">PDOK</a> (<a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>), adresses BAG via PDOK. Le laboratoire affiche le voisinage géométrique. Les zones actives BUUURT et GEO-IA seront intégrées séparément.</small>
+</main>
+<script>
+const $ = id => document.getElementById(id);
+const rd = 'http://www.opengis.net/def/crs/EPSG/0/28992';
+const api = new URL('https://api.pdok.nl/cbs/wijken-en-buurten-2025/ogc/v1/collections/buurten/items');
+const bag = 'https://api.pdok.nl/bzk/locatieserver/search/v3_1/free';
+// Arithmetic tolerances in RD metres. They absorb floating-point noise, not geographic gaps.
+const epsilon = 0.000001;
+const polygons = feature => feature.geometry.type === 'Polygon'
+  ? [feature.geometry.coordinates] : feature.geometry.coordinates;
+const name = feature => feature.properties.buurtnaam;
+let activeRequest;
+
+async function fetchJSON(url, signal, expectedCrs) {
+  const response = await fetch(url, {signal: AbortSignal.any([signal, AbortSignal.timeout(20000)])});
+  if (!response.ok) throw Error('HTTP ' + response.status);
+  if (expectedCrs && response.headers.get('Content-Crs') !== '<' + expectedCrs + '>') {
+    throw Error('Système de coordonnées inattendu');
+  }
+  return response.json();
+}
+
+async function loadBox(box, signal) {
+  const query = new URLSearchParams({bbox: box.join(','), 'bbox-crs': rd, crs: rd, f: 'json', limit: 100});
+  const features = new Map();
+  const seen = new Set();
+  let url = new URL('?' + query, api);
+  while (url) {
+    if (seen.size === 30 || seen.has(url.href)) throw Error('Pagination incomplète');
+    seen.add(url.href);
+    const data = await fetchJSON(url, signal, rd);
+    if (!Array.isArray(data.features) || data.numberReturned !== data.features.length) {
+      throw Error('Réponse géographique incomplète');
+    }
+    for (const feature of data.features) {
+      const id = feature.properties?.buurtcode;
+      if (!/^BU[A-Z0-9]{8}$/.test(id) || !name(feature) || String(feature.properties.jaar) !== '2025' ||
+          !['Polygon', 'MultiPolygon'].includes(feature.geometry?.type) || !polygons(feature).length) {
+        throw Error('Identifiant ou géométrie invalide');
+      }
+      if (features.has(id)) throw Error('Doublon dans les contours officiels');
+      features.set(id, feature);
+    }
+    const next = data.links?.find(link => link.rel === 'next');
+    url = next ? new URL(next.href, url) : null;
+    if (url && (url.origin !== api.origin || url.pathname !== api.pathname ||
+        ['bbox', 'bbox-crs', 'crs'].some(key => url.searchParams.get(key) !== query.get(key)))) {
+      throw Error('Lien de pagination inattendu');
+    }
+  }
+  return [...features.values()];
+}
+
+function bounds(features) {
+  const box = [Infinity, Infinity, -Infinity, -Infinity];
+  for (const feature of features) {
+    for (const polygon of polygons(feature)) {
+      for (const [x, y] of polygon[0]) {
+        box[0] = Math.min(box[0], x);
+        box[1] = Math.min(box[1], y);
+        box[2] = Math.max(box[2], x);
+        box[3] = Math.max(box[3], y);
+      }
+    }
+  }
+  return box;
+}
+
+function ringContains([x, y], ring) {
+  let inside = false;
+  for (let i = 1; i < ring.length; i++) {
+    const [ax, ay] = ring[i - 1];
+    const [bx, by] = ring[i];
+    if ((ay > y) !== (by > y) && x < (bx - ax) * (y - ay) / (by - ay) + ax) inside = !inside;
+  }
+  return inside;
+}
+
+function segments(feature) {
+  return polygons(feature).flatMap(polygon =>
+    polygon.flatMap(ring => ring.slice(1).map((end, index) => [ring[index], end])));
+}
+
+function onBoundary(feature, [x, y]) {
+  return segments(feature).some(([[ax, ay], [bx, by]]) => {
+    const dx = bx - ax, dy = by - ay, length = Math.hypot(dx, dy);
+    const t = length ? Math.max(0, Math.min(1, ((x - ax) * dx + (y - ay) * dy) / length ** 2)) : 0;
+    return Math.hypot(x - ax - t * dx, y - ay - t * dy) <= epsilon;
+  });
+}
+
+function contains(feature, point) {
+  return polygons(feature).some(([outer, ...holes]) =>
+    ringContains(point, outer) && !holes.some(hole => ringContains(point, hole)));
+}
+
+function territory(features, point) {
+  if (features.some(feature => onBoundary(feature, point))) throw Error('Adresse sur une frontière');
+  const matches = features.filter(feature => contains(feature, point));
+  if (matches.length !== 1) throw Error('Quartier absent ou ambigu');
+  return matches[0];
+}
+
+function sharesBoundary(homeSegments, feature) {
+  const other = segments(feature);
+  for (const [a, b] of homeSegments) {
+    const dx = b[0] - a[0], dy = b[1] - a[1], length = Math.hypot(dx, dy);
+    if (length <= epsilon) continue;
+    for (const [c, d] of other) {
+      if ([0, 1].some(i => Math.max(c[i], d[i]) < Math.min(a[i], b[i]) - epsilon ||
+                          Math.min(c[i], d[i]) > Math.max(a[i], b[i]) + epsilon)) continue;
+      const cross = p => ((p[0] - a[0]) * dy - (p[1] - a[1]) * dx) / length;
+      if (Math.abs(cross(c)) > epsilon || Math.abs(cross(d)) > epsilon) continue;
+      const along = p => ((p[0] - a[0]) * dx + (p[1] - a[1]) * dy) / length;
+      const from = along(c), to = along(d);
+      if (Math.min(length, Math.max(from, to)) - Math.max(0, Math.min(from, to)) > epsilon) return true;
+    }
+  }
+  return false;
+}
+
+function mapElement(tag, attributes, parent) {
+  const node = document.createElementNS('http://www.w3.org/2000/svg', tag);
+  for (const [key, value] of Object.entries(attributes)) node.setAttribute(key, value);
+  parent.append(node);
+  return node;
+}
+
+function labelPoint(feature) {
+  // Take the centre of the longest interior horizontal span across several rows.
+  let best = null, width = 0;
+  for (const polygon of polygons(feature)) {
+    const [minX, minY, maxX, maxY] = bounds([{geometry: {type: 'Polygon', coordinates: polygon}}]);
+    for (const fraction of [.5, .38, .62, .26, .74, .14, .86]) {
+      const y = minY + (maxY - minY) * fraction;
+      const crossings = [];
+      for (const ring of polygon) {
+        for (let i = 1; i < ring.length; i++) {
+          const [ax, ay] = ring[i - 1], [bx, by] = ring[i];
+          if ((ay > y) !== (by > y)) crossings.push(ax + (bx - ax) * (y - ay) / (by - ay));
+        }
+      }
+      crossings.sort((a, b) => a - b);
+      for (let i = 1; i < crossings.length; i += 2) {
+        const span = crossings[i] - crossings[i - 1];
+        if (span <= width) continue;
+        width = span;
+        best = [(crossings[i] + crossings[i - 1]) / 2, y];
+      }
+    }
+  }
+  return best;
+}
+
+function render(features, home, neighbors, point) {
+  const svg = $('map');
+  const chosen = new Set(neighbors);
+  const eligible = new Set(neighbors);
+  const labels = [];
+  const labelSize = Math.max(12, Math.ceil(12 * 760 / svg.clientWidth));
+  const [minX, minY, maxX, maxY] = bounds([home, ...neighbors]);
+  const scale = Math.min(690 / (maxX - minX), 490 / (maxY - minY));
+  const xy = ([x, y]) => [380 + (x - (minX + maxX) / 2) * scale, 285 - (y - (minY + maxY) / 2) * scale];
+  const updateCount = () => { $('count').textContent = chosen.size + ' quartiers voisins sélectionnés'; };
+  const paths = mapElement('g', {}, svg);
+  const overlays = mapElement('g', {'pointer-events': 'none'}, svg);
+  for (const feature of features) {
+    const selectable = eligible.has(feature);
+    const code = feature.properties.buurtcode;
+    const d = polygons(feature).flatMap(polygon => polygon.map(ring =>
+      'M' + ring.map(p => xy(p).map(v => v.toFixed(2)).join(',')).join('L') + 'Z')).join(' ');
+    const path = mapElement('path', {d, 'fill-rule': 'evenodd', stroke: '#fff', 'stroke-width': 1.5,
+      class: 'zone', 'data-code': code, fill: feature === home ? '#83ce87' : '#d4d7db'}, paths);
+    mapElement('title', {}, path).textContent = name(feature);
+    if (!selectable) continue;
+
+    const label = document.createElement('label');
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    label.append(checkbox, name(feature));
+    $('choices').append(label);
+    let check;
+    const anchor = labelPoint(feature);
+    if (anchor) {
+      const [x, y] = xy(anchor);
+      check = mapElement('text', {x, y: y + labelSize + 7, 'text-anchor': 'middle', 'font-size': labelSize + 5,
+        'font-weight': 800, fill: '#302800', stroke: '#fff', 'stroke-width': 3, 'paint-order': 'stroke'}, overlays);
+    }
+    const refresh = () => {
+      const selected = chosen.has(feature);
+      checkbox.checked = selected;
+      path.setAttribute('fill', selected ? '#f6ce45' : '#fff0b5');
+      path.setAttribute('aria-pressed', String(selected));
+      if (check) check.textContent = selected ? '☑' : '☐';
+      updateCount();
+    };
+    const toggle = () => {
+      if (chosen.has(feature)) chosen.delete(feature);
+      else chosen.add(feature);
+      refresh();
+    };
+    path.setAttribute('tabindex', '0');
+    path.setAttribute('role', 'button');
+    path.setAttribute('aria-label', name(feature));
+    path.style.cursor = 'pointer';
+    path.addEventListener('click', toggle);
+    path.addEventListener('keydown', event => {
+      if (event.key === ' ' || event.key === 'Enter') {
+        event.preventDefault();
+        toggle();
+      }
+    });
+    checkbox.addEventListener('change', toggle);
+    refresh();
+  }
+
+  for (const feature of [home, ...neighbors, ...features.filter(item => item !== home && !eligible.has(item))]) {
+    const anchor = labelPoint(feature);
+    if (!anchor) continue;
+    const [x, y] = xy(anchor);
+    const width = name(feature).length * labelSize * .55 + 10;
+    if (x - width / 2 < 4 || x + width / 2 > 756 || y < labelSize + 2 || y > 555 ||
+        labels.some(other => Math.abs(x - other.x) < (width + other.width) / 2 &&
+                             Math.abs(y - other.y) < labelSize * 2 + 6)) continue;
+    labels.push({x, y, width});
+    mapElement('text', {x, y, 'text-anchor': 'middle', 'font-size': labelSize,
+      'font-weight': 650, fill: '#222', stroke: '#fff', 'stroke-width': 3, 'paint-order': 'stroke'}, overlays)
+      .textContent = name(feature);
+  }
+
+  const [cx, cy] = xy(point);
+  mapElement('circle', {cx, cy, r: 7, fill: '#a80048', stroke: '#fff', 'stroke-width': 2}, overlays);
+  let zoom = 1;
+  function showZoom(value) {
+    zoom = Math.max(1, Math.min(3, value));
+    const width = 760 / zoom, height = 570 / zoom;
+    const x = Math.max(0, Math.min(760 - width, cx - width / 2));
+    const y = Math.max(0, Math.min(570 - height, cy - height / 2));
+    svg.setAttribute('viewBox', [x, y, width, height].join(' '));
+    $('zoom-in').disabled = zoom === 3;
+    $('zoom-out').disabled = zoom === 1;
+  }
+  $('zoom-in').onclick = () => showZoom(zoom * 1.5);
+  $('zoom-out').onclick = () => showZoom(zoom / 1.5);
+  $('zoom-reset').onclick = () => showZoom(1);
+  showZoom(1);
+  $('controls').hidden = false;
+  $('zones').hidden = neighbors.length === 0;
+  updateCount();
+}
+
+const normalize = text => String(text ?? '').normalize('NFKC').toLowerCase()
+  .replace(/\b(\d{4})\s+([a-z]{2})\b/g, '$1$2').replace(/[,\s]+/g, ' ').trim();
+
+function selectAddress(data, query) {
+  const records = data.response?.docs;
+  if (!Array.isArray(records) || !records.length) throw Error('Adresse introuvable');
+  const matches = records.filter(record => record.type === 'adres' &&
+    normalize(record.weergavenaam) === normalize(query) && /\b\d{4}[a-z]{2}\b/.test(normalize(query)));
+  if (matches.length !== 1) {
+    throw Error('Adresse non confirmée. Saisir le libellé complet. Suggestions : ' +
+      records.map(record => record.weergavenaam).filter(Boolean).join(' · '));
+  }
+  const address = matches[0];
+  const coords = /^POINT\s*\(([-.\d]+)\s+([-.\d]+)\)$/.exec(address.centroide_rd);
+  if (!/^\d{16}$/.test(address.nummeraanduiding_id) || !coords) throw Error('Identifiant BAG ou coordonnées absents');
+  const point = coords.slice(1).map(Number);
+  if (!point.every(Number.isFinite)) throw Error('Coordonnées BAG invalides');
+  return {label: address.weergavenaam, id: address.nummeraanduiding_id, point};
+}
+
+function clearMap() {
+  $('map').replaceChildren();
+  $('map').setAttribute('viewBox', '0 0 760 570');
+  $('count').textContent = '';
+  $('choices').replaceChildren();
+  $('zones').hidden = true;
+  $('controls').hidden = true;
+}
+
+$('address').addEventListener('input', () => {
+  activeRequest?.abort();
+  clearMap();
+  $('status').textContent = 'Adresse modifiée. Lancer une nouvelle recherche.';
+});
+
+$('form').onsubmit = async event => {
+  event.preventDefault();
+  activeRequest?.abort();
+  const request = new AbortController();
+  activeRequest = request;
+  const {signal} = request;
+  const query = $('address').value;
+  clearMap();
+  $('status').textContent = 'Recherche de l’adresse officielle…';
+  try {
+    const search = new URLSearchParams({q: query, fq: 'type:adres', rows: 5});
+    const address = selectAddress(await fetchJSON(bag + '?' + search, signal), query);
+    signal.throwIfAborted();
+    const [x, y] = address.point;
+    const located = territory(await loadBox([x - 1, y - 1, x + 1, y + 1], signal), address.point);
+    signal.throwIfAborted();
+    const [west, south, east, north] = bounds([located]);
+    const features = await loadBox([west - 250, south - 250, east + 250, north + 250], signal);
+    signal.throwIfAborted();
+    const home = territory(features, address.point);
+    if (home.properties.buurtcode !== located.properties.buurtcode) throw Error('Attribution incohérente après extension');
+    const edges = segments(home);
+    const neighbors = features.filter(feature => feature !== home && sharesBoundary(edges, feature));
+    neighbors.sort((a, b) => name(a).localeCompare(name(b), 'nl'));
+    render(features, home, neighbors, address.point);
+    $('status').textContent = address.label + ' — ' + name(home) + ' · ' + neighbors.length + ' voisins détectés';
+  } catch (error) {
+    if (signal.aborted) return;
+    clearMap();
+    $('status').textContent = 'Échec : ' + error.message;
+  }
+};
+</script>
+</body>
+</html>
