@@ -56,3 +56,24 @@ test("Dolores BAG address uses the official Borgerbuurt topology", () => {
     "BU0363ER02", "BU0363ET01", "BU0363EU03", "BU0363EV01", "BU0363EV02"
   ]);
 });
+
+test("Dolores uses the fifteen municipal territories at 2009-01-01", () => {
+  const base = join(__dirname, "../revue/data", reviewProfiles.dolores.dataset);
+  const {features} = JSON.parse(readFileSync(base + ".geojson"));
+  const {neighbors, overlapSquareMetres} = JSON.parse(readFileSync(base + "-neighbors.json"));
+  const result = classifySponsorTerritory(reviewProfiles.dolores.center, features, neighbors);
+  const names = band => features.filter(f => result.bands[f.id] === band).map(f => f.properties.buurtnaam).sort();
+  assert.equal(features.length, 15);
+  assert.equal(new Set(features.map(f => f.id)).size, 15);
+  assert.deepEqual(names("home"), ["Oud-West"]);
+  assert.deepEqual(names("direct"), ["Centrum", "De Baarsjes", "Oud-Zuid", "Westerpark"]);
+  assert.deepEqual(names("second"), ["Bos en Lommer", "Noord", "Oost-Watergraafsmeer", "Slotervaart",
+    "Westpoort", "Zeeburg", "Zuideramstel"]);
+  assert.deepEqual(names("other"), ["Geuzenveld-Slotermeer", "Osdorp", "Zuidoost"]);
+  assert.equal(overlapSquareMetres.length, 5);
+  const districtIds = Object.fromEntries(features.map(f => [f.properties.buurtnaam, f.id]));
+  assert(!neighbors[districtIds.Westerpark].includes(districtIds.Noord));
+  for (const [id, adjacent] of Object.entries(neighbors)) {
+    for (const neighbor of adjacent) assert(neighbors[neighbor].includes(id));
+  }
+});

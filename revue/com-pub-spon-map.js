@@ -70,7 +70,7 @@ const requestedLanguage = pageUrl.searchParams.get("lang");
 language.value = Object.hasOwn(copy, requestedLanguage) ? requestedLanguage : "nl";
 const requestedProfile = pageUrl.searchParams.get("demo") || defaultReviewProfile;
 const profile = Object.hasOwn(reviewProfiles, requestedProfile) ? reviewProfiles[requestedProfile] : null;
-const draft = readSponsorDraft(requestedProfile);
+const draft = readSponsorDraft(sponsorDraftScope(requestedProfile));
 const requests = new Map(Array.isArray(draft.requests) ? draft.requests : []);
 const extension = $("extension-dialog");
 const frame = $("map-frame");
@@ -90,7 +90,7 @@ let streetLoadFailed = false;
 
 function saveDraft() {
   return writeSponsorDraft({selected: [...selected], requests: [...requests], merchantId: profile.merchantId,
-    address: profile.address, center: profile.center, home: territory.home, bands: territory.bands}, requestedProfile);
+    address: profile.address, center: profile.center, home: territory.home, bands: territory.bands}, sponsorDraftScope(requestedProfile));
 }
 
 function translate() {
@@ -219,13 +219,14 @@ function districtLabel(code) {
 
 async function loadMap() {
   if (!profile) throw new Error("coordinates");
-  const base = "data/" + profile.region + "-cbs-2025";
+  const base = "data/" + sponsorDataset(profile);
   const [data, graph] = await Promise.all([base + ".geojson", base + "-neighbors.json"].map(async url => {
     const response = await fetch(url);
     if (!response.ok) throw new Error("error");
     return response.json();
   }));
   const {center} = profile;
+  frame.classList.toggle("historic-map", Boolean(profile.dataset));
   if (profile.name) {
     $("reference-shop-name").textContent = profile.name;
     $("reference-shop-address").textContent = profile.address;
@@ -249,7 +250,9 @@ async function loadMap() {
     });
   };
   recenter();
-  map.attributionControl.addAttribution('<a href="https://www.pdok.nl/introductie/-/article/cbs-wijken-en-buurten" target="_blank" rel="noopener">CBS/Kadaster via PDOK · 2025 · CC BY 4.0</a>');
+  map.attributionControl.addAttribution(profile.dataset
+    ? '<a href="https://data.overheid.nl/dataset/5l2csm77flzgya" target="_blank" rel="noopener">Gemeente Amsterdam · 2009 · CC0 1.0</a>'
+    : '<a href="https://www.pdok.nl/introductie/-/article/cbs-wijken-en-buurten" target="_blank" rel="noopener">CBS/Kadaster via PDOK · 2025 · CC BY 4.0</a>');
   const fills = Object.fromEntries([...document.querySelectorAll("[data-band]")].map(item =>
     [item.dataset.band, getComputedStyle(item).getPropertyValue("--band").trim()]));
   const polygons = new Map();
@@ -266,6 +269,7 @@ async function loadMap() {
     }
   }).addTo(map);
 
+  const pinSize = profile.dataset && map.getSize().x < 500 ? [27, 32] : [34, 40];
   const origin = L.marker(center, {
     interactive: false,
     keyboard: false,
@@ -273,8 +277,8 @@ async function loadMap() {
     zIndexOffset: 1000,
     icon: L.divIcon({
       className: "shop-pin",
-      iconSize: [34, 40],
-      iconAnchor: [17, 39],
+      iconSize: pinSize,
+      iconAnchor: [pinSize[0] / 2, pinSize[1] - 1],
       html: '<svg viewBox="0 0 34 40" aria-hidden="true"><path d="M17 39C13 34 1 23 1 17a16 16 0 1 1 32 0c0 6-12 17-16 22Z" fill="#168741" stroke="white" stroke-width="2"/><path d="M10 16v8h14v-8m-9 8v-6h4v6M9 16l2-6h12l2 6H9Z" fill="none" stroke="white" stroke-width="1.5" stroke-linejoin="round"/></svg>'
     })
   }).addTo(map);
@@ -339,10 +343,11 @@ async function loadMap() {
       const offsets = [[0, 0]];
       const step = Math.min(14, Math.max(5, Math.round(radius / 3)));
       if (district.band !== "other") {
-        for (const scale of [1, 2, 3]) {
+        for (const scale of [1, 2, 3, 4, 5]) {
           const shift = scale * step;
           offsets.push([0, -shift], [0, shift], [-shift, 0], [shift, 0],
-            [-shift, -shift], [shift, -shift], [-shift, shift], [shift, shift]);
+            [-shift, -shift], [shift, -shift], [-shift, shift], [shift, shift],
+            [-step, shift], [step, shift], [-step, -shift], [step, -shift]);
         }
       }
       const findPlacement = () => {

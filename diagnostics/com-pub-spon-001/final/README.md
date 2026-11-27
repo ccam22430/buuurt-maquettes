@@ -92,3 +92,14 @@ The [geographic register](../../../revue/GEO-REFERENCE.md) contains the precise 
 Chrome rendered 152 SVG neighbourhoods, four fills and five selections, without tile elements in the simplified mode. In the BRT street mode, Chrome loaded official tiles. All 152 rendered SVG path strings and the shop marker transform matched exactly across the toggle, with selection preserved. Switching back removed the street tiles. Package navigation carried the Dolores selection. At 390 × 844 the initial view showed three complete neighbourhood names without horizontal overflow. Longer names remain available by zooming or in the district list. Native touch and V1 integration were not re-tested.
 
 [BUUURT mobile](dolores-mobile.jpg) · [Street map, same mobile dimensions](dolores-streets-mobile.jpg) · [Street map on desktop](dolores-streets.jpg).
+
+## Amsterdam municipal snapshot · 2009-01-01
+
+The attached public municipal CSV generated 15 valid geometries and a native RD shared-boundary graph. Regenerating with the documented dependencies produced byte-identical GeoJSON and graph files. The eight geography tests pass, including the CBS fixtures. The [source notes](../../../revue/GEO-REFERENCE.md) record the licence, the five original overlaps and the colour assignments.
+
+Chromium review from the local library link, at 390 × 844 with an iPhone 13 viewport and at 1364 × 950 on desktop. Cloud egress supplied the external assets to Chromium during the test. Both modes rendered with matching projected paths and loaded official BRT tiles. The checks covered zoom, drag, recenter, fullscreen and Escape, deselecting De Baarsjes, reading the remaining three names on the package page, and returning with the deselection preserved. The package screen continued to show €15, €30 and €50.
+
+Five complete names appear at the initial mobile framing (Westerpark, Centrum, Oud-Zuid, Bos en Lommer and Slotervaart), compared with two in the earlier CBS review. This is a count across different territorial vintages. Oud-West and De Baarsjes remain available in the full list and can be inspected on the map after zooming. This review used a desktop Chromium engine with a mobile viewport.
+
+- Mobile [without streets](historical-2009-mobile.jpg) and [with streets](historical-2009-mobile-streets.jpg).
+- Desktop [without streets](historical-2009-desktop.jpg) and [with streets](historical-2009-desktop-streets.jpg).

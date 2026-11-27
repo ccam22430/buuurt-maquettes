@@ -136,3 +136,9 @@ summary { font-size: 13px; cursor: pointer; }
 #reference-shop { margin: 8px 0; font-size: 12px; }
 
 .reference-controls { margin-top: 14px; }
+
+@media (max-width: 499px) {
+  .body:has(.campaign-steps) .historic-map:not(.is-expanded) .map {
+    height: clamp(320px, 40dvh, 440px);
+  }
+}
