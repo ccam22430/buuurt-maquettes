@@ -2,11 +2,12 @@
 
 const copy = {
   nl: {
+    campaign: "Gesponsord bericht", postStep: "Bericht", territoryStep: "Gebied", budgetStep: "Budget", reviewStep: "Bevestiging", coordinates: "De winkellocatie ontbreekt.", boundary: "De winkel ligt op een buurtgrens.", territory: "De buurt kon niet eenduidig worden bepaald.", neighbors: "Geen aangrenzende buurten gevonden.", geometry: "Onbruikbare buurtgrenzen.",
     title: "Kies je verspreidingsgebied", back: "Terug", intro: "Tik op de buurten waar je je bericht wilt verspreiden.",
     home: "Buurt van je winkel", direct: "Direct aangrenzend", second: "Tweede ring", other: "Overige buurten",
     recenter: "Centreer", fullscreen: "Volledig scherm", exit: "Klein scherm",
     zoomIn: "Inzoomen", zoomOut: "Uitzoomen", districts: "Buurten op naam bekijken",
-    scope: "De kaart toont geografische nabijheid. De voorselectie volgt de GEO-06-testrechten. GEO-IA en werkelijke capaciteit zijn hier niet beschikbaar.",
+    scope: "De kaart toont geografische nabijheid. Direct aangrenzende buurten zijn vooraf geselecteerd voor deze demonstratie. GEO-IA en werkelijke capaciteit zijn hier niet beschikbaar.",
     why: "Waarom wordt deze buurt niet aanbevolen?",
     grayReason: "Deze buurt valt buiten de twee ringen van aangrenzende buurten rond je winkel. Voor deze buurt is hier geen GEO-IA-beoordeling beschikbaar.",
     extensionTerms: "Als een uitbreiding van je verspreidingsgebied gerechtvaardigd lijkt, kun je die aanvragen.\n\nAcceptatie is niet gegarandeerd: BUUURT geeft altijd voorrang aan de meest relevante berichten voor bewoners.",
@@ -18,11 +19,12 @@ const copy = {
     library: "BUUURT-maquettes", choice: "Publicatiemethode", close: "Sluiten", menu: "BUUURT-menu"
   },
   en: {
+    campaign: "Sponsored post", postStep: "Post", territoryStep: "Area", budgetStep: "Budget", reviewStep: "Review", coordinates: "The shop location is unavailable.", boundary: "The shop is on a neighbourhood boundary.", territory: "The neighbourhood could not be identified unambiguously.", neighbors: "No directly adjacent neighbourhoods were found.", geometry: "Neighbourhood boundaries are invalid.",
     title: "Choose your delivery area", back: "Back", intro: "Tap the neighbourhoods where you’d like your post to appear.",
     home: "Your shop’s neighbourhood", direct: "Direct neighbours", second: "Second ring", other: "Other neighbourhoods",
     recenter: "Recenter", fullscreen: "Full screen", exit: "Exit full screen",
     zoomIn: "Zoom in", zoomOut: "Zoom out", districts: "Browse neighbourhoods by name",
-    scope: "The map shows geographic proximity. The default selection uses GEO-06 test permissions. GEO-AI and live capacity are unavailable here.",
+    scope: "The map shows geographic proximity. Direct neighbours are preselected for this review. GEO-AI and live capacity are unavailable here.",
     why: "Why isn’t this neighbourhood recommended?",
     grayReason: "This neighbourhood lies outside the two rings of adjacent neighbourhoods around your shop. No GEO-AI assessment is available here for this neighbourhood.",
     extensionTerms: "If an extension of your delivery area seems justified, you can request one.\n\nAcceptance is not guaranteed: BUUURT always prioritises the most relevant posts for residents.",
@@ -34,11 +36,12 @@ const copy = {
     library: "BUUURT prototypes", choice: "Publication method", close: "Close", menu: "BUUURT menu"
   },
   fr: {
-    title: "Choisissez votre zone de diffusion", back: "Retour", intro: "Touchez les quartiers dans lesquels vous souhaitez diffuser votre annonce.",
-    home: "Quartier de votre commerce", direct: "Voisins directs", second: "Deuxième couronne", other: "Autres quartiers",
+    campaign: "Annonce sponsorisée", postStep: "Annonce", territoryStep: "Territoire", budgetStep: "Budget", reviewStep: "Validation", coordinates: "Les coordonnées du commerce sont indisponibles.", boundary: "Le commerce est situé sur une limite de quartier.", territory: "Le quartier du commerce ne peut pas être identifié avec certitude.", neighbors: "Aucun voisin direct n’a été identifié.", geometry: "Les contours des quartiers sont invalides.",
+    title: "Choisissez votre zone de diffusion", back: "Retour", intro: "Sélectionnez les quartiers où vous souhaitez diffuser votre annonce.",
+    home: "Votre quartier", direct: "Quartiers recommandés", second: "Quartiers élargis", other: "Autres quartiers",
     recenter: "Recentrer", fullscreen: "Plein écran", exit: "Quitter le plein écran",
     zoomIn: "Zoom avant", zoomOut: "Zoom arrière", districts: "Consulter les quartiers par nom",
-    scope: "La carte représente la proximité géographique. La présélection reprend les droits d’essai GEO-06. Les recommandations GEO-IA et la capacité réelle sont indisponibles ici.",
+    scope: "La carte représente la proximité géographique. Les voisins directs sont présélectionnés pour cette revue. Les recommandations GEO-IA et la capacité réelle sont indisponibles ici.",
     why: "Pourquoi ce quartier n’est-il pas recommandé ?",
     grayReason: "Ce quartier se situe au-delà des deux couronnes de quartiers limitrophes autour de votre commerce. Aucune évaluation GEO-IA de ce quartier n’est disponible ici.",
     extensionTerms: "Si une extension de votre territoire de diffusion vous semble justifiée, vous pouvez en faire la demande.\n\nSon acceptation n’est toutefois pas garantie : BUUURT privilégie toujours les annonces les plus pertinentes pour les habitants.",
@@ -56,7 +59,9 @@ const language = $("lang");
 const pageUrl = new URL(location.href);
 const requestedLanguage = pageUrl.searchParams.get("lang");
 language.value = Object.hasOwn(copy, requestedLanguage) ? requestedLanguage : "nl";
-const draft = readSponsorDraft();
+const requestedProfile = pageUrl.searchParams.get("demo") || "amsterdam";
+const profile = Object.hasOwn(reviewProfiles, requestedProfile) ? reviewProfiles[requestedProfile] : null;
+const draft = readSponsorDraft(requestedProfile);
 const requests = new Map(Array.isArray(draft.requests) ? draft.requests : []);
 const extension = $("extension-dialog");
 const frame = $("map-frame");
@@ -67,12 +72,14 @@ let selected;
 
 let map;
 let districts;
+let territory;
 let activeDistrict;
 let status = "loading";
 let notification = "";
 
 function saveDraft() {
-  return writeSponsorDraft({selected: [...selected], requests: [...requests]});
+  return writeSponsorDraft({selected: [...selected], requests: [...requests], merchantId: profile.merchantId,
+    address: profile.address, center: profile.center, home: territory.home, bands: territory.bands}, requestedProfile);
 }
 
 function translate() {
@@ -92,10 +99,12 @@ function translate() {
   const backUrl = new URL("com-pub-002.html", pageUrl);
   backUrl.search = pageUrl.search;
   backUrl.searchParams.delete("lang");
+  backUrl.searchParams.delete("demo");
   backUrl.searchParams.delete("notifications");
   backUrl.hash = lang + "-MER-PUB-002";
   document.querySelector(".back").href = backUrl;
   $("choice-link").href = backUrl;
+  for (const caption of document.querySelectorAll(".district-category")) caption.textContent = words()[caption.dataset.category];
 }
 language.addEventListener("change", () => {
   pageUrl.searchParams.set("lang", language.value);
@@ -165,6 +174,7 @@ function toggleSelection(code) {
   if (selected.has(code)) selected.delete(code);
   else selected.add(code);
   for (const button of districtButtons.get(code) || []) {
+    button.dataset.selected = String(selected.has(code));
     if (button.hasAttribute("aria-checked")) button.setAttribute("aria-checked", selected.has(code));
   }
   saveDraft();
@@ -177,6 +187,7 @@ function districtLabel(code) {
   label.textContent = district.buurtnaam;
   if (interactive) {
     label.type = "button";
+    label.dataset.selected = String(selected.has(code));
     label.setAttribute("aria-label", district.buurtnaam);
     label.onclick = () => choose(code);
     if (district.band === "other") label.setAttribute("aria-haspopup", "dialog");
@@ -191,17 +202,31 @@ function districtLabel(code) {
 }
 
 async function loadMap() {
-  const response = await fetch("data/amsterdam-cbs-2025.geojson");
-  if (!response.ok) throw new Error("CBS snapshot unavailable");
-  const data = await response.json();
-  const {center, demoEligible} = data.pilot;
+  if (!profile) throw new Error("coordinates");
+  const base = "data/" + profile.region + "-cbs-2025";
+  const [data, graph] = await Promise.all([base + ".geojson", base + "-neighbors.json"].map(async url => {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error("error");
+    return response.json();
+  }));
+  const {center} = profile;
+  territory = classifySponsorTerritory(center, data.features, graph.neighbors);
+  for (const feature of data.features) feature.properties.band = territory.bands[feature.id];
   districts = new Map(data.features.map(feature => [feature.id, feature.properties]));
-  selected = new Set(Array.isArray(draft.selected) ? draft.selected.filter(code => districts.has(code) && canSelect(code)) : demoEligible);
-  map = L.map("campaign-map", {zoomControl: false, minZoom: 11, maxZoom: 19, zoomSnap: 0.5, scrollWheelZoom: true});
+  selected = new Set(Array.isArray(draft.selected) ?
+    draft.selected.filter(code => districts.has(code) && canSelect(code)) : territory.direct);
+  map = L.map("campaign-map", {zoomControl: false, minZoom: 11, maxZoom: 19, zoomSnap: 0.25, scrollWheelZoom: true});
   const overview = L.geoJSON(data, {
     filter: feature => ["home", "direct"].includes(feature.properties.band)
   }).getBounds();
-  const recenter = () => map.fitBounds(overview, {padding: [26, 38], maxZoom: 15.5});
+  const recenter = () => {
+    const compact = map.getSize().x < 500;
+    map.fitBounds(overview, {
+      paddingTopLeft: compact ? [12, 22] : [28, 24],
+      paddingBottomRight: compact ? [38, 24] : [62, 30],
+      maxZoom: 16
+    });
+  };
   recenter();
   map.attributionControl.addAttribution('<a href="https://www.pdok.nl/introductie/-/article/cbs-wijken-en-buurten" target="_blank" rel="noopener">CBS/Kadaster via PDOK · 2025 · CC BY 4.0</a>');
   const fills = Object.fromEntries([...document.querySelectorAll("[data-band]")].map(item =>
@@ -222,7 +247,7 @@ async function loadMap() {
   const origin = L.marker(center, {
     interactive: false,
     keyboard: false,
-    title: districts.get(data.pilot.home).buurtnaam,
+    title: districts.get(territory.home).buurtnaam,
     zIndexOffset: 1000,
     icon: L.divIcon({
       className: "shop-pin",
@@ -251,7 +276,12 @@ async function loadMap() {
     labels.push({district, label, name, element, polygon: polygons.get(code)});
   }
   for (const [code] of [...districts].sort(([, a], [, b]) => a.buurtnaam.localeCompare(b.buurtnaam, "nl"))) {
-    list.append(districtLabel(code));
+    const label = districtLabel(code);
+    const caption = document.createElement("small");
+    caption.className = "district-category";
+    caption.dataset.category = districts.get(code).band;
+    label.append(caption);
+    list.append(label);
   }
 
   function renderLabels() {
@@ -277,29 +307,51 @@ async function loadMap() {
       const fitsPolygon = box => [box.left, (box.left + box.right) / 2, box.right].every(x =>
         [box.top, (box.top + box.bottom) / 2, box.bottom].every(y =>
           path.isPointInFill(new DOMPoint(x, y).matrixTransform(transform))));
-      const maxWidth = Math.min(132, path.getBoundingClientRect().width - 4);
+      const maxWidth = Math.max(0, Math.min(132, path.getBoundingClientRect().width - 4));
       element.hidden = false;
       name.hidden = false;
-      label.style.maxWidth = Math.max(0, maxWidth) + "px";
-      let box = label.getBoundingClientRect();
-      if (!fitsPolygon(box)) {
-        const [lat, lng] = district.label;
-        const radius = map.latLngToLayerPoint([lat, lng + district.clearance]).distanceTo(
-          map.latLngToLayerPoint(district.label));
-        label.style.maxWidth = Math.min(maxWidth, radius * 1.9) + "px";
-        box = label.getBoundingClientRect();
+      label.style.translate = "";
+      const [lat, lng] = district.label;
+      const radius = map.latLngToLayerPoint([lat, lng + district.clearance]).distanceTo(
+        map.latLngToLayerPoint(district.label));
+      const offsets = [[0, 0]];
+      const step = Math.min(14, Math.max(5, Math.round(radius / 3)));
+      if (district.band !== "other") {
+        for (const scale of [1, 2, 3]) {
+          const shift = scale * step;
+          offsets.push([0, -shift], [0, shift], [-shift, 0], [shift, 0],
+            [-shift, -shift], [shift, -shift], [-shift, shift], [shift, shift]);
+        }
       }
-      const fits = rect => label.scrollWidth <= label.clientWidth && fitsPolygon(rect) &&
-        rect.left >= viewport.left && rect.right <= viewport.right &&
-        rect.top >= viewport.top && rect.bottom <= viewport.bottom - 20 &&
-        !occupied.some(other => overlaps(rect, other));
-      if (!fits(box) && district.band === "direct") {
+      const findPlacement = () => {
+        if (label.scrollWidth > label.clientWidth) return null;
+        const box = label.getBoundingClientRect();
+        for (const [x, y] of offsets) {
+          const rect = {left: box.left + x, right: box.right + x, top: box.top + y, bottom: box.bottom + y};
+          if (rect.left < viewport.left || rect.right > viewport.right || rect.top < viewport.top ||
+              rect.bottom > viewport.bottom - 20 || occupied.some(other => overlaps(rect, other)) ||
+              !fitsPolygon(rect)) continue;
+          return {x, y, rect};
+        }
+        return null;
+      };
+      let placement;
+      const widths = [maxWidth, maxWidth * .84, maxWidth * .70, Math.min(maxWidth, radius * 2.1)];
+      for (const width of new Set(widths.map(Math.round))) {
+        label.style.maxWidth = width + "px";
+        placement = findPlacement();
+        if (placement) break;
+      }
+      if (!placement && district.band === "direct") {
         name.hidden = true;
         label.title = district.buurtnaam;
-        box = label.getBoundingClientRect();
+        placement = findPlacement();
       }
-      element.hidden = !fits(box);
-      if (!element.hidden) occupied.push(box);
+      element.hidden = !placement;
+      if (placement) {
+        label.style.translate = placement.x + "px " + placement.y + "px";
+        occupied.push(placement.rect);
+      }
     }
   }
 
@@ -318,7 +370,12 @@ async function loadMap() {
   $("zoom-in").onclick = () => map.zoomIn();
   $("zoom-out").onclick = () => map.zoomOut();
   $("recenter").onclick = recenter;
-  map.on("moveend zoomend resize", renderLabels);
+  let pendingFrame;
+  const scheduleLabels = () => {
+    cancelAnimationFrame(pendingFrame);
+    pendingFrame = requestAnimationFrame(renderLabels);
+  };
+  map.on("moveend zoomend resize", scheduleLabels);
   const resize = new ResizeObserver(() => map.invalidateSize());
   resize.observe(map.getContainer());
   document.fonts.ready.then(renderLabels);
@@ -330,6 +387,6 @@ async function loadMap() {
 
 loadMap().catch(error => {
   console.error(error);
-  status = "error";
+  status = ["coordinates", "boundary", "territory", "neighbors", "geometry"].includes(error.message) ? error.message : "error";
   translate();
 });

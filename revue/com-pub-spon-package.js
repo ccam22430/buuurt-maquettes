@@ -22,7 +22,8 @@ const duration = $("duration");
 const options = [...document.querySelectorAll("[name=budget]")];
 const chosenBudget = () => options.find(option => option.checked).value;
 const targets = {15: 500, 30: 1200, 50: 2500};
-const draft = readSponsorDraft();
+const profile = url.searchParams.get("demo") || "amsterdam";
+const draft = readSponsorDraft(profile);
 let selectedNames;
 let selectionUnavailable = false;
 
@@ -34,7 +35,7 @@ if ([...duration.options].some(option => option.value === draft.duration)) durat
 duration.addEventListener("change", savePackage);
 
 function savePackage() {
-  writeSponsorDraft({budget: chosenBudget(), duration: duration.value});
+  writeSponsorDraft({budget: chosenBudget(), duration: duration.value}, profile);
   translatePackage();
 }
 
@@ -73,7 +74,8 @@ translatePackage();
 
 async function showSelectedDistricts() {
   if (!Array.isArray(draft.selected)) throw new Error("No saved territory selection");
-  const response = await fetch("data/amsterdam-cbs-2025.geojson");
+  if (!Object.hasOwn(reviewProfiles, profile)) throw new Error("Unknown review profile");
+  const response = await fetch("data/" + reviewProfiles[profile].region + "-cbs-2025.geojson");
   if (!response.ok) throw new Error("CBS snapshot unavailable");
   const {features} = await response.json();
   const names = new Map(features.map(feature => [feature.id, feature.properties.buurtnaam]));

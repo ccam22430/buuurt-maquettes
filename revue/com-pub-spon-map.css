@@ -21,10 +21,10 @@ h1 { margin: 0 0 6px; font-size: clamp(23px, 5.7vw, 31px); font-weight: 900; lin
 body.map-expanded { overflow: hidden; }
 .campaign-legend { display: grid; grid-template-columns: 1fr 1fr; gap: 5px 12px; margin: 10px 0; padding: 0; list-style: none; font-size: 12px; }
 .campaign-legend li::before { display: inline-block; content: ""; width: 12px; height: 12px; border-radius: 3px; background: var(--band); margin-inline-end: 5px; vertical-align: -1px; border: 1px solid #0002; }
-[data-band="home"] { --band: #66c879; }
-[data-band="direct"] { --band: #ffda47; }
-[data-band="second"] { --band: #ff8ab4; }
-[data-band="other"] { --band: #cfd0d4; }
+[data-band="home"] { --band: #8ce26d; }
+[data-band="direct"] { --band: #ffdd4d; }
+[data-band="second"] { --band: #ff719f; }
+[data-band="other"] { --band: #c5c8ce; }
 .district-marker > button, .district-marker > span {
   position: absolute;
   inset: 0 auto auto 0;
@@ -40,7 +40,7 @@ body.map-expanded { overflow: hidden; }
   background: transparent;
   color: #121212;
   font-size: 11px;
-  font-weight: 900;
+  font-weight: 800;
   text-align: center;
   white-space: normal;
   overflow-wrap: normal;
@@ -49,17 +49,6 @@ body.map-expanded { overflow: hidden; }
   line-height: 1.1;
 }
 .district-marker > button { cursor: pointer; }
-.district-marker > [aria-checked]::after {
-  content: "";
-  display: grid;
-  place-items: center;
-  width: 14px;
-  height: 14px;
-  border: 1.5px solid #212121;
-  border-radius: 3px;
-  background: white;
-}
-.district-marker > [aria-checked="true"]::after { content: "✓"; background: var(--pink); border-color: #a80039; color: white; }
 .shop-pin svg { display: block; width: 100%; height: 100%; }
 .district-marker[hidden], #extension-form[hidden] { display: none; }
 #district-list { max-height: 260px; overflow: auto; }
@@ -105,3 +94,19 @@ summary { font-size: 13px; cursor: pointer; }
 .package-option strong { margin-left: auto; }
 .package-option:has(:checked) { border-color: var(--pink); background: #fff3f7; }
 .package-option input { accent-color: var(--pink); }
+
+.campaign-name { margin: 0 0 9px; font-size: 18px; font-weight: 900; }
+.campaign-steps { position: relative; display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; margin: 0 0 15px; padding: 0; list-style: none; text-align: center; font-size: 11px; }
+.campaign-steps::before { content: ""; position: absolute; top: 13px; inset-inline: 12.5%; height: 1px; background: #a3a0a5; }
+.campaign-steps li { position: relative; display: grid; justify-items: center; gap: 3px; min-width: 0; }
+.campaign-steps li > span { display: grid; place-items: center; width: 27px; height: 27px; border: 1px solid #a3a0a5; border-radius: 50%; color: var(--ink); background: white; font-size: 14px; }
+.campaign-steps [aria-current] { color: #bc003e; }
+.campaign-steps [aria-current] > span { background: var(--pink); border-color: var(--pink); color: white; }
+.body:has(.campaign-steps) .map { height: clamp(270px, calc(100dvh - 445px), 580px); }
+.map-tools #recenter { grid-row: 1; }
+.step-actions > .back, .step-actions > .cta { flex: 1; }
+.step-actions > .back { color: #bc003e; border-color: var(--pink); }
+#district-list .district-category { display: block; color: #534f55; font-size: 11px; }
+#district-list [data-selected="true"]::after { content: " ✓"; color: #a80039; }
+.district-marker > [data-selected]::after { content: ""; display: grid; place-items: center; width: 14px; height: 14px; border: 1.5px solid #212121; border-radius: 3px; background: white; }
+.district-marker > [data-selected="true"]::after { content: "✓"; background: var(--pink); border-color: #a80039; color: white; }
