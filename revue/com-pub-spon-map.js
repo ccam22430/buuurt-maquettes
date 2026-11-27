@@ -2,8 +2,7 @@
 
 const copy = {
   nl: {
-    title: "Stel je gesponsorde campagne in", back: "Terug", package: "Kies je pakket",
-    impressions: "doelvertoningen", zones: "Kies je verspreidingsgebied",
+    title: "Kies je verspreidingsgebied", back: "Terug", intro: "Tik op de buurten waar je je bericht wilt verspreiden.",
     home: "Buurt van je winkel", direct: "Direct aangrenzend", second: "Tweede ring", other: "Overige buurten",
     recenter: "Centreer", fullscreen: "Volledig scherm", exit: "Klein scherm",
     zoomIn: "Inzoomen", zoomOut: "Uitzoomen", districts: "Buurten op naam bekijken",
@@ -13,16 +12,13 @@ const copy = {
     extensionTerms: "Als een uitbreiding van je verspreidingsgebied gerechtvaardigd lijkt, kun je die aanvragen.\n\nAcceptatie is niet gegarandeerd: BUUURT geeft altijd voorrang aan de meest relevante berichten voor bewoners.",
     extend: "Uitbreiding aanvragen", returnMap: "Terug naar de kaart", reason: "Motivering",
     humanReview: "Gratis aanvraag. Een medewerker beslist over goedkeuring.", submit: "Opslaan in de maquette",
-    saved: "Aanvraag opgeslagen in deze maquette.", next: "Verder", duration: "Looptijd",
-    durationNote: "Indicatieve looptijd voor de maquette.", days: "dagen",
-    geographicSelection: "Geografische selectie voor de maquette", reviewTitle: "Campagneoverzicht", done: "Werkelijke capaciteit en rechten moeten worden gecontroleerd vóór bevestiging.",
+    storageError: "De selectie kon niet worden opgeslagen.", saved: "Aanvraag opgeslagen in deze maquette.", next: "Verder",
+    geographicSelection: "Geografische selectie voor de maquette",
     loading: "Officiële grenzen laden…", error: "De kaart kon niet worden geladen.",
-    library: "BUUURT-maquettes", choice: "Publicatiemethode", close: "Sluiten", menu: "BUUURT-menu",
-    stages: ["Bericht", "Gebieden", "Looptijd", "Overzicht"]
+    library: "BUUURT-maquettes", choice: "Publicatiemethode", close: "Sluiten", menu: "BUUURT-menu"
   },
   en: {
-    title: "Configure your sponsored campaign", back: "Back", package: "Choose your package",
-    impressions: "target impressions", zones: "Choose your delivery area",
+    title: "Choose your delivery area", back: "Back", intro: "Tap the neighbourhoods where you’d like your post to appear.",
     home: "Your shop’s neighbourhood", direct: "Direct neighbours", second: "Second ring", other: "Other neighbourhoods",
     recenter: "Recenter", fullscreen: "Full screen", exit: "Exit full screen",
     zoomIn: "Zoom in", zoomOut: "Zoom out", districts: "Browse neighbourhoods by name",
@@ -32,16 +28,13 @@ const copy = {
     extensionTerms: "If an extension of your delivery area seems justified, you can request one.\n\nAcceptance is not guaranteed: BUUURT always prioritises the most relevant posts for residents.",
     extend: "Request an area extension", returnMap: "Back to the map", reason: "Reason for your request",
     humanReview: "Requests are free. A person decides whether to approve them.", submit: "Save in the prototype",
-    saved: "Request saved in this prototype.", next: "Continue", duration: "Campaign duration",
-    durationNote: "Indicative duration for the prototype.", days: "days",
-    geographicSelection: "Geographic selection for the prototype", reviewTitle: "Campaign summary", done: "Live capacity and permissions must be checked before confirmation.",
+    storageError: "The selection could not be saved.", saved: "Request saved in this prototype.", next: "Continue",
+    geographicSelection: "Geographic selection for the prototype",
     loading: "Loading official boundaries…", error: "The map could not be loaded.",
-    library: "BUUURT prototypes", choice: "Publication method", close: "Close", menu: "BUUURT menu",
-    stages: ["Post", "Areas", "Duration", "Review"]
+    library: "BUUURT prototypes", choice: "Publication method", close: "Close", menu: "BUUURT menu"
   },
   fr: {
-    title: "Configurer votre campagne sponsorisée", back: "Retour", package: "Choisissez votre forfait",
-    impressions: "impressions cibles", zones: "Sélectionnez vos zones de diffusion",
+    title: "Choisissez votre zone de diffusion", back: "Retour", intro: "Touchez les quartiers dans lesquels vous souhaitez diffuser votre annonce.",
     home: "Quartier de votre commerce", direct: "Voisins directs", second: "Deuxième couronne", other: "Autres quartiers",
     recenter: "Recentrer", fullscreen: "Plein écran", exit: "Quitter le plein écran",
     zoomIn: "Zoom avant", zoomOut: "Zoom arrière", districts: "Consulter les quartiers par nom",
@@ -51,12 +44,10 @@ const copy = {
     extensionTerms: "Si une extension de votre territoire de diffusion vous semble justifiée, vous pouvez en faire la demande.\n\nSon acceptation n’est toutefois pas garantie : BUUURT privilégie toujours les annonces les plus pertinentes pour les habitants.",
     extend: "Demander une extension de territoire", returnMap: "Revenir à la carte", reason: "Motif de votre demande",
     humanReview: "La demande est gratuite et soumise à une décision humaine.", submit: "Enregistrer dans la maquette",
-    saved: "Demande enregistrée dans cette maquette.", next: "Continuer", duration: "Durée de diffusion",
-    durationNote: "Durée indicative de la maquette.", days: "jours",
-    geographicSelection: "Sélection géographique de la maquette", reviewTitle: "Récapitulatif de la campagne", done: "La capacité et les droits réels doivent être contrôlés avant toute confirmation.",
+    storageError: "La sélection n’a pas pu être enregistrée.", saved: "Demande enregistrée dans cette maquette.", next: "Continuer",
+    geographicSelection: "Sélection géographique de la maquette",
     loading: "Chargement des contours officiels…", error: "La carte n’a pas pu être chargée.",
-    library: "Maquettes BUUURT", choice: "Choix du mode de publication", close: "Fermer", menu: "Menu BUUURT",
-    stages: ["Annonce", "Zones", "Durée", "Récapitulatif"]
+    library: "Maquettes BUUURT", choice: "Choix du mode de publication", close: "Fermer", menu: "Menu BUUURT"
   }
 };
 
@@ -65,16 +56,10 @@ const language = $("lang");
 const pageUrl = new URL(location.href);
 const requestedLanguage = pageUrl.searchParams.get("lang");
 language.value = Object.hasOwn(copy, requestedLanguage) ? requestedLanguage : "nl";
-const storageKey = "buuurt-review:com-pub-spon-001:cbs-2025";
-let draft = {};
-try { draft = JSON.parse(sessionStorage.getItem(storageKey)) || {}; } catch {}
+const draft = readSponsorDraft();
 const requests = new Map(Array.isArray(draft.requests) ? draft.requests : []);
 const extension = $("extension-dialog");
 const frame = $("map-frame");
-const duration = $("duration");
-const budget = () => document.querySelector("[name=budget]:checked");
-const targets = {15: 500, 30: 1200, 50: 2500};
-const colors = {home: "#83cf97", direct: "#ffe086", second: "#f6aaca", other: "#ddd9de"};
 const words = () => copy[language.value];
 const districtButtons = new Map();
 const canSelect = code => districts.get(code).band !== "home";
@@ -86,43 +71,14 @@ let activeDistrict;
 let status = "loading";
 let notification = "";
 
-for (const input of document.querySelectorAll("[name=budget]")) {
-  if (input.value === draft.budget) input.checked = true;
-  input.addEventListener("change", saveDraft);
-}
-if ([...duration.options].some(option => option.value === draft.duration)) duration.value = draft.duration;
-duration.addEventListener("change", saveDraft);
-$("duration-panel").hidden = !draft.durationVisible;
-
 function saveDraft() {
-  if (!selected) return;
-  try {
-    sessionStorage.setItem(storageKey, JSON.stringify({
-      selected: [...selected], requests: [...requests], budget: budget().value,
-      duration: duration.value, durationVisible: !$("duration-panel").hidden
-    }));
-  } catch {}
-  renderReview();
-}
-
-function renderReview() {
-  if (!districts) return;
-  const format = new Intl.NumberFormat(language.value);
-  const names = [...selected].map(code => districts.get(code).buurtnaam);
-  $("review-summary").textContent = [
-    format.format(targets[budget().value]) + " " + words().impressions,
-    budget().value + " €",
-    duration.value + " " + words().days,
-    ...names
-  ].join(" · ");
+  return writeSponsorDraft({selected: [...selected], requests: [...requests]});
 }
 
 function translate() {
   const lang = language.value;
   document.documentElement.lang = lang;
   for (const element of document.querySelectorAll("[data-t]")) element.textContent = words()[element.dataset.t];
-  for (const element of document.querySelectorAll("[data-stage]")) element.textContent = words().stages[element.dataset.stage];
-  for (const option of duration.options) option.textContent = option.value + " " + words().days;
   $("zoom-in").setAttribute("aria-label", words().zoomIn);
   $("zoom-out").setAttribute("aria-label", words().zoomOut);
   $("fullscreen").textContent = frame.classList.contains("is-expanded") ? words().exit : words().fullscreen;
@@ -140,7 +96,6 @@ function translate() {
   backUrl.hash = lang + "-MER-PUB-002";
   document.querySelector(".back").href = backUrl;
   $("choice-link").href = backUrl;
-  renderReview();
 }
 language.addEventListener("change", () => {
   pageUrl.searchParams.set("lang", language.value);
@@ -151,17 +106,20 @@ translate();
 
 $("menu").onclick = () => $("campaign-menu").showModal();
 $("continue").onclick = () => {
-  const panel = $("duration-panel");
-  if (panel.hidden) {
-    panel.hidden = false;
-    saveDraft();
-    duration.focus();
+  if (!saveDraft()) {
+    notification = "storageError";
+    translate();
     return;
   }
-  $("campaign-review").hidden = false;
-  renderReview();
-  $("campaign-review").focus();
+  const next = new URL("com-pub-spon-package.html", pageUrl);
+  next.search = pageUrl.search;
+  next.searchParams.set("lang", language.value);
+  location.assign(next);
 };
+
+window.addEventListener("pageshow", event => {
+  if (event.persisted) location.reload();
+});
 
 function showExtension(code) {
   activeDistrict = code;
@@ -190,9 +148,8 @@ $("extension-form").onsubmit = event => {
     return;
   }
   requests.set(activeDistrict, reason);
-  saveDraft();
+  notification = saveDraft() ? "saved" : "storageError";
   extension.close();
-  notification = "saved";
   translate();
 };
 
@@ -222,6 +179,7 @@ function districtLabel(code) {
     label.type = "button";
     label.setAttribute("aria-label", district.buurtnaam);
     label.onclick = () => choose(code);
+    if (district.band === "other") label.setAttribute("aria-haspopup", "dialog");
     if (district.band !== "other") {
       label.setAttribute("role", "checkbox");
       label.setAttribute("aria-checked", selected.has(code));
@@ -240,16 +198,38 @@ async function loadMap() {
   districts = new Map(data.features.map(feature => [feature.id, feature.properties]));
   selected = new Set(Array.isArray(draft.selected) ? draft.selected.filter(code => districts.has(code) && canSelect(code)) : demoEligible);
   map = L.map("campaign-map", {zoomControl: false, minZoom: 11, maxZoom: 19, zoomSnap: 0.5, scrollWheelZoom: true});
-  const recenter = () => map.setView(center, map.getSize().x < 500 ? 15.5 : 16);
+  const overview = L.geoJSON(data, {
+    filter: feature => ["home", "direct"].includes(feature.properties.band)
+  }).getBounds();
+  const recenter = () => map.fitBounds(overview, {padding: [26, 38], maxZoom: 15.5});
   recenter();
   map.attributionControl.addAttribution('<a href="https://www.pdok.nl/introductie/-/article/cbs-wijken-en-buurten" target="_blank" rel="noopener">CBS/Kadaster via PDOK · 2025 · CC BY 4.0</a>');
+  const fills = Object.fromEntries([...document.querySelectorAll("[data-band]")].map(item =>
+    [item.dataset.band, getComputedStyle(item).getPropertyValue("--band").trim()]));
+  const polygons = new Map();
   L.geoJSON(data, {
-    style: feature => ({color: "#675d65", weight: 1, fillColor: colors[feature.properties.band], fillOpacity: 0.86}),
-    onEachFeature: (feature, layer) => layer.on("click", () => choose(feature.id))
+    style: feature => ({
+      color: "#fff", weight: 2,
+      fillColor: fills[feature.properties.band],
+      fillOpacity: 1
+    }),
+    onEachFeature: (feature, layer) => {
+      polygons.set(feature.id, layer);
+      layer.on("click", () => choose(feature.id));
+    }
   }).addTo(map);
 
-  const origin = L.circleMarker(center, {
-    radius: 7, color: "white", weight: 3, fillColor: "#18733e", fillOpacity: 1, interactive: false
+  const origin = L.marker(center, {
+    interactive: false,
+    keyboard: false,
+    title: districts.get(data.pilot.home).buurtnaam,
+    zIndexOffset: 1000,
+    icon: L.divIcon({
+      className: "shop-pin",
+      iconSize: [34, 40],
+      iconAnchor: [17, 39],
+      html: '<svg viewBox="0 0 34 40" aria-hidden="true"><path d="M17 39C13 34 1 23 1 17a16 16 0 1 1 32 0c0 6-12 17-16 22Z" fill="#168741" stroke="white" stroke-width="2"/><path d="M10 16v8h14v-8m-9 8v-6h4v6M9 16l2-6h12l2 6H9Z" fill="none" stroke="white" stroke-width="1.5" stroke-linejoin="round"/></svg>'
+    })
   }).addTo(map);
   const labels = [];
   const list = $("district-list");
@@ -263,9 +243,12 @@ async function loadMap() {
       keyboard: false, pane: "tooltipPane", interactive: false
     }).addTo(map);
     const element = marker.getElement();
+    const name = document.createElement("span");
+    name.textContent = district.buurtnaam;
+    label.replaceChildren(name);
     label.style.pointerEvents = "auto";
     L.DomEvent.disableClickPropagation(label);
-    labels.push({district, label, element});
+    labels.push({district, label, name, element, polygon: polygons.get(code)});
   }
   for (const [code] of [...districts].sort(([, a], [, b]) => a.buurtnaam.localeCompare(b.buurtnaam, "nl"))) {
     list.append(districtLabel(code));
@@ -278,17 +261,44 @@ async function loadMap() {
     const occupied = [controls, originBox];
     const overlaps = (a, b) => a.left < b.right + 4 && a.right > b.left - 4 &&
       a.top < b.bottom + 4 && a.bottom > b.top - 4;
-    for (const {district, label, element} of labels) {
+    for (const {district, label, name, element, polygon} of labels) {
+      const anchor = map.latLngToContainerPoint(district.label);
+      if (anchor.x < 0 || anchor.x > viewport.width || anchor.y < 0 || anchor.y > viewport.height) {
+        element.hidden = true;
+        continue;
+      }
+      const path = polygon.getElement();
+      const matrix = path.getScreenCTM();
+      if (!matrix) {
+        element.hidden = true;
+        continue;
+      }
+      const transform = matrix.inverse();
+      const fitsPolygon = box => [box.left, (box.left + box.right) / 2, box.right].every(x =>
+        [box.top, (box.top + box.bottom) / 2, box.bottom].every(y =>
+          path.isPointInFill(new DOMPoint(x, y).matrixTransform(transform))));
+      const maxWidth = Math.min(132, path.getBoundingClientRect().width - 4);
       element.hidden = false;
-      const box = label.getBoundingClientRect();
-      const [lat, lng] = district.label;
-      const radius = map.latLngToLayerPoint([lat, lng + district.clearance]).distanceTo(
-        map.latLngToLayerPoint(district.label));
-      const latitudeScale = Math.cos(lat * Math.PI / 180);
-      element.hidden = Math.hypot(box.width, box.height * latitudeScale) / 2 > radius ||
-        box.left < viewport.left || box.right > viewport.right ||
-        box.top < viewport.top || box.bottom > viewport.bottom - 20 ||
-        occupied.some(other => overlaps(box, other));
+      name.hidden = false;
+      label.style.maxWidth = Math.max(0, maxWidth) + "px";
+      let box = label.getBoundingClientRect();
+      if (!fitsPolygon(box)) {
+        const [lat, lng] = district.label;
+        const radius = map.latLngToLayerPoint([lat, lng + district.clearance]).distanceTo(
+          map.latLngToLayerPoint(district.label));
+        label.style.maxWidth = Math.min(maxWidth, radius * 1.9) + "px";
+        box = label.getBoundingClientRect();
+      }
+      const fits = rect => label.scrollWidth <= label.clientWidth && fitsPolygon(rect) &&
+        rect.left >= viewport.left && rect.right <= viewport.right &&
+        rect.top >= viewport.top && rect.bottom <= viewport.bottom - 20 &&
+        !occupied.some(other => overlaps(rect, other));
+      if (!fits(box) && district.band === "direct") {
+        name.hidden = true;
+        label.title = district.buurtnaam;
+        box = label.getBoundingClientRect();
+      }
+      element.hidden = !fits(box);
       if (!element.hidden) occupied.push(box);
     }
   }

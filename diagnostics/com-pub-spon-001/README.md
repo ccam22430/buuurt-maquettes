@@ -44,3 +44,11 @@ Chromium launched directly from the shell was blocked by the managed sandbox hel
 3. Compare [desktop](desktop.jpg) and [mobile](mobile.jpg), deselect a yellow zone, zoom or pan, then change language. Open a grey zone, save a test reason, and reopen it after reloading in the same tab.
 4. From COM-PUB-002, verify both publication choices. In sponsored review, verify budget, territory, duration, and recap. Test touch on Safari iOS and Chrome Android before accepting mobile behaviour.
 5. Obtain founder validation before merging to the branch used by the visual library. After the authorised merge, check the library link and GeoJSON on its normal host. Keep application rollout subject to separate V1 authorisation, capacity, and GEO-IA integration and acceptance.
+
+## Territory-only revision
+
+The review now opens on a dedicated territory page. Continue saves the district IDs and opens the package page in the same tab, carrying the locale and announcement context. The package page lists the selected official district names and retains the existing 500/€15, 1,200/€30, and 2,500/€50 packages. The official logo bytes and the CBS/PDOK GeoJSON are identical to the initial submission.
+
+The opening map shows all four geographic bands. The browser checks confirmed 152 polygon paths with white borders and zero tile elements, five selected pilot neighbours, and visible bottom actions within the 390 × 844 mobile frame. Labels are dark and unboxed and wrap only at valid breaks. Where the whole name cannot fit, a direct-neighbour checkbox can remain available with the official name as its accessible name. A larger zoom and the district list expose full names. The green shop pin is anchored at its actual coordinates.
+
+Chrome checks passed for zoom controls, recenter, full screen, deselection, grey-neighbourhood extension, language change, territory transfer to the package page, all three existing tariffs, and the 30 € / 14-day summary. Back preserved the deselection and extension reason. The mobile capture was inspected against the written visual criteria. The second reference image was unavailable in the session, so a direct image comparison is pending. GEO-IA and real capacity remain unavailable in the review environment.
