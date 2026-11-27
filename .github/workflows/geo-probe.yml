@@ -14,12 +14,13 @@ jobs:
         run: |
           python3 - <<'PY'
           import urllib.request, json
-          url = 'https://api.pdok.nl/cbs/wijkenbuurten/2025/ogc/v1/collections/wijken/items?bbox=4.83,52.35,4.89,52.39&limit=10&f=json'
+          url = 'https://api.pdok.nl/cbs/wijken-en-buurten-2025/ogc/v1/collections/buurten/items?bbox=4.83,52.35,4.89,52.39&limit=10&f=json'
           with urllib.request.urlopen(url, timeout=25) as response:
               data = json.load(response)
           features = data['features']
           assert features and all(f['geometry']['type'] in ('Polygon','MultiPolygon') for f in features)
           print('PDOK polygons:', len(features))
-          print('Properties:', json.dumps([f['properties'] for f in features], ensure_ascii=False))
+          assert all(f['properties'].get('buurtcode') and f['properties'].get('buurtnaam') and str(f['properties'].get('jaar')) == '2025' for f in features)
+          print('Neighbourhoods:', [(f['properties']['buurtcode'], f['properties']['buurtnaam']) for f in features])
           print('Pagination:', [l.get('rel') for l in data.get('links',[])])
           PY
