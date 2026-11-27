@@ -1,0 +1,62 @@
+{
+  "date": "2026-11-27T09:31:12.265Z",
+  "browser": "151.0.7922.34",
+  "profiles": [
+    {
+      "name": "ordinateur-NL",
+      "lang": "NL",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "touch": false,
+      "passed": true,
+      "browserErrors": 0,
+      "externalRequests": 0
+    },
+    {
+      "name": "ordinateur-EN",
+      "lang": "EN",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "touch": false,
+      "passed": true,
+      "browserErrors": 0,
+      "externalRequests": 0
+    },
+    {
+      "name": "smartphone-NL",
+      "lang": "NL",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "touch": true,
+      "passed": true,
+      "browserErrors": 0,
+      "externalRequests": 0
+    },
+    {
+      "name": "smartphone-EN",
+      "lang": "EN",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "touch": true,
+      "passed": true,
+      "browserErrors": 0,
+      "externalRequests": 0
+    }
+  ],
+  "languages": [
+    "NL",
+    "EN"
+  ],
+  "persistence": "server restart",
+  "access": "separate merchant/admin sessions",
+  "route": "free OFF / choice ON / CBS selection / zone revocation / capacity low & unknown / idempotent publication",
+  "scope": "local test services and test data; official BAG/CBS snapshots"
+}
