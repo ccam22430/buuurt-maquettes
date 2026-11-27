@@ -1,0 +1,271 @@
+{
+  "checked_at": "2026-11-27T09:05:05.573417+00:00",
+  "license": "CC0 1.0",
+  "cases": {
+    "urbain": {
+      "target": "Erasmusgracht",
+      "water_source": "https://api.pdok.nl/kadaster/bgt/ogc/v1/collections/waterdeel/items?bbox=4.845021999999999%2C52.369012000000005%2C4.856626100000001%2C52.378721&limit=100&f=json",
+      "water_pages": 1,
+      "bridge_source": "https://api.pdok.nl/kadaster/bgt/ogc/v1/collections/overbruggingsdeel/items?bbox=4.845021999999999%2C52.369012000000005%2C4.856626100000001%2C52.378721&limit=100&f=json",
+      "bridge_pages": 1,
+      "straight_water": [
+        {
+          "id": "3a7abeb0-37ec-5fe0-8e30-1d1a8f4014f2",
+          "bgt_id": "G0363.141f1ef17e6e49dbbe6d79dac3d59656",
+          "m": 29.92
+        },
+        {
+          "id": "6b1278a4-9cb6-5d5b-9367-0f1262cd4855",
+          "bgt_id": "G0363.40f5ac7fa11d4024953a3fd1ac298630",
+          "m": 50.86
+        },
+        {
+          "id": "8ed05fb2-509f-5f83-aa80-957cf77b277d",
+          "bgt_id": "G0363.d8e65b52d9dc4eeea8eea74bb60fc80f",
+          "m": 19.8
+        }
+      ],
+      "paths": {
+        "foot": {
+          "water": [
+            {
+              "id": "3a7abeb0-37ec-5fe0-8e30-1d1a8f4014f2",
+              "bgt_id": "G0363.141f1ef17e6e49dbbe6d79dac3d59656",
+              "m": 19.36
+            }
+          ],
+          "bridge": [
+            {
+              "id": "570028a3-7b07-5ba2-9131-ce8fa4d07003",
+              "bgt_id": "G0363.01ab4f4a800843729d6ff049b1a694af",
+              "m": 1.97
+            },
+            {
+              "id": "a7de5888-ba7d-5602-85a3-8891920319e6",
+              "bgt_id": "G0363.5313dddff0cf40cf854240fb66c807f8",
+              "m": 23.3
+            },
+            {
+              "id": "dcbc3d73-065e-519b-b593-6593f454c170",
+              "bgt_id": "G0363.37a7d42bb1f040a7b39a04318a2823db",
+              "m": 1.97
+            }
+          ],
+          "osm_bridge": true
+        },
+        "bike": {
+          "water": [
+            {
+              "id": "6548e819-5eb6-52a2-b717-d831b2ecafab",
+              "bgt_id": "G0363.0d24506c50924a5d81231d1309fec667",
+              "m": 19.36
+            }
+          ],
+          "bridge": [
+            {
+              "id": "570028a3-7b07-5ba2-9131-ce8fa4d07003",
+              "bgt_id": "G0363.01ab4f4a800843729d6ff049b1a694af",
+              "m": 1.97
+            },
+            {
+              "id": "a7de5888-ba7d-5602-85a3-8891920319e6",
+              "bgt_id": "G0363.5313dddff0cf40cf854240fb66c807f8",
+              "m": 23.3
+            },
+            {
+              "id": "dcbc3d73-065e-519b-b593-6593f454c170",
+              "bgt_id": "G0363.37a7d42bb1f040a7b39a04318a2823db",
+              "m": 1.97
+            }
+          ],
+          "osm_bridge": true
+        }
+      }
+    },
+    "rural": {
+      "target": "Bibliotheek De Rijp",
+      "water_source": "https://api.pdok.nl/kadaster/bgt/ogc/v1/collections/waterdeel/items?bbox=4.830261999999999%2C52.5530528%2C4.849159%2C52.563454&limit=100&f=json",
+      "water_pages": 7,
+      "bridge_source": "https://api.pdok.nl/kadaster/bgt/ogc/v1/collections/overbruggingsdeel/items?bbox=4.830261999999999%2C52.5530528%2C4.849159%2C52.563454&limit=100&f=json",
+      "bridge_pages": 2,
+      "straight_water": [
+        {
+          "id": "1f319be6-36d7-59a9-80c7-1b2396096d08",
+          "bgt_id": "W0651.012beeaf081541f6b1f6e4b86849d320",
+          "m": 12.81
+        },
+        {
+          "id": "240f38bf-46df-539b-b1a0-b2c705063ba9",
+          "bgt_id": "W0651.8abeacd5439b75760000000a192404f7",
+          "m": 5.3
+        },
+        {
+          "id": "3403f512-04a8-5c98-b40a-29c0600acb66",
+          "bgt_id": "W0651.72b48b5baf174bb2bc4ba28a7eecd3d0",
+          "m": 82.82
+        },
+        {
+          "id": "53d8ebec-3d54-56c7-b1a6-43b4cb669312",
+          "bgt_id": "W0651.000ca4e61bdb414b8a4f512bb34efd47",
+          "m": 9.21
+        },
+        {
+          "id": "6ca37da0-2d37-5a92-931e-cb0a131cb358",
+          "bgt_id": "W0651.1e021a4294a2470c811bfd1a61da6c0d",
+          "m": 16.76
+        },
+        {
+          "id": "71f38501-4690-5a89-a1b7-c6cfbd913cb9",
+          "bgt_id": "W0651.ccb77522592a42c99559bbb9d317a8fb",
+          "m": 7.9
+        },
+        {
+          "id": "7e06925e-4e55-5ad8-9158-aa1b34e2e9ed",
+          "bgt_id": "W0651.85986d570c334adc81285efe57689f64",
+          "m": 8.07
+        },
+        {
+          "id": "951c18a0-044b-57e9-84fc-7f5b5ea08d9b",
+          "bgt_id": "W0651.870c11649555473bb5406a06c920949a",
+          "m": 3.91
+        },
+        {
+          "id": "b89e28c7-7807-5cd4-b928-37736029e80d",
+          "bgt_id": "W0651.b338daeb226248c8ac3d8690ddca17ee",
+          "m": 4.17
+        },
+        {
+          "id": "cc55d8fb-d847-53b1-833c-6dbae367910a",
+          "bgt_id": "W0651.af04e4a463dd4cc499fc06372cdd6fc3",
+          "m": 6.93
+        },
+        {
+          "id": "db81ebcf-82cd-5f8c-8470-ea8801b86842",
+          "bgt_id": "W0651.087a4c5c8e614b60b1fb396a506a77a7",
+          "m": 6.19
+        },
+        {
+          "id": "e45473e1-655e-59b9-83ed-0d13c30d40b3",
+          "bgt_id": "W0651.acf7713845124cb19bcc49c225fef7e7",
+          "m": 17.72
+        }
+      ],
+      "paths": {
+        "foot": {
+          "water": [
+            {
+              "id": "1f319be6-36d7-59a9-80c7-1b2396096d08",
+              "bgt_id": "W0651.012beeaf081541f6b1f6e4b86849d320",
+              "m": 10.44
+            },
+            {
+              "id": "21707bcd-148d-52ba-9894-4601a9420aa3",
+              "bgt_id": "W0651.4c626223341248efa5e812a2e30adec2",
+              "m": 5.33
+            },
+            {
+              "id": "89b694f4-3333-5871-b7b5-2b82e54f3700",
+              "bgt_id": "W0651.bb6ab6e72e094aedae74b8d147374534",
+              "m": 15.52
+            },
+            {
+              "id": "967babd3-707a-5bc9-8723-8ceeb7c79f96",
+              "bgt_id": "W0651.30070185095445848e99e22ebebefef7",
+              "m": 15.27
+            }
+          ],
+          "bridge": [
+            {
+              "id": "0998f208-2ed3-5ada-b86c-54267ec80d88",
+              "bgt_id": "G0361.8abeacd5439b75760000000a1924158b",
+              "m": 15.52
+            },
+            {
+              "id": "43c323c7-b4c3-5a9d-a8f3-708cd79ca308",
+              "bgt_id": "G0361.8abeacd54c6b7500047b1ce16fba298c",
+              "m": 13.13
+            },
+            {
+              "id": "d59d71e5-017f-5465-84f4-31f967f83a7e",
+              "bgt_id": "G0361.8abeacd5439b75760000000a19241550",
+              "m": 15.27
+            },
+            {
+              "id": "f238226f-a526-58b0-b5b6-41b2deb2bcb9",
+              "bgt_id": "G0361.8abeacd5439b75760000000a19241a7f",
+              "m": 5.33
+            }
+          ],
+          "osm_bridge": true
+        },
+        "bike": {
+          "water": [
+            {
+              "id": "21707bcd-148d-52ba-9894-4601a9420aa3",
+              "bgt_id": "W0651.4c626223341248efa5e812a2e30adec2",
+              "m": 5.33
+            },
+            {
+              "id": "4329b65a-6ac7-5a0d-8581-aa78edcc048f",
+              "bgt_id": "W0651.c4db13ec7554441c9c98019b918204cc",
+              "m": 4.24
+            },
+            {
+              "id": "630eb55a-53b0-57a3-8b79-4929505a48d5",
+              "bgt_id": "W0651.96f8994bec054ed8aa59b43a50f8b6f7",
+              "m": 3.84
+            },
+            {
+              "id": "7060009c-8f7b-536b-8ef5-9d35a3bf50b7",
+              "bgt_id": "W0651.33189250e6a94aa5a8a74120f53807be",
+              "m": 5.48
+            },
+            {
+              "id": "be2630f7-d012-5866-8c13-c58f2b97456c",
+              "bgt_id": "W0651.8a1d9462020c423e8e6846183dc3f0da",
+              "m": 6.12
+            },
+            {
+              "id": "f7709a26-1125-5ad5-8544-602d2de66fb6",
+              "bgt_id": "W0651.7249dd998ac748c8b739c9a12f27794f",
+              "m": 7.54
+            }
+          ],
+          "bridge": [
+            {
+              "id": "593bb674-3a0e-5ff5-81cb-2e231ca6b75f",
+              "bgt_id": "G0361.8abeacd5439b75760000000a19241708",
+              "m": 3.83
+            },
+            {
+              "id": "72ecf4e1-08c3-511f-a2cb-1cde301bcbd6",
+              "bgt_id": "G0361.8abeacd54c6b7500047b1ce16fba2730",
+              "m": 4.24
+            },
+            {
+              "id": "9db2e029-b2b0-5741-ac82-49a76f1c7593",
+              "bgt_id": "G0361.8abeacd54c6b7500047b1ce16fba27b0",
+              "m": 5.47
+            },
+            {
+              "id": "a4045b70-25b5-515c-ae10-7c2445a483ab",
+              "bgt_id": "G0361.8abeacd5439b75760000000a19241a3b",
+              "m": 7.54
+            },
+            {
+              "id": "bd760e24-4fbf-5e23-8203-4a1e8f27f822",
+              "bgt_id": "G0361.8abeacd5439b75760000000a1218c9ea",
+              "m": 13.08
+            },
+            {
+              "id": "f238226f-a526-58b0-b5b6-41b2deb2bcb9",
+              "bgt_id": "G0361.8abeacd5439b75760000000a19241a7f",
+              "m": 5.33
+            }
+          ],
+          "osm_bridge": true
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,134 @@
+{
+  "urbain": {
+    "origin": {
+      "label": "Jan Evertsenstraat 55-H",
+      "lon": 4.8556261,
+      "lat": 52.3707909,
+      "bag": "0363200000145991"
+    },
+    "targets": [
+      {
+        "label": "OBA Mercatorplein",
+        "lon": 4.8502319,
+        "lat": 52.3693887,
+        "osm": 2678712018
+      },
+      {
+        "label": "Erasmusgracht",
+        "lon": 4.8469734,
+        "lat": 52.3763312,
+        "osm": 3307835922
+      },
+      {
+        "label": "Admiraal De Ruijterweg",
+        "lon": 4.8600128,
+        "lat": 52.371502,
+        "osm": 434397637
+      },
+      {
+        "label": "Postjesweg",
+        "lon": 4.8531786,
+        "lat": 52.3647729,
+        "osm": 290931857
+      },
+      {
+        "label": "Marco Polostraat",
+        "lon": 4.8554942,
+        "lat": 52.3709604,
+        "osm": 434675423
+      },
+      {
+        "label": "Chassé Hotel",
+        "lon": 4.8615876,
+        "lat": 52.3700271,
+        "osm": 9039148431
+      }
+    ]
+  },
+  "rural": {
+    "origin": {
+      "label": "Raadhuisstraat 24, Graft",
+      "lon": 4.83183462,
+      "lat": 52.56244524,
+      "bag": "0365200000002169"
+    },
+    "targets": [
+      {
+        "label": "Raadhuisstraat",
+        "lon": 4.831705,
+        "lat": 52.5620389,
+        "osm": 1731021431
+      },
+      {
+        "label": "Globdijk",
+        "lon": 4.8325859,
+        "lat": 52.5647174,
+        "osm": 1731021435
+      },
+      {
+        "label": "Noordeinde",
+        "lon": 4.8353576,
+        "lat": 52.5713455,
+        "osm": 1731021449
+      },
+      {
+        "label": "Bibliotheek De Rijp",
+        "lon": 4.848159,
+        "lat": 52.5540528,
+        "osm": 4523440147
+      },
+      {
+        "label": "TOP De Rijp",
+        "lon": 4.844815,
+        "lat": 52.5597089,
+        "osm": 6141097051
+      },
+      {
+        "label": "Museum In 't Houten Huis",
+        "lon": 4.8532007,
+        "lat": 52.5593118,
+        "osm": 2880246787
+      }
+    ]
+  },
+  "touristique": {
+    "origin": {
+      "label": "Arrêt Zaanse Schans",
+      "lon": 4.8231439,
+      "lat": 52.4729816,
+      "osm": 700343155
+    },
+    "targets": [
+      {
+        "label": "Informatiecentrum Zaanse Schans",
+        "lon": 4.822117,
+        "lat": 52.4736777,
+        "osm": 3945659248
+      },
+      {
+        "label": "Zaandijk Zaanse Schans",
+        "lon": 4.8051566,
+        "lat": 52.4692791,
+        "osm": 4185358281
+      },
+      {
+        "label": "Molenmuseum",
+        "lon": 4.8138403,
+        "lat": 52.4788064,
+        "osm": 2889795555
+      },
+      {
+        "label": "Zaankerk",
+        "lon": 4.8344363,
+        "lat": 52.4678009,
+        "osm": 4742300320
+      },
+      {
+        "label": "Zaans Museum",
+        "lon": 4.8223781,
+        "lat": 52.4735241,
+        "osm": 3945659249
+      }
+    ]
+  }
+}

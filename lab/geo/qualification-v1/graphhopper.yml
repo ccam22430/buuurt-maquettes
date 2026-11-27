@@ -1,0 +1,17 @@
+graphhopper:
+  datareader.file: noord-holland.osm.pbf
+  graph.location: graph-cache
+  import.osm.ignored_highways: motorway,trunk,construction
+  graph.encoded_values: foot_access, foot_average_speed, foot_priority, bike_access, bike_average_speed, bike_priority, roundabout, road_class, road_environment, hike_rating, country, foot_road_access, mtb_rating, bike_road_access
+  profiles:
+    - name: foot
+      custom_model_files: [foot.json]
+    - name: bike
+      custom_model_files: [bike.json]
+  prepare.min_network_size: 100
+server:
+  application_connectors:
+    - type: http
+      port: 8989
+      bind_host: localhost
+  admin_connectors: []
