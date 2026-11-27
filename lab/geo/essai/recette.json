@@ -1,0 +1,35 @@
+{
+  "date": "2026-11-27T09:17:20.483Z",
+  "browser": "151.0.7922.34",
+  "profiles": [
+    {
+      "name": "ordinateur",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "touch": false
+    },
+    {
+      "name": "smartphone",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "touch": true
+    }
+  ],
+  "scenarios": [
+    "OFF direct gratuit",
+    "ON choix",
+    "profil Amsterdam et Graft",
+    "carte CBS et sélection tactile",
+    "zone grise et révocation",
+    "capacité disponible, insuffisante et inconnue",
+    "forfaits",
+    "reprise du brouillon et langues",
+    "OFF depuis le sponsorisé",
+    "campagne C-001 maintenue",
+    "aucune requête externe et aucune erreur JavaScript"
+  ]
+}
