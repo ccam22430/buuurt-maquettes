@@ -1,0 +1,52 @@
+body { background: white; }
+.phone { max-width: 760px; min-height: 100dvh; border: 0; border-radius: 0; box-shadow: none; }
+.body { padding: 16px clamp(14px, 4vw, 28px) 34px; }
+.map-wrap { position: relative; }
+.map { height: clamp(300px, 45vh, 480px); background: #faf9fa; }
+.map-tools { position: absolute; z-index: 500; top: 8px; right: 8px; margin: 0; gap: 4px; flex-direction: column; }
+.map-tools button { min-width: 44px; min-height: 44px; padding: 4px 7px; box-shadow: 0 1px 5px #0002; }
+.map-wrap.is-expanded { position: fixed; inset: 0; z-index: 900; background: white; }
+.map-wrap.is-expanded .map { height: 100%; border-radius: 0; }
+body.map-expanded { overflow: hidden; }
+.campaign-legend { display: flex; flex-wrap: wrap; gap: 6px 16px; padding: 0; list-style: none; font-size: 12px; }
+.campaign-legend li::before { display: inline-block; content: ""; width: 12px; height: 12px; border-radius: 3px; background: var(--band); margin-inline-end: 5px; vertical-align: -1px; border: 1px solid #0003; }
+[data-band="home"] { --band: #83cf97; }
+[data-band="direct"] { --band: #ffe086; }
+[data-band="second"] { --band: #f6aaca; }
+[data-band="other"] { --band: #ddd9de; }
+.district-marker { background: transparent; border: 0; }
+.district-marker > button, .district-marker > span { position: absolute; inset: 0 auto auto 0; transform: translate(-50%, -50%); display: flex; align-items: center; gap: 4px; white-space: nowrap; min-height: 36px; padding: 4px 7px; font-size: 12px; font-weight: 800; border: 1px solid #0003; border-radius: 8px; color: #20191e; background: #fffffff2; }
+.district-marker > button { cursor: pointer; }
+.district-marker > [aria-checked]::before { content: ""; width: 13px; height: 13px; border: 1px solid currentColor; border-radius: 3px; display: grid; place-items: center; }
+.district-marker > [aria-checked="true"]::before { content: "✓"; color: white; background: #ad0039; border-color: #ad0039; }
+.district-marker[hidden], #extension-form[hidden] { display: none; }
+#district-list { max-height: 260px; overflow: auto; }
+#district-list button { display: block; width: 100%; text-align: left; min-height: 44px; background: white; border: 0; border-bottom: 1px solid var(--line); cursor: pointer; }
+#district-list button[aria-checked="true"]::after { content: " ✓"; }
+#extension-dialog { margin: auto; width: min(450px, calc(100% - 24px)); border-radius: 18px; }
+#extension-dialog p { white-space: pre-line; }
+#extension-dialog textarea { width: 100%; }
+.dialog-back { min-height: 44px; margin-top: 8px; padding: 6px 12px; border-radius: 9px; border: 1px solid var(--line); background: white; font: inherit; cursor: pointer; }
+#campaign-review { border-top: 1px solid var(--line); margin-top: 16px; }
+#gray-selection { min-height: 44px; margin-bottom: 10px; background: white; border: 1px solid var(--line); border-radius: 9px; padding: 5px 10px; cursor: pointer; }
+#gray-selection::before { content: "□ "; }
+#gray-selection[aria-checked="true"]::before { content: "✓ "; }
+#district-list > span { display: block; padding: 8px 0; }
+.district-marker > button, .district-marker > span {
+  width: max-content;
+  max-width: 94px;
+  min-height: 28px;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-align: center;
+  line-height: 1.12;
+}
+.district-marker > [aria-checked]::before { flex: none; }
+@media (max-width: 500px) {
+  .map-tools { align-items: end; }
+  .district-marker > button, .district-marker > span { max-width: 72px; font-size: 11px; }
+  #recenter, #fullscreen { font-size: 0; }
+  #recenter::after, #fullscreen::after { font-size: 21px; line-height: 1; }
+  #recenter::after { content: "◎"; }
+  #fullscreen::after { content: "⛶"; }
+}
