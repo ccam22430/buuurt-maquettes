@@ -216,15 +216,15 @@ async function loadMap() {
   selected = new Set(Array.isArray(draft.selected) ?
     draft.selected.filter(code => districts.has(code) && canSelect(code)) : territory.direct);
   map = L.map("campaign-map", {zoomControl: false, minZoom: 11, maxZoom: 19, zoomSnap: 0.25, scrollWheelZoom: true});
-  const overview = L.geoJSON(data, {
-    filter: feature => ["home", "direct"].includes(feature.properties.band)
-  }).getBounds();
+  const priorityDistricts = [...districts.values()].filter(district =>
+    district.band === "home" || district.band === "direct");
+  const overview = L.latLngBounds([center, ...priorityDistricts.map(district => district.label)]);
   const recenter = () => {
     const compact = map.getSize().x < 500;
     map.fitBounds(overview, {
-      paddingTopLeft: compact ? [12, 22] : [28, 24],
-      paddingBottomRight: compact ? [38, 24] : [62, 30],
-      maxZoom: 16
+      paddingTopLeft: compact ? [44, 48] : [64, 44],
+      paddingBottomRight: compact ? [66, 48] : [80, 50],
+      maxZoom: 15.75
     });
   };
   recenter();
@@ -336,10 +336,15 @@ async function loadMap() {
         return null;
       };
       let placement;
+      label.classList.remove("district-label-inline");
       const widths = [maxWidth, maxWidth * .84, maxWidth * .70, Math.min(maxWidth, radius * 2.1)];
-      for (const width of new Set(widths.map(Math.round))) {
-        label.style.maxWidth = width + "px";
-        placement = findPlacement();
+      for (const inline of [false, true]) {
+        label.classList.toggle("district-label-inline", inline);
+        for (const width of new Set(widths.map(Math.round))) {
+          label.style.maxWidth = width + "px";
+          placement = findPlacement();
+          if (placement) break;
+        }
         if (placement) break;
       }
       if (!placement && district.band === "direct") {

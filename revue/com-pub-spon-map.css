@@ -110,3 +110,13 @@ summary { font-size: 13px; cursor: pointer; }
 #district-list [data-selected="true"]::after { content: " ✓"; color: #a80039; }
 .district-marker > [data-selected]::after { content: ""; display: grid; place-items: center; width: 14px; height: 14px; border: 1.5px solid #212121; border-radius: 3px; background: white; }
 .district-marker > [data-selected="true"]::after { content: "✓"; background: var(--pink); border-color: #a80039; color: white; }
+
+
+.district-marker > button.district-label-inline {
+  grid-template-columns: auto auto;
+  align-items: center;
+  column-gap: 4px;
+}
+.district-label-inline > span { min-width: 0; }
+.district-label-inline::after { grid-column: 1; grid-row: 1; }
+.district-label-inline > span { grid-column: 2; grid-row: 1; }
