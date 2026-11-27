@@ -120,3 +120,19 @@ summary { font-size: 13px; cursor: pointer; }
 .district-label-inline > span { min-width: 0; }
 .district-label-inline::after { grid-column: 1; grid-row: 1; }
 .district-label-inline > span { grid-column: 2; grid-row: 1; }
+
+#reference-toggle {
+  min-height: 44px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: white;
+  color: #a80039;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+}
+#reference-status:empty { display: none; }
+#reference-shop { margin: 8px 0; font-size: 12px; }
+
+.reference-controls { margin-top: 14px; }

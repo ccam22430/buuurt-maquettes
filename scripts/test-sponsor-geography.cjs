@@ -41,3 +41,18 @@ for (const [region, expectedHome, expectedSecond] of [
     assert.throws(() => classifySponsorTerritory(center, features, {}), /neighbors/);
   });
 }
+
+
+test("Dolores BAG address uses the official Borgerbuurt topology", () => {
+  const {features} = load("amsterdam", ".geojson");
+  const {neighbors} = load("amsterdam", "-neighbors.json");
+  const result = classifySponsorTerritory(reviewProfiles.dolores.center, features, neighbors);
+  assert.equal(result.home, "BU0363ES02");
+  assert.deepEqual(result.direct.sort(), [
+    "BU0363EP02", "BU0363ES01", "BU0363ES03", "BU0363EU01", "BU0363EU02"
+  ]);
+  assert.deepEqual(Object.keys(result.bands).filter(code => result.bands[code] === "second").sort(), [
+    "BU0363AB09", "BU0363EN03", "BU0363EN04", "BU0363EP01", "BU0363EQ01",
+    "BU0363ER02", "BU0363ET01", "BU0363EU03", "BU0363EV01", "BU0363EV02"
+  ]);
+});

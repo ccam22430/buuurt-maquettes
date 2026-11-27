@@ -22,7 +22,7 @@ const duration = $("duration");
 const options = [...document.querySelectorAll("[name=budget]")];
 const chosenBudget = () => options.find(option => option.checked).value;
 const targets = {15: 500, 30: 1200, 50: 2500};
-const profile = url.searchParams.get("demo") || "amsterdam";
+const profile = url.searchParams.get("demo") || defaultReviewProfile;
 const draft = readSponsorDraft(profile);
 let selectedNames;
 let selectionUnavailable = false;

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="nl" data-buuurt-font="nunito"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BUUURT — COM-PUB-SPON-001 — Territoire de diffusion</title><link rel="stylesheet" href="buuurt-theme.css"><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""><link rel="stylesheet" href="com-pub-spon-map.css"></head><body>
+<html lang="nl" data-buuurt-font="nunito"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BUUURT — COM-PUB-SPON-001 — Territoire de diffusion</title><link rel="stylesheet" href="buuurt-theme.css"><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""><link rel="stylesheet" href="com-pub-spon-map.css?v=dolores"></head><body>
 <div class="phone"><header class="head"><button type="button" aria-label="Menu" id="menu" aria-haspopup="dialog">☰</button><img class="official-logo" src="data/buuurt-sponsor-logo.jpg" alt="BUUURT — logo officiel" style="width:145px;height:67px;object-fit:contain;max-width:calc(100% - 110px)"><div style="display:flex;align-items:center;gap:5px"><select id="lang" aria-label="Langue / Taal / Language" style="width:65px;border:0;background:white;font-weight:800"><option value="fr">🌐 FR</option><option value="nl">🌐 NL</option><option value="en">🌐 EN</option></select><button aria-label="Notifications" id="bell" style="position:relative;font-size:19px">♧<span class="count" style="position:absolute;right:-4px;top:-5px;background:#19161b;color:white;border-radius:12px;font-size:10px;padding:1px 4px">1</span></button></div></header>
 <dialog id="campaign-menu" class="buuurt-official-modal" aria-labelledby="menu-heading">
  <h2 id="menu-heading">Menu BUUURT</h2>
@@ -35,6 +35,11 @@
 <a class="back" href="com-pub-002.html#fr-MER-PUB-002"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6M9 12h12"/></svg><span data-t="back"></span></a>
 <button type="button" class="cta" id="continue" disabled><span data-t="next"></span> <span aria-hidden="true">→</span></button>
 </nav>
+<section class="reference-controls">
+<button id="reference-toggle" type="button" aria-controls="campaign-map" aria-pressed="false" disabled></button>
+<p id="reference-status" role="status"></p>
+<p id="reference-shop" hidden><strong id="reference-shop-name"></strong> · <span id="reference-shop-address"></span><br><small data-t="demoShop"></small></p>
+</section>
 <dialog id="extension-dialog" aria-labelledby="extension-title">
 <h2 id="extension-title" data-t="why"></h2>
 <p><strong id="district-name"></strong></p>
@@ -52,4 +57,4 @@
 </dialog>
 </main></div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-<script src="com-pub-spon-geography.js"></script><script src="com-pub-spon-draft.js"></script><script src="com-pub-spon-map.js"></script><script src="buuurt-shared-header.js"></script></body></html>
+<script src="com-pub-spon-geography.js?v=dolores"></script><script src="com-pub-spon-draft.js"></script><script src="com-pub-spon-map.js?v=dolores"></script><script src="buuurt-shared-header.js"></script></body></html>

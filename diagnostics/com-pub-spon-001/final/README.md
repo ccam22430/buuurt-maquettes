@@ -84,3 +84,11 @@ Follow-up criteria passed in Chrome: MAP-03 used an actual mouse drag and verifi
 GitHub Pages serves one site per repository. Changing the current Pages source would replace the BUUURT library. Use a separate public GitHub Free repository dedicated to review, with Pages set to deploy from `main` at `/ (root)`. Authenticated Pages configuration could not be queried from the Cloud network, and this session has no repository provisioning tool. The existing BUUURT Pages settings were not changed.
 
 Run `./scripts/package-sponsor-review.sh /tmp/buuurt-sponsor-review.zip` from the review branch to export only tracked static assets, excluding Git metadata, scripts, diagnostics, environment state and secrets. The only preview-specific data are the previously approved GEO-06 test profiles and official CBS/PDOK fixtures. Extract the archive at the root of the dedicated review repository. The entry point is `/revue/com-pub-spon-001.html?lang=fr` relative to that site's base URL. Verify the actual published URL after enabling Pages.
+
+## Dolores reference review
+
+The [geographic register](../../../revue/GEO-REFERENCE.md) contains the precise BAG address point, administrative divisions, shared boundary lengths and source links. Geometry data files are byte-identical to the previous revision. An additional automated classification test checks all five direct and ten second-ring IDs. All seven geography tests passed.
+
+Chrome rendered 152 SVG neighbourhoods, four fills and five selections, without tile elements in the simplified mode. In the BRT street mode, Chrome loaded official tiles. All 152 rendered SVG path strings and the shop marker transform matched exactly across the toggle, with selection preserved. Switching back removed the street tiles. Package navigation carried the Dolores selection. At 390 × 844 the initial view showed three complete neighbourhood names without horizontal overflow. Longer names remain available by zooming or in the district list. Native touch and V1 integration were not re-tested.
+
+[BUUURT mobile](dolores-mobile.jpg) · [Street map, same mobile dimensions](dolores-streets-mobile.jpg) · [Street map on desktop](dolores-streets.jpg).

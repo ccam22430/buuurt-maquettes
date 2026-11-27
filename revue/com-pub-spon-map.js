@@ -2,6 +2,9 @@
 
 const copy = {
   nl: {
+    showStreets: "Kaart met straten", hideStreets: "Kaart zonder straten",
+    demoShop: "Referentie voor deze demo. Geen klant- of partnerrelatie.",
+    streetError: "De achtergrondkaart kon niet volledig worden geladen.",
     campaign: "Gesponsord bericht", postStep: "Bericht", territoryStep: "Gebied", budgetStep: "Budget", reviewStep: "Bevestiging", coordinates: "De winkellocatie ontbreekt.", boundary: "De winkel ligt op een buurtgrens.", territory: "De buurt kon niet eenduidig worden bepaald.", neighbors: "Geen aangrenzende buurten gevonden.", geometry: "Onbruikbare buurtgrenzen.",
     title: "Kies je verspreidingsgebied", back: "Terug", intro: "Tik op de buurten waar je je bericht wilt verspreiden.",
     home: "Buurt van je winkel", direct: "Direct aangrenzend", second: "Tweede ring", other: "Overige buurten",
@@ -19,6 +22,9 @@ const copy = {
     library: "BUUURT-maquettes", choice: "Publicatiemethode", close: "Sluiten", menu: "BUUURT-menu"
   },
   en: {
+    showStreets: "Map with streets", hideStreets: "Map without streets",
+    demoShop: "Demo reference. No customer or partnership affiliation.",
+    streetError: "The reference basemap could not be fully loaded.",
     campaign: "Sponsored post", postStep: "Post", territoryStep: "Area", budgetStep: "Budget", reviewStep: "Review", coordinates: "The shop location is unavailable.", boundary: "The shop is on a neighbourhood boundary.", territory: "The neighbourhood could not be identified unambiguously.", neighbors: "No directly adjacent neighbourhoods were found.", geometry: "Neighbourhood boundaries are invalid.",
     title: "Choose your delivery area", back: "Back", intro: "Tap the neighbourhoods where you’d like your post to appear.",
     home: "Your shop’s neighbourhood", direct: "Direct neighbours", second: "Second ring", other: "Other neighbourhoods",
@@ -36,6 +42,9 @@ const copy = {
     library: "BUUURT prototypes", choice: "Publication method", close: "Close", menu: "BUUURT menu"
   },
   fr: {
+    showStreets: "Carte avec rues", hideStreets: "Carte sans rues",
+    demoShop: "Commerce de référence pour la démonstration, sans affiliation client ou partenaire.",
+    streetError: "Le fond cartographique de référence n’a pas pu être chargé entièrement.",
     campaign: "Annonce sponsorisée", postStep: "Annonce", territoryStep: "Territoire", budgetStep: "Budget", reviewStep: "Validation", coordinates: "Les coordonnées du commerce sont indisponibles.", boundary: "Le commerce est situé sur une limite de quartier.", territory: "Le quartier du commerce ne peut pas être identifié avec certitude.", neighbors: "Aucun voisin direct n’a été identifié.", geometry: "Les contours des quartiers sont invalides.",
     title: "Choisissez votre zone de diffusion", back: "Retour", intro: "Sélectionnez les quartiers où vous souhaitez diffuser votre annonce.",
     home: "Votre quartier", direct: "Quartiers recommandés", second: "Quartiers élargis", other: "Autres quartiers",
@@ -59,7 +68,7 @@ const language = $("lang");
 const pageUrl = new URL(location.href);
 const requestedLanguage = pageUrl.searchParams.get("lang");
 language.value = Object.hasOwn(copy, requestedLanguage) ? requestedLanguage : "nl";
-const requestedProfile = pageUrl.searchParams.get("demo") || "amsterdam";
+const requestedProfile = pageUrl.searchParams.get("demo") || defaultReviewProfile;
 const profile = Object.hasOwn(reviewProfiles, requestedProfile) ? reviewProfiles[requestedProfile] : null;
 const draft = readSponsorDraft(requestedProfile);
 const requests = new Map(Array.isArray(draft.requests) ? draft.requests : []);
@@ -76,6 +85,8 @@ let territory;
 let activeDistrict;
 let status = "loading";
 let notification = "";
+let streetsVisible = pageUrl.searchParams.get("reference") === "streets";
+let streetLoadFailed = false;
 
 function saveDraft() {
   return writeSponsorDraft({selected: [...selected], requests: [...requests], merchantId: profile.merchantId,
@@ -96,10 +107,14 @@ function translate() {
   $("menu-heading").textContent = words().menu;
   $("map-status").textContent = words()[status] || "";
   $("message").textContent = words()[notification] || "";
+  $("reference-toggle").textContent = streetsVisible ? words().hideStreets : words().showStreets;
+  $("reference-toggle").setAttribute("aria-pressed", streetsVisible);
+  $("reference-status").textContent = streetsVisible && streetLoadFailed ? words().streetError : "";
   const backUrl = new URL("com-pub-002.html", pageUrl);
   backUrl.search = pageUrl.search;
   backUrl.searchParams.delete("lang");
   backUrl.searchParams.delete("demo");
+  backUrl.searchParams.delete("reference");
   backUrl.searchParams.delete("notifications");
   backUrl.hash = lang + "-MER-PUB-002";
   document.querySelector(".back").href = backUrl;
@@ -123,6 +138,7 @@ $("continue").onclick = () => {
   const next = new URL("com-pub-spon-package.html", pageUrl);
   next.search = pageUrl.search;
   next.searchParams.set("lang", language.value);
+  next.searchParams.delete("reference");
   location.assign(next);
 };
 
@@ -210,6 +226,11 @@ async function loadMap() {
     return response.json();
   }));
   const {center} = profile;
+  if (profile.name) {
+    $("reference-shop-name").textContent = profile.name;
+    $("reference-shop-address").textContent = profile.address;
+    $("reference-shop").hidden = false;
+  }
   territory = classifySponsorTerritory(center, data.features, graph.neighbors);
   for (const feature of data.features) feature.properties.band = territory.bands[feature.id];
   districts = new Map(data.features.map(feature => [feature.id, feature.properties]));
@@ -232,7 +253,8 @@ async function loadMap() {
   const fills = Object.fromEntries([...document.querySelectorAll("[data-band]")].map(item =>
     [item.dataset.band, getComputedStyle(item).getPropertyValue("--band").trim()]));
   const polygons = new Map();
-  L.geoJSON(data, {
+  const boundaries = L.geoJSON(data, {
+    smoothFactor: 0,
     style: feature => ({
       color: "#fff", weight: 2,
       fillColor: fills[feature.properties.band],
@@ -247,7 +269,7 @@ async function loadMap() {
   const origin = L.marker(center, {
     interactive: false,
     keyboard: false,
-    title: districts.get(territory.home).buurtnaam,
+    title: profile.name || districts.get(territory.home).buurtnaam,
     zIndexOffset: 1000,
     icon: L.divIcon({
       className: "shop-pin",
@@ -372,6 +394,35 @@ async function loadMap() {
   document.addEventListener("keydown", event => {
     if (event.key === "Escape" && !extension.open && frame.classList.contains("is-expanded")) toggleFullscreen();
   });
+  const streets = L.tileLayer(
+    "https://service.pdok.nl/kadaster/brt-achtergrondkaart/wmts/v2_0/standaard/EPSG:3857/{z}/{x}/{y}.png",
+    {maxNativeZoom: 19, attribution: '<a href="https://www.pdok.nl/introductie/-/article/basisregistratie-topografie-brt-achtergrondkaart" target="_blank" rel="noopener">BRT © Kadaster · PDOK</a>'}
+  );
+  streets.on("tileerror", () => {
+    if (streetLoadFailed) return;
+    streetLoadFailed = true;
+    translate();
+  });
+  function showReferenceMode() {
+    if (streetsVisible) {
+      streetLoadFailed = false;
+      streets.addTo(map);
+      boundaries.setStyle({fillOpacity: .12, color: "#414353"});
+    } else {
+      streets.remove();
+      boundaries.setStyle({fillOpacity: 1, color: "#fff"});
+    }
+    translate();
+  }
+  $("reference-toggle").onclick = () => {
+    streetsVisible = !streetsVisible;
+    if (streetsVisible) pageUrl.searchParams.set("reference", "streets");
+    else pageUrl.searchParams.delete("reference");
+    history.replaceState(null, "", pageUrl);
+    showReferenceMode();
+  };
+  $("reference-toggle").disabled = false;
+  showReferenceMode();
   $("zoom-in").onclick = () => map.zoomIn();
   $("zoom-out").onclick = () => map.zoomOut();
   $("recenter").onclick = recenter;
