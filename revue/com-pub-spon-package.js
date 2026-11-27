@@ -1,15 +1,15 @@
 "use strict";
 
 const translations = {
-  nl: ["Kies je gesponsorde pakket", "Pakketten", "doelvertoningen", "Indicatieve looptijd", "Gekozen buurten",
+  nl: ["Kies je gesponsorde pakket", "Pakketten", "doelvertoningen", "Indicatieve looptijd", "Gekozen gebieden",
     "Terug", "Verder", "Campagneoverzicht", "Werkelijke capaciteit en rechten moeten worden gecontroleerd vóór bevestiging.",
-    "dagen", "Geen aanvullende buurten gekozen.", "De selectie is niet beschikbaar.", "BUUURT-maquettes", "Publicatiemethode", "Sluiten"],
-  en: ["Choose your sponsored package", "Packages", "target impressions", "Indicative duration", "Selected neighbourhoods",
+    "dagen", "Geen aanvullende gebieden gekozen.", "De selectie is niet beschikbaar.", "BUUURT-maquettes", "Publicatiemethode", "Sluiten"],
+  en: ["Choose your sponsored package", "Packages", "target impressions", "Indicative duration", "Selected territories",
     "Back", "Continue", "Campaign summary", "Live capacity and permissions must be checked before confirmation.",
-    "days", "No additional neighbourhoods selected.", "The selection is unavailable.", "BUUURT prototypes", "Publication method", "Close"],
-  fr: ["Choisissez votre forfait sponsorisé", "Forfaits", "impressions cibles", "Durée indicative", "Quartiers sélectionnés",
+    "days", "No additional territories selected.", "The selection is unavailable.", "BUUURT prototypes", "Publication method", "Close"],
+  fr: ["Choisissez votre forfait sponsorisé", "Forfaits", "impressions cibles", "Durée indicative", "Territoires sélectionnés",
     "Retour", "Continuer", "Récapitulatif de la campagne", "La capacité et les droits réels doivent être contrôlés avant toute confirmation.",
-    "jours", "Aucun quartier supplémentaire sélectionné.", "La sélection est indisponible.", "Maquettes BUUURT", "Choix du mode de publication", "Fermer"]
+    "jours", "Aucun territoire supplémentaire sélectionné.", "La sélection est indisponible.", "Maquettes BUUURT", "Choix du mode de publication", "Fermer"]
 };
 const keys = ["title", "packages", "impressions", "duration", "selection", "back", "next", "review", "done",
   "days", "empty", "error", "library", "choice", "close"];

@@ -63,3 +63,9 @@ Reproduce the comparison by downloading WFS `GetFeature` with `version=2.0.0`, `
 For a qualified dataset, add source and vintage metadata and stable feature IDs in configuration, then regenerate the graph and the map from the geometry. The existing runtime already classifies features by IDs and positive-length edges. No municipality-specific code is needed for each added feature.
 
 The seam review in `diagnostics/com-pub-spon-001/seam-review` records the source and rights checks and the measured land/water splits. Its diagnostic overlay preserves both source sets, shows overlaps and unassigned areas, and marks candidate contacts for further evidence. It does not feed the selection graph.
+
+## BUUURT commercial Amsterdam and surroundings · v1
+
+The current Amsterdam map uses `amsterdam-commercial-v1`, a derived coverage of 27 selectable territories. It retains the fifteen historical Amsterdam names and IDs and adds Amstelveen, Diemen and ten neighbouring municipal territories based on the CBS 2009 edition. Duivendrecht is listed with Ouder-Amstel. Badhoevedorp and Zwanenburg are listed with Haarlemmermeer. These localities share their parent territory's selection. Spaarnwoude is the shorter display name for the 2009 Haarlemmerliede en Spaarnwoude footprint.
+
+The source geometries remain separate from the output. The generation and audit details are in `diagnostics/com-pub-spon-001/commercial-v1`. The blue water layer uses CBS land use surveyed in summer 2010. The optional streets mode still uses the official BRT layer at the same camera. Blue water is a visual overlay and has no additional territory ID. The graph uses positive-length common edges in the commercial partition across municipalities and boroughs alike.

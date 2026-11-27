@@ -58,7 +58,7 @@ test("Dolores BAG address uses the official Borgerbuurt topology", () => {
 });
 
 test("Dolores uses the fifteen municipal territories at 2009-01-01", () => {
-  const base = join(__dirname, "../revue/data", reviewProfiles.dolores.dataset);
+  const base = join(__dirname, "../revue/data", "amsterdam-stadsdelen-2009");
   const {features} = JSON.parse(readFileSync(base + ".geojson"));
   const {neighbors, overlapSquareMetres} = JSON.parse(readFileSync(base + "-neighbors.json"));
   const result = classifySponsorTerritory(reviewProfiles.dolores.center, features, neighbors);
@@ -76,4 +76,35 @@ test("Dolores uses the fifteen municipal territories at 2009-01-01", () => {
   for (const [id, adjacent] of Object.entries(neighbors)) {
     for (const neighbor of adjacent) assert(neighbors[neighbor].includes(id));
   }
+});
+
+test("the commercial partition keeps Dolores and makes neighboring cities selectable", () => {
+  const base = join(__dirname, "../revue/data", reviewProfiles.dolores.dataset);
+  const {features} = JSON.parse(readFileSync(base + ".geojson"));
+  const {neighbors, sharedBoundaryMetres} = JSON.parse(readFileSync(base + "-neighbors.json"));
+  const water = JSON.parse(readFileSync(base + "-water.geojson"));
+  assert.equal(features.length, 27);
+  assert.equal(new Set(features.map(feature => feature.id)).size, 27);
+  assert.equal(features.filter(feature => feature.id.startsWith("AMS2009-")).length, 15);
+  const result = classifySponsorTerritory(reviewProfiles.dolores.center, features, neighbors);
+  const names = ids => features.filter(feature => ids.includes(feature.id))
+    .map(feature => feature.properties.buurtnaam).sort();
+  assert.deepEqual(names([result.home]), ["Oud-West"]);
+  assert.deepEqual(names(result.direct), ["Centrum", "De Baarsjes", "Oud-Zuid", "Westerpark"]);
+  assert.deepEqual(names(["GM0362", "GM0384"]), ["Amstelveen", "Diemen"]);
+  for (const code of ["GM0362", "GM0384"]) {
+    assert.equal(result.bands[code], "other");
+    assert(neighbors[code].some(id => id.startsWith("AMS2009-")));
+  }
+  const visited = new Set([result.home]);
+  for (const code of visited) {
+    for (const neighbor of neighbors[code]) {
+      assert(neighbors[neighbor].includes(code));
+      visited.add(neighbor);
+    }
+  }
+  assert.equal(visited.size, features.length);
+  assert.equal(sharedBoundaryMetres.length, Object.values(neighbors).flat().length / 2);
+  assert(sharedBoundaryMetres.every(([, , length]) => length > 0));
+  assert(["Polygon", "MultiPolygon"].includes(water.geometry.type));
 });

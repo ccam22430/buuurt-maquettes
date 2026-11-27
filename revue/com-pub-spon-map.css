@@ -139,6 +139,19 @@ summary { font-size: 13px; cursor: pointer; }
 
 @media (max-width: 499px) {
   .body:has(.campaign-steps) .historic-map:not(.is-expanded) .map {
-    height: clamp(320px, 40dvh, 440px);
+    height: clamp(355px, 43dvh, 440px);
   }
 }
+
+/* Labels remain legible on both the coloured map and the street reference. */
+.district-marker > button, .district-marker > span {
+  text-shadow: 0 0 2px #fff, 0 0 2px #fff;
+}
+#district-list button:focus-visible, .district-marker button:focus-visible {
+  outline: 2px solid #19171c;
+  outline-offset: 2px;
+}
+@media (min-width: 600px) {
+  .district-marker > button, .district-marker > span { font-size: 12px; }
+}
+.map .leaflet-control-attribution { font-size: 9px; }

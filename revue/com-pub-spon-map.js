@@ -6,10 +6,10 @@ const copy = {
     demoShop: "Referentie voor deze demo. Geen klant- of partnerrelatie.",
     streetError: "De achtergrondkaart kon niet volledig worden geladen.",
     campaign: "Gesponsord bericht", postStep: "Bericht", territoryStep: "Gebied", budgetStep: "Budget", reviewStep: "Bevestiging", coordinates: "De winkellocatie ontbreekt.", boundary: "De winkel ligt op een buurtgrens.", territory: "De buurt kon niet eenduidig worden bepaald.", neighbors: "Geen aangrenzende buurten gevonden.", geometry: "Onbruikbare buurtgrenzen.",
-    title: "Kies je verspreidingsgebied", back: "Terug", intro: "Tik op de buurten waar je je bericht wilt verspreiden.",
+    title: "Kies je verspreidingsgebied", back: "Terug", intro: "Kies de buurten en plaatsen waar je je bericht wilt tonen.",
     home: "Buurt van je winkel", direct: "Direct aangrenzend", second: "Tweede ring", other: "Overige buurten",
     recenter: "Centreer", fullscreen: "Volledig scherm", exit: "Klein scherm",
-    zoomIn: "Inzoomen", zoomOut: "Uitzoomen", districts: "Buurten op naam bekijken",
+    zoomIn: "Inzoomen", zoomOut: "Uitzoomen", districts: "Buurten en plaatsen bekijken",
     scope: "De kaart toont geografische nabijheid. Direct aangrenzende buurten zijn vooraf geselecteerd voor deze demonstratie. GEO-IA en werkelijke capaciteit zijn hier niet beschikbaar.",
     why: "Waarom wordt deze buurt niet aanbevolen?",
     grayReason: "Deze buurt valt buiten de twee ringen van aangrenzende buurten rond je winkel. Voor deze buurt is hier geen GEO-IA-beoordeling beschikbaar.",
@@ -17,8 +17,8 @@ const copy = {
     extend: "Uitbreiding aanvragen", returnMap: "Terug naar de kaart", reason: "Motivering",
     humanReview: "Gratis aanvraag. Een medewerker beslist over goedkeuring.", submit: "Opslaan in de maquette",
     storageError: "De selectie kon niet worden opgeslagen.", saved: "Aanvraag opgeslagen in deze maquette.", next: "Verder",
-    geographicSelection: "Geografische selectie voor de maquette",
-    loading: "Officiële grenzen laden…", error: "De kaart kon niet worden geladen.",
+    geographicSelection: "Dit gebied selecteren",
+    loading: "Gebieden laden…", error: "De kaart kon niet worden geladen.",
     library: "BUUURT-maquettes", choice: "Publicatiemethode", close: "Sluiten", menu: "BUUURT-menu"
   },
   en: {
@@ -26,10 +26,10 @@ const copy = {
     demoShop: "Demo reference. No customer or partnership affiliation.",
     streetError: "The reference basemap could not be fully loaded.",
     campaign: "Sponsored post", postStep: "Post", territoryStep: "Area", budgetStep: "Budget", reviewStep: "Review", coordinates: "The shop location is unavailable.", boundary: "The shop is on a neighbourhood boundary.", territory: "The neighbourhood could not be identified unambiguously.", neighbors: "No directly adjacent neighbourhoods were found.", geometry: "Neighbourhood boundaries are invalid.",
-    title: "Choose your delivery area", back: "Back", intro: "Tap the neighbourhoods where you’d like your post to appear.",
+    title: "Choose your delivery area", back: "Back", intro: "Choose the neighbourhoods and towns where you’d like your post to appear.",
     home: "Your shop’s neighbourhood", direct: "Direct neighbours", second: "Second ring", other: "Other neighbourhoods",
     recenter: "Recenter", fullscreen: "Full screen", exit: "Exit full screen",
-    zoomIn: "Zoom in", zoomOut: "Zoom out", districts: "Browse neighbourhoods by name",
+    zoomIn: "Zoom in", zoomOut: "Zoom out", districts: "Browse neighbourhoods and towns",
     scope: "The map shows geographic proximity. Direct neighbours are preselected for this review. GEO-AI and live capacity are unavailable here.",
     why: "Why isn’t this neighbourhood recommended?",
     grayReason: "This neighbourhood lies outside the two rings of adjacent neighbourhoods around your shop. No GEO-AI assessment is available here for this neighbourhood.",
@@ -37,8 +37,8 @@ const copy = {
     extend: "Request an area extension", returnMap: "Back to the map", reason: "Reason for your request",
     humanReview: "Requests are free. A person decides whether to approve them.", submit: "Save in the prototype",
     storageError: "The selection could not be saved.", saved: "Request saved in this prototype.", next: "Continue",
-    geographicSelection: "Geographic selection for the prototype",
-    loading: "Loading official boundaries…", error: "The map could not be loaded.",
+    geographicSelection: "Select this area",
+    loading: "Loading territories…", error: "The map could not be loaded.",
     library: "BUUURT prototypes", choice: "Publication method", close: "Close", menu: "BUUURT menu"
   },
   fr: {
@@ -46,19 +46,19 @@ const copy = {
     demoShop: "Commerce de référence pour la démonstration, sans affiliation client ou partenaire.",
     streetError: "Le fond cartographique de référence n’a pas pu être chargé entièrement.",
     campaign: "Annonce sponsorisée", postStep: "Annonce", territoryStep: "Territoire", budgetStep: "Budget", reviewStep: "Validation", coordinates: "Les coordonnées du commerce sont indisponibles.", boundary: "Le commerce est situé sur une limite de quartier.", territory: "Le quartier du commerce ne peut pas être identifié avec certitude.", neighbors: "Aucun voisin direct n’a été identifié.", geometry: "Les contours des quartiers sont invalides.",
-    title: "Choisissez votre zone de diffusion", back: "Retour", intro: "Sélectionnez les quartiers où vous souhaitez diffuser votre annonce.",
-    home: "Votre quartier", direct: "Quartiers recommandés", second: "Quartiers élargis", other: "Autres quartiers",
+    title: "Choisissez votre zone de diffusion", back: "Retour", intro: "Sélectionnez les quartiers et les villes où diffuser votre annonce.",
+    home: "Votre quartier", direct: "Quartiers recommandés", second: "Quartiers élargis", other: "Autres territoires",
     recenter: "Recentrer", fullscreen: "Plein écran", exit: "Quitter le plein écran",
-    zoomIn: "Zoom avant", zoomOut: "Zoom arrière", districts: "Consulter les quartiers par nom",
-    scope: "La carte représente la proximité géographique. Les voisins directs sont présélectionnés pour cette revue. Les recommandations GEO-IA et la capacité réelle sont indisponibles ici.",
-    why: "Pourquoi ce quartier n’est-il pas recommandé ?",
-    grayReason: "Ce quartier se situe au-delà des deux couronnes de quartiers limitrophes autour de votre commerce. Aucune évaluation GEO-IA de ce quartier n’est disponible ici.",
+    zoomIn: "Zoom avant", zoomOut: "Zoom arrière", districts: "Voir les quartiers et les villes",
+    scope: "Les territoires limitrophes de votre commerce sont présélectionnés.",
+    why: "Pourquoi ce territoire n’est-il pas recommandé ?",
+    grayReason: "Ce territoire se trouve au-delà des deux couronnes autour de votre commerce.",
     extensionTerms: "Si une extension de votre territoire de diffusion vous semble justifiée, vous pouvez en faire la demande.\n\nSon acceptation n’est toutefois pas garantie : BUUURT privilégie toujours les annonces les plus pertinentes pour les habitants.",
     extend: "Demander une extension de territoire", returnMap: "Revenir à la carte", reason: "Motif de votre demande",
     humanReview: "La demande est gratuite et soumise à une décision humaine.", submit: "Enregistrer dans la maquette",
     storageError: "La sélection n’a pas pu être enregistrée.", saved: "Demande enregistrée dans cette maquette.", next: "Continuer",
-    geographicSelection: "Sélection géographique de la maquette",
-    loading: "Chargement des contours officiels…", error: "La carte n’a pas pu être chargée.",
+    geographicSelection: "Sélectionner ce territoire",
+    loading: "Chargement des territoires…", error: "La carte n’a pas pu être chargée.",
     library: "Maquettes BUUURT", choice: "Choix du mode de publication", close: "Fermer", menu: "Menu BUUURT"
   }
 };
@@ -220,7 +220,9 @@ function districtLabel(code) {
 async function loadMap() {
   if (!profile) throw new Error("coordinates");
   const base = "data/" + sponsorDataset(profile);
-  const [data, graph] = await Promise.all([base + ".geojson", base + "-neighbors.json"].map(async url => {
+  const sources = [base + ".geojson", base + "-neighbors.json"];
+  if (profile.water) sources.push(base + "-water.geojson");
+  const [data, graph, water] = await Promise.all(sources.map(async url => {
     const response = await fetch(url);
     if (!response.ok) throw new Error("error");
     return response.json();
@@ -248,10 +250,11 @@ async function loadMap() {
       paddingBottomRight: compact ? [66, 48] : [80, 50],
       maxZoom: 15.75
     });
+    if (compact && profile.water) map.setZoom(map.getZoom() + .25, {animate: false});
   };
   recenter();
   map.attributionControl.addAttribution(profile.dataset
-    ? '<a href="https://data.overheid.nl/dataset/5l2csm77flzgya" target="_blank" rel="noopener">Gemeente Amsterdam · 2009 · CC0 1.0</a>'
+    ? '<a href="https://data.overheid.nl/dataset/5l2csm77flzgya" target="_blank" rel="noopener">Gemeente Amsterdam · CC0</a> · <a href="https://data.overheid.nl/dataset/83996-cbs-gebiedsindelingen-1995---2015" target="_blank" rel="noopener">CBS/Kadaster · CC BY 4.0</a>'
     : '<a href="https://www.pdok.nl/introductie/-/article/cbs-wijken-en-buurten" target="_blank" rel="noopener">CBS/Kadaster via PDOK · 2025 · CC BY 4.0</a>');
   const fills = Object.fromEntries([...document.querySelectorAll("[data-band]")].map(item =>
     [item.dataset.band, getComputedStyle(item).getPropertyValue("--band").trim()]));
@@ -259,7 +262,7 @@ async function loadMap() {
   const boundaries = L.geoJSON(data, {
     smoothFactor: 0,
     style: feature => ({
-      color: "#fff", weight: 2,
+      className: "territory-outline", color: "#fff", weight: 2,
       fillColor: fills[feature.properties.band],
       fillOpacity: 1
     }),
@@ -270,6 +273,15 @@ async function loadMap() {
   }).addTo(map);
 
   const pinSize = profile.dataset && map.getSize().x < 500 ? [27, 32] : [34, 40];
+  const waterLayer = water && L.geoJSON(water, {
+    interactive: false, bubblingMouseEvents: false, smoothFactor: 0,
+    style: {className: "commercial-water", stroke: false, fillColor: "#8ecae8", fillOpacity: 1}
+  });
+  waterLayer?.addTo(map);
+  if (waterLayer) {
+    map.attributionControl.addAttribution('<a href="https://data.overheid.nl/dataset/81148-bestand-bodemgebruik-2010" target="_blank" rel="noopener">CBS water 2010 · CC BY 4.0</a>');
+  }
+
   const origin = L.marker(center, {
     interactive: false,
     keyboard: false,
@@ -307,6 +319,13 @@ async function loadMap() {
     caption.className = "district-category";
     caption.dataset.category = districts.get(code).band;
     label.append(caption);
+    const localities = districts.get(code).localities;
+    if (localities?.length) {
+      const towns = document.createElement("small");
+      towns.className = "district-category";
+      towns.textContent = localities.join(" · ");
+      label.append(towns);
+    }
     list.append(label);
   }
 
@@ -333,7 +352,8 @@ async function loadMap() {
       const fitsPolygon = box => [box.left, (box.left + box.right) / 2, box.right].every(x =>
         [box.top, (box.top + box.bottom) / 2, box.bottom].every(y =>
           path.isPointInFill(new DOMPoint(x, y).matrixTransform(transform))));
-      const maxWidth = Math.max(0, Math.min(132, path.getBoundingClientRect().width - 4));
+      const outline = path.getBoundingClientRect();
+      const maxWidth = Math.max(0, Math.min(132, outline.width - 4));
       element.hidden = false;
       name.hidden = false;
       label.style.translate = "";
@@ -347,13 +367,14 @@ async function loadMap() {
           const shift = scale * step;
           offsets.push([0, -shift], [0, shift], [-shift, 0], [shift, 0],
             [-shift, -shift], [shift, -shift], [-shift, shift], [shift, shift],
-            [-step, shift], [step, shift], [-step, -shift], [step, -shift]);
+            [-step, shift], [step, shift], [-step, -shift], [step, -shift],
+            [-shift, step], [shift, step], [-shift, -step], [shift, -step]);
         }
       }
-      const findPlacement = () => {
+      const findPlacement = (candidates = offsets) => {
         if (label.scrollWidth > label.clientWidth) return null;
         const box = label.getBoundingClientRect();
-        for (const [x, y] of offsets) {
+        for (const [x, y] of candidates) {
           const rect = {left: box.left + x, right: box.right + x, top: box.top + y, bottom: box.bottom + y};
           if (rect.left < viewport.left || rect.right > viewport.right || rect.top < viewport.top ||
               rect.bottom > viewport.bottom - 20 || occupied.some(other => overlaps(rect, other)) ||
@@ -373,6 +394,20 @@ async function loadMap() {
           if (placement) break;
         }
         if (placement) break;
+      }
+      if (!placement && (district.band === "home" || district.band === "direct")) {
+        const alternatives = [];
+        const centerX = viewport.left + anchor.x;
+        const centerY = viewport.top + anchor.y;
+        for (let y = Math.max(outline.top, viewport.top); y < Math.min(outline.bottom, viewport.bottom); y += 5) {
+          for (let x = Math.max(outline.left, viewport.left); x < Math.min(outline.right, viewport.right); x += 5) {
+            alternatives.push([x - centerX, y - centerY]);
+          }
+        }
+        alternatives.sort(([x, y], [a, b]) => x * x + y * y - a * a - b * b);
+        label.classList.remove("district-label-inline");
+        label.style.maxWidth = Math.round(Math.min(maxWidth, 85)) + "px";
+        placement = findPlacement(alternatives);
       }
       if (!placement && district.band === "direct") {
         name.hidden = true;
@@ -412,9 +447,11 @@ async function loadMap() {
     if (streetsVisible) {
       streetLoadFailed = false;
       streets.addTo(map);
+      waterLayer?.remove();
       boundaries.setStyle({fillOpacity: .12, color: "#414353"});
     } else {
       streets.remove();
+      waterLayer?.addTo(map);
       boundaries.setStyle({fillOpacity: 1, color: "#fff"});
     }
     translate();
