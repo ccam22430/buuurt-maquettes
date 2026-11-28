@@ -4,7 +4,7 @@ const bikeCampaignId = bikeUrl.searchParams.get("campaign");
 const bikeLocked = readBikeCampaign(localStorage, bikeCampaignId);
 const bikeDialog = bikeElement("extension-dialog");
 const bikeRequests = new Map();
-let baseBands, networkData, networkLayers;
+let baseBands, networkData, networkLayers, isochroneDisplay;
 let extensionExpiryTimer;
 const currentAd = extensionAd(bikeUrl);
 let bikeData, bikeFixture, bikeSettings, bikeNetwork, bands, selected, view, active;
@@ -202,7 +202,11 @@ function refreshBike() {
   note.textContent = bikeFixtureNames()[bikeFixture];
   bikeElement("campaign-lock").hidden = !bikeLocked;
   checkboxControls.clear();
-  if (networkLayers) view.drawNetwork(networkLayers);
+  if (networkLayers) {
+    const displayLayers = isochroneDisplay && isochroneDisplayLayers(isochroneDisplay, bikeSettings,
+      networkGrants(localStorage, bikeFixture, currentAd), bands);
+    view.drawNetwork(networkLayers, displayLayers);
+  }
   else view.draw(bands);
   view.setSelection(selected);
   renderBikeList();
@@ -222,6 +226,7 @@ async function startBike() {
   baseBands = bikeBands(bikeData, bikeFixture, bikeSettings);
   if (!bikeLocked) {
     networkData = await loadNetworkZones(bikeFixture, bikeData.times);
+    isochroneDisplay = await loadIsochroneDisplay(bikeFixture, networkData);
     networkLayers = networkBands(networkData, bikeData.wijken.features, bikeSettings,
       networkGrants(localStorage, bikeFixture, currentAd));
   }

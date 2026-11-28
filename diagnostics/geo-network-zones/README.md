@@ -41,3 +41,17 @@ Recommended mixed quote for review: apply the existing volume curve once to the 
 ## Verification
 
 The Node suite covers exact time boundaries, real mixed coverage, multiple grants and revocation, stable inventory, separate category reservation, price and historical behaviour. Chromium exercised COM-PUB-SPON-003 on desktop and iPhone emulation, including the green notice, viewing the two administrative levels, fullscreen, zoom and recenter, selecting yellow and orange separately, a manual request, targeted and global preview, approval, Budget and return, revocation, and FR/NL/EN. Leaflet was loaded from its pinned CDN dependency by the browser harness. No physical phone, field cycling run or production feed was used.
+
+## COM-PUB-SPON-003 display refinement
+
+The merchant map now loads separate, cumulative 20 m display contours derived from the same graph, travel times, 65 m attachment limit and 5 km/h approach cost. Marching squares interpolate the smaller of the routing-time and attachment-distance margins, followed by topology-preserving 2 m simplification. District clipping uses the same official polygons. The existing [CBS 2010 water mask](https://data.overheid.nl/dataset/81148-bestand-bodemgebruik-2010) (CC BY 4.0) cuts out mapped waterways. Outer contours are painted first, so adjacent minute bands no longer produce SVG hairlines. Missing display data falls back to the previous map.
+
+Old grey pockets included coarse sampling gaps, mapped water and points without a reachable connection under the routing assumptions. In Dolores's 10-minute cumulative contour, six of the 16 previous enclosed holes above 100 m² had less than 10% mapped water. Finer sampling recovered approximately 3–91% of their areas, depending on network support. Mapped water and unsupported residual pockets are kept. Total visual area may decrease where the old grid colored water or painted entire 80 m cells. The hydrographic snapshot and nearest-network approach remain approximate.
+
+Commercial data digests, partner route samples, authorization ranges and Budget logic are unchanged. The merchant overlay only offers an existing selectable category in a district and still uses the canonical grant rules. Super Admin continues to preview the original quantitative areas. Chromium exercised both screen classes, recenter, zoom and the existing selection, extension and return flow. A physical phone was not part of this run.
+
+Build using the pinned road extract and Python with NumPy, SciPy, contourpy, pyproj and Shapely:
+
+```sh
+python scripts/build-amsterdam-isochrone-display.py /path/to/existing-roads.json
+```

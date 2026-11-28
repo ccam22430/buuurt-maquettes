@@ -221,13 +221,16 @@ function createBikeMap(data, fixture, onChoose) {
   const boundaries = L.geoJSON(data.wijken, {pane: "districtBoundaries", interactive: false, smoothFactor: 0,
     style: {color: "white", weight: 1.5, fill: false}});
   let networkMode = false;
-  function drawNetwork(result) {
+  function drawNetwork(result, displayLayers) {
+    if (!networkMode && displayLayers?.length) {
+      map.attributionControl.addAttribution('<a href="https://data.overheid.nl/dataset/81148-bestand-bodemgebruik-2010">CBS · Water · CC BY 4.0</a>');
+    }
     networkMode = true;
     bands = result.bands;
     outline.setStyle({fillColor: fills.other});
     boundaries.addTo(map);
     access.clearLayers();
-    access.addData(result.layers);
+    access.addData(displayLayers?.length ? displayLayers : result.layers);
     access.eachLayer(layer => {
       const {id, category} = layer.feature.properties;
       layer.setStyle({fillColor: category === "extended" ? "#ff9f43" : fills[category]});

@@ -39,6 +39,29 @@ function networkBands(data, districts, thresholds, grants = []) {
   return {bands, layers};
 }
 
+async function loadIsochroneDisplay(fixture, network) {
+  try {
+    const response = await fetch("data/amsterdam-isochrone-display-" + fixture + ".json?v=contours-1");
+    if (!response.ok) return null;
+    const data = await response.json();
+    return data.networkSha256 === network.networkSha256 && Array.isArray(data.layers) ? data : null;
+  } catch { return null; }
+}
+
+// Paint outer contours first. Inner fills cover shared edges without SVG seams.
+function isochroneDisplayLayers(display, thresholds, grants, bands) {
+  const layers = {extended: [], direct: [], home: []};
+  for (const [id, minute, geometry] of display.layers) {
+    if (!Object.hasOwn(bands, id)) continue;
+    const limit = networkLimit(grants, id, thresholds.standard);
+    const category = minute === thresholds.local ? "home" :
+      minute === thresholds.standard && bands[id] === "direct" ? "direct" :
+      minute === limit && limit > thresholds.standard && bands[orangeKey(id)] === "extended" ? "extended" : null;
+    if (category) layers[category].push({type: "Feature", geometry, properties: {id, category}});
+  }
+  return [...layers.extended, ...layers.direct, ...layers.home];
+}
+
 function networkInventory(pools, data, settings, grants) {
   return pools.flatMap(pool => {
     const district = pool.territories.length === 1 && pool.territories[0];
