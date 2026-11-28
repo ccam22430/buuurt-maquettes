@@ -1,0 +1,5 @@
+# COM-PUB-SPON-001 graphical review · 2026-11-28
+
+The six decisions apply to the campaign territory screen: functional selection wording, pink extension CTA using the shared #FB0153 token and the primary button dimensions, persistent home label, four updated legend names, three introduction blocks, and Nunito across the screen including Leaflet. The shared theme and validated header remain the references. The existing Nunito design now uses a local Latin variable face from Google Fonts, with its SIL OFL terms, for the required weights.
+
+Chromium checks passed at 390 × 844 in French, 768 × 1024 in Dutch and 1364 × 950 in English. The local Nunito face loaded while external fonts were blocked. Assertions covered computed weights, no horizontal overflow, home-label and pin separation at the opening zoom and four zoom-out steps, pan, recenter, the extension form, and selection persistence to the packages and back. The nine geography tests still pass. GeoJSON, the neighborhood graphs and the selection/offer rules have no diff. The checks use simulated device dimensions.

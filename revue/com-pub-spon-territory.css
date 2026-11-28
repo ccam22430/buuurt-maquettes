@@ -1,0 +1,41 @@
+@font-face {
+  font-family: Nunito;
+  src: url("data/fonts/Nunito-Latin-400-800.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+}
+
+:root { --pink: var(--buuurt-pink); }
+.leaflet-container,
+.leaflet-container .leaflet-control,
+.leaflet-container .leaflet-tooltip,
+.leaflet-container .leaflet-popup-content {
+  font-family: var(--buuurt-font);
+}
+h1 { font-weight: 700; }
+h2, .campaign-legend { font-weight: 600; }
+.intro { font-weight: 400; }
+.intro + .intro { margin-top: 0; }
+.intro.instruction { margin-bottom: 8px; }
+button, .back, .cta { font-weight: 700; }
+.district-marker > button, .district-marker > span { font-weight: 600; }
+.district-marker > .home-district-label {
+  font-weight: 800;
+}
+.home-district-label.is-displaced {
+  background: #e8f9e1;
+  border-radius: 6px;
+  padding: 3px 6px;
+}
+#extend {
+  display: inline-flex;
+  min-height: 48px;
+  padding: 10px 14px;
+  border-radius: 11px;
+  background: var(--buuurt-pink);
+  border-color: var(--buuurt-pink);
+  color: white;
+}
+#extend[hidden] { display: none; }
+#extension-dialog .dialog-back { background: white; border-color: #aaa4aa; }

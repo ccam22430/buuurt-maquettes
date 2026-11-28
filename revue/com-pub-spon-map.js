@@ -6,11 +6,12 @@ const copy = {
     demoShop: "Referentie voor deze demo. Geen klant- of partnerrelatie.",
     streetError: "De achtergrondkaart kon niet volledig worden geladen.",
     campaign: "Gesponsord bericht", postStep: "Bericht", territoryStep: "Gebied", budgetStep: "Budget", reviewStep: "Bevestiging", coordinates: "De winkellocatie ontbreekt.", boundary: "De winkel ligt op een buurtgrens.", territory: "De buurt kon niet eenduidig worden bepaald.", neighbors: "Geen aangrenzende buurten gevonden.", geometry: "Onbruikbare buurtgrenzen.",
-    title: "Kies je verspreidingsgebied", back: "Terug", intro: "Kies de buurten en plaatsen waar je je bericht wilt tonen.",
-    home: "Buurt van je winkel", direct: "Direct aangrenzend", second: "Tweede ring", other: "Overige buurten",
+    title: "Vergroot je zichtbaarheid", back: "Terug", intro: "Selecteer de buurten en steden waar je je berichten wilt verspreiden.",
+    discovery: "Wanneer een voorbijganger de BUUURT-QR-code scant van een winkel in een van de geselecteerde gebieden, kan diegene ook je berichten ontdekken.",
+    home: "Mijn buurt", direct: "Aangrenzende buurten", second: "Uitgebreid verzorgingsgebied", other: "Buiten het standaard verspreidingsgebied",
     recenter: "Centreer", fullscreen: "Volledig scherm", exit: "Klein scherm",
     zoomIn: "Inzoomen", zoomOut: "Uitzoomen", districts: "Buurten en plaatsen bekijken",
-    scope: "De kaart toont geografische nabijheid. Direct aangrenzende buurten zijn vooraf geselecteerd voor deze demonstratie. GEO-IA en werkelijke capaciteit zijn hier niet beschikbaar.",
+    scope: "De kaart toont geografische nabijheid. Aangrenzende buurtene buurten zijn vooraf geselecteerd voor deze demonstratie. GEO-IA en werkelijke capaciteit zijn hier niet beschikbaar.",
     why: "Waarom wordt deze buurt niet aanbevolen?",
     grayReason: "Deze buurt valt buiten de twee ringen van aangrenzende buurten rond je winkel. Voor deze buurt is hier geen GEO-IA-beoordeling beschikbaar.",
     extensionTerms: "Als een uitbreiding van je verspreidingsgebied gerechtvaardigd lijkt, kun je die aanvragen.\n\nAcceptatie is niet gegarandeerd: BUUURT geeft altijd voorrang aan de meest relevante berichten voor bewoners.",
@@ -26,11 +27,12 @@ const copy = {
     demoShop: "Demo reference. No customer or partnership affiliation.",
     streetError: "The reference basemap could not be fully loaded.",
     campaign: "Sponsored post", postStep: "Post", territoryStep: "Area", budgetStep: "Budget", reviewStep: "Review", coordinates: "The shop location is unavailable.", boundary: "The shop is on a neighbourhood boundary.", territory: "The neighbourhood could not be identified unambiguously.", neighbors: "No directly adjacent neighbourhoods were found.", geometry: "Neighbourhood boundaries are invalid.",
-    title: "Choose your delivery area", back: "Back", intro: "Choose the neighbourhoods and towns where you’d like your post to appear.",
-    home: "Your shop’s neighbourhood", direct: "Direct neighbours", second: "Second ring", other: "Other neighbourhoods",
+    title: "Broaden your visibility", back: "Back", intro: "Select the neighbourhoods and cities where you want to distribute your posts.",
+    discovery: "When a passer-by scans the BUUURT QR code of a shop in one of the selected territories, they will also be able to discover your posts.",
+    home: "My neighbourhood", direct: "Adjacent neighbourhoods", second: "Extended catchment area", other: "Outside the standard distribution area",
     recenter: "Recenter", fullscreen: "Full screen", exit: "Exit full screen",
     zoomIn: "Zoom in", zoomOut: "Zoom out", districts: "Browse neighbourhoods and towns",
-    scope: "The map shows geographic proximity. Direct neighbours are preselected for this review. GEO-AI and live capacity are unavailable here.",
+    scope: "The map shows geographic proximity. Adjacent neighbourhoods are preselected for this review. GEO-AI and live capacity are unavailable here.",
     why: "Why isn’t this neighbourhood recommended?",
     grayReason: "This neighbourhood lies outside the two rings of adjacent neighbourhoods around your shop. No GEO-AI assessment is available here for this neighbourhood.",
     extensionTerms: "If an extension of your delivery area seems justified, you can request one.\n\nAcceptance is not guaranteed: BUUURT always prioritises the most relevant posts for residents.",
@@ -46,8 +48,9 @@ const copy = {
     demoShop: "Commerce de référence pour la démonstration, sans affiliation client ou partenaire.",
     streetError: "Le fond cartographique de référence n’a pas pu être chargé entièrement.",
     campaign: "Annonce sponsorisée", postStep: "Annonce", territoryStep: "Territoire", budgetStep: "Budget", reviewStep: "Validation", coordinates: "Les coordonnées du commerce sont indisponibles.", boundary: "Le commerce est situé sur une limite de quartier.", territory: "Le quartier du commerce ne peut pas être identifié avec certitude.", neighbors: "Aucun voisin direct n’a été identifié.", geometry: "Les contours des quartiers sont invalides.",
-    title: "Choisissez votre zone de diffusion", back: "Retour", intro: "Sélectionnez les quartiers et les villes où diffuser votre annonce.",
-    home: "Votre quartier", direct: "Quartiers recommandés", second: "Quartiers élargis", other: "Autres territoires",
+    title: "Élargissez votre visibilité", back: "Retour", intro: "Sélectionnez les quartiers et les villes dans lesquels vous souhaitez diffuser vos annonces.",
+    discovery: "Lorsqu'un passant scanne le QR code BUUURT d'un commerce situé dans l'un des territoires sélectionnés, il pourra également découvrir vos annonces.",
+    home: "Mon quartier", direct: "Quartiers limitrophes", second: "Zone de chalandise élargie", other: "Hors zone de diffusion standard",
     recenter: "Recentrer", fullscreen: "Plein écran", exit: "Quitter le plein écran",
     zoomIn: "Zoom avant", zoomOut: "Zoom arrière", districts: "Voir les quartiers et les villes",
     scope: "Les territoires limitrophes de votre commerce sont présélectionnés.",
@@ -305,6 +308,7 @@ async function loadMap() {
       icon: L.divIcon({className: "district-marker", html: label, iconSize: [0, 0]}),
       keyboard: false, pane: "tooltipPane", interactive: false
     }).addTo(map);
+    if (district.band === "home") label.classList.add("home-district-label");
     const element = marker.getElement();
     const name = document.createElement("span");
     name.textContent = district.buurtnaam;
@@ -338,7 +342,8 @@ async function loadMap() {
       a.top < b.bottom + 4 && a.bottom > b.top - 4;
     for (const {district, label, name, element, polygon} of labels) {
       const anchor = map.latLngToContainerPoint(district.label);
-      if (anchor.x < 0 || anchor.x > viewport.width || anchor.y < 0 || anchor.y > viewport.height) {
+      const isHome = district.band === "home";
+      if (!isHome && (anchor.x < 0 || anchor.x > viewport.width || anchor.y < 0 || anchor.y > viewport.height)) {
         element.hidden = true;
         continue;
       }
@@ -353,6 +358,12 @@ async function loadMap() {
         [box.top, (box.top + box.bottom) / 2, box.bottom].every(y =>
           path.isPointInFill(new DOMPoint(x, y).matrixTransform(transform))));
       const outline = path.getBoundingClientRect();
+      if (isHome && (outline.width === 0 || outline.height === 0 || outline.right <= viewport.left ||
+          outline.left >= viewport.right || outline.bottom <= viewport.top || outline.top >= viewport.bottom)) {
+        element.hidden = true;
+        continue;
+      }
+      label.classList.remove("is-displaced");
       const maxWidth = Math.max(0, Math.min(132, outline.width - 4));
       element.hidden = false;
       name.hidden = false;
@@ -408,6 +419,27 @@ async function loadMap() {
         label.classList.remove("district-label-inline");
         label.style.maxWidth = Math.round(Math.min(maxWidth, 85)) + "px";
         placement = findPlacement(alternatives);
+      }
+      if (!placement && isHome) {
+        // At low zoom the polygon may be smaller than its name. Keep the label
+        // inside the viewport and reserve its space before placing other labels.
+        label.classList.add("is-displaced");
+        label.style.maxWidth = Math.min(160, viewport.width - 20) + "px";
+        const box = label.getBoundingClientRect();
+        const left = Math.max(viewport.left + 8, Math.min(box.left, viewport.right - box.width - 8));
+        const top = Math.max(viewport.top + 8, Math.min(box.top, viewport.bottom - box.height - 24));
+        const candidateTops = [top, originBox.top - box.height - 8, originBox.bottom + 8, viewport.top + 8, viewport.bottom - box.height - 24];
+        const candidateLefts = [left, viewport.left + 8];
+        for (const y of candidateTops) {
+          for (const x of candidateLefts) {
+            const rect = {left: x, right: x + box.width, top: y, bottom: y + box.height};
+            if (y < viewport.top + 8 || rect.bottom > viewport.bottom - 24 ||
+                occupied.some(other => overlaps(rect, other))) continue;
+            placement = {x: x - box.left, y: y - box.top, rect};
+            break;
+          }
+          if (placement) break;
+        }
       }
       if (!placement && district.band === "direct") {
         name.hidden = true;
