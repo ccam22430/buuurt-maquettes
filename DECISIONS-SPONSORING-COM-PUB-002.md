@@ -53,3 +53,9 @@ Statut : VALIDÉ PAR LE FONDATEUR — base de travail V1, sans engagement commer
 - Prototype à évaluer : NL/EN, usage sur smartphone, temps de création, qualité des questions, exactitude des champs, résistance aux dérives, coût par session et démonstration commerçant.
 - Ne pas promettre une impossibilité absolue de dérive du modèle ; tester les cas hors sujet et malveillants. Conserver le parcours manuel et le même aperçu final puis choix gratuit/sponsorisé.
 - Statut : exigences approuvées, prototype autorisé en environnement isolé sans frais nouveaux ; aucun déploiement en production autorisé.
+
+## 2026-11-28 — COM-PUB-SPON-001 graphical decisions
+
+The founder's six decisions for the review screen are recorded in [the graphical review log](diagnostics/com-pub-spon-001/harmonisation/README.md). The final graphic validation is pending. The extension action uses the existing pink brand token, the home label is retained at low zoom, and the approved title, explanation, legend and functional selection wording are in the three-language catalogue. The geography and commercial rules are unchanged.
+
+[COM-PUB-SPON-002](diagnostics/com-pub-spon-002/README.md) is a separate Amsterdam experiment using the official gebied/wijk hierarchy, with no default additional selection. Its rule set and draft are scoped to that experiment.

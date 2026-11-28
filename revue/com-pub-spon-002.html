@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="nl" data-buuurt-font="nunito"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BUUURT — COM-PUB-SPON-002 — Expérimentation Amsterdam</title><link rel="stylesheet" href="buuurt-theme.css"><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""><link rel="stylesheet" href="com-pub-spon-map.css?v=commercial-v1"><link rel="stylesheet" href="com-pub-spon-territory.css?v=typography-2"><link rel="stylesheet" href="com-pub-spon-levels.css?v=1"></head><body>
+<div class="phone"><header class="head"><button type="button" aria-label="Menu" id="menu" aria-haspopup="dialog">☰</button><img class="official-logo" src="data/buuurt-sponsor-logo.jpg" alt="BUUURT — logo officiel" style="width:145px;height:67px;object-fit:contain;max-width:calc(100% - 110px)"><div style="display:flex;align-items:center;gap:5px"><select id="lang" aria-label="Langue / Taal / Language" style="width:65px;border:0;background:white;font-weight:800"><option value="fr">🌐 FR</option><option value="nl">🌐 NL</option><option value="en">🌐 EN</option></select><button aria-label="Notifications" id="bell" style="position:relative;font-size:19px">♧<span class="count" style="position:absolute;right:-4px;top:-5px;background:#19161b;color:white;border-radius:12px;font-size:10px;padding:1px 4px">1</span></button></div></header>
+<dialog id="campaign-menu" class="buuurt-official-modal" aria-labelledby="menu-heading">
+ <h2 id="menu-heading">Menu BUUURT</h2>
+ <nav><p><a href="index.html" id="review-link" data-t="library">Maquettes BUUURT</a></p><p><a href="com-pub-002.html#fr-MER-PUB-002" id="choice-link" data-t="choice">Choix du mode de publication</a></p></nav>
+ <form method="dialog"><button id="close-menu" data-t="close">Fermer</button></form>
+</dialog>
+<main class="body">
+<p class="campaign-name" data-t="campaign"></p>
+<ol class="campaign-steps">
+<li><span aria-hidden="true">1</span><b data-t="postStep"></b></li>
+<li aria-current="step"><span aria-hidden="true">2</span><b data-t="territoryStep"></b></li>
+<li><span aria-hidden="true">3</span><b data-t="budgetStep"></b></li>
+<li><span aria-hidden="true">4</span><b data-t="reviewStep"></b></li>
+</ol>
+<h1 id="territory-title" data-t="title"></h1>
+<p class="intro instruction" data-t="intro"></p>
+<p class="intro" data-t="discovery"></p>
+<div class="level-switch" role="group" aria-label="Niveau géographique">
+<button type="button" id="areas" data-t="areas" aria-pressed="true"></button>
+<button type="button" id="wijken" data-t="wijken" aria-pressed="false"></button>
+</div>
+<p id="fixture-note" data-t="fixture" hidden></p>
+<p id="map-status" role="status"></p>
+<div class="levels-layout">
+<div>
+<div class="map-wrap" id="map-frame">
+<div id="campaign-map" class="map" role="region" aria-labelledby="territory-title"></div>
+<div class="map-tools">
+<button type="button" id="zoom-in" aria-label="Zoom in">+</button>
+<button type="button" id="zoom-out" aria-label="Zoom out">−</button>
+<button type="button" id="recenter" data-t="recenter"></button>
+<button type="button" id="fullscreen" data-t="fullscreen" aria-pressed="false"></button>
+</div></div>
+<ul class="campaign-legend">
+<li data-band="home" data-t="home"></li><li data-band="direct" data-t="direct"></li>
+<li data-band="second" data-t="second"></li><li data-band="other" data-t="other"></li>
+</ul>
+</div>
+<section id="zone-list" aria-labelledby="list-title">
+<h2 id="list-title" data-t="list"></h2>
+<div id="district-list"></div>
+</section>
+</div>
+<p id="message" role="status"></p>
+<nav class="step-actions">
+<a class="back" href="com-pub-002.html#fr-MER-PUB-002"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6M9 12h12"/></svg><span data-t="back"></span></a>
+<button type="button" class="cta" id="continue" disabled><span data-t="next"></span> <span aria-hidden="true">→</span></button>
+</nav>
+<dialog id="extension-dialog" aria-labelledby="extension-title">
+<h2 id="extension-title" data-t="why"></h2>
+<p><strong id="district-name"></strong></p>
+<p data-t="grayReason"></p>
+<p data-t="extensionTerms"></p>
+<button type="button" id="gray-selection" role="checkbox" aria-checked="false" data-t="geographicSelection"></button>
+<button type="button" class="extension" id="extend" data-t="extend"></button>
+<form id="extension-form" hidden>
+<label for="reason" data-t="reason"></label>
+<textarea required id="reason" rows="4" maxlength="1000"></textarea>
+<p data-t="humanReview"></p>
+<button class="cta" data-t="submit"></button>
+</form>
+<form method="dialog"><button type="submit" class="dialog-back" data-t="returnMap"></button></form>
+</dialog>
+</main></div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="com-pub-spon-geography.js?v=levels-1"></script><script src="com-pub-spon-draft.js"></script><script src="com-pub-spon-copy.js?v=typography"></script><script src="com-pub-spon-levels-model.js?v=1"></script><script src="com-pub-spon-levels.js?v=1"></script><script src="buuurt-shared-header.js"></script></body></html>

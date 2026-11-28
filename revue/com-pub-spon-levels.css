@@ -1,0 +1,39 @@
+.phone { max-width: 1180px; }
+.level-switch { display: flex; gap: 8px; margin-block: 12px; flex-wrap: wrap; }
+.level-switch button {
+  min-height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: white;
+  color: var(--ink);
+  padding: 6px 14px;
+}
+.level-switch button[aria-pressed="true"] {
+  background: var(--buuurt-pink-tint);
+  color: var(--buuurt-pink-dark);
+  border-color: var(--buuurt-pink);
+}
+#zone-list { min-width: 0; }
+#list-title { margin: 8px 0; font-size: 18px; }
+#district-list { max-height: 395px; }
+#district-list details { border-bottom: 1px solid var(--line); }
+#district-list summary { padding: 10px 4px; }
+#district-list details button { padding-inline-start: 12px; }
+#district-list button::after, #district-list button[aria-checked="true"]::after { content: none; }
+.zone-row { display: flex !important; min-width: 0; align-items: center; gap: 8px; padding: 6px; }
+.zone-row > :last-child { min-width: 0; flex: 1; }
+.zone-status { display: block; color: #625a63; font-size: 11px; }
+.zone-swatch { width: 9px; height: 22px; border-radius: 4px; background: var(--band); }
+.zone-check {
+  width: 16px; height: 16px; display: inline-grid; place-items: center;
+  border: 1px solid #615860; border-radius: 4px; background: white; font-size: 12px;
+}
+[aria-checked="true"] .zone-check, [aria-checked="mixed"] .zone-check {
+  background: var(--buuurt-pink); border-color: var(--buuurt-pink-dark); color: white;
+}
+.district-marker > button[data-selected="mixed"]::after { content: "−"; }
+.zone-row:disabled { color: #625a63; }
+@media (min-width: 850px) {
+  .levels-layout { display: grid; grid-template-columns: minmax(0, 2fr) minmax(240px, 1fr); gap: 20px; }
+  #district-list { max-height: clamp(270px, calc(100dvh - 445px), 580px); }
+}

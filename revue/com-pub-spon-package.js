@@ -23,7 +23,8 @@ const options = [...document.querySelectorAll("[name=budget]")];
 const chosenBudget = () => options.find(option => option.checked).value;
 const targets = {15: 500, 30: 1200, 50: 2500};
 const profile = url.searchParams.get("demo") || defaultReviewProfile;
-const draft = readSponsorDraft(sponsorDraftScope(profile));
+const scope = sponsorDraftScope(profile) + (profile === "amsterdam-levels" && url.searchParams.get("fixture") === "border" ? ":border" : "");
+const draft = readSponsorDraft(scope);
 let selectedNames;
 let selectionUnavailable = false;
 
@@ -35,7 +36,7 @@ if ([...duration.options].some(option => option.value === draft.duration)) durat
 duration.addEventListener("change", savePackage);
 
 function savePackage() {
-  writeSponsorDraft({budget: chosenBudget(), duration: duration.value}, sponsorDraftScope(profile));
+  writeSponsorDraft({budget: chosenBudget(), duration: duration.value}, scope);
   translatePackage();
 }
 
@@ -45,7 +46,7 @@ function translatePackage() {
   document.documentElement.lang = lang;
   for (const element of document.querySelectorAll("[data-t]")) element.textContent = words[element.dataset.t];
   for (const option of duration.options) option.textContent = option.value + " " + words.days;
-  const back = new URL("com-pub-spon-001.html", url);
+  const back = new URL(reviewProfiles[profile]?.mapPage || "com-pub-spon-001.html", url);
   back.search = url.search;
   back.searchParams.set("lang", lang);
   document.querySelector(".back").href = back;
