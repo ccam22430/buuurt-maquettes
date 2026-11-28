@@ -20,3 +20,26 @@
 [hidden] { display: none !important; }
 .geo-settings label:has(select) { grid-template-columns: minmax(0, 1fr); }
 .geo-settings select { width: 100%; min-height: 44px; }
+.bike-label, .bike-label *, .area-name { pointer-events: none; }
+.bike-label > div { display: contents; }
+.bike-label > div > span {
+  inset: 0 auto auto 0;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: max-content;
+  max-width: 132px;
+  color: #121212;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.1;
+  text-align: center;
+  text-shadow: 0 0 2px white;
+}
+.bike-label .territory-check {
+  color: #362446;
+  font-size: 17px;
+  font-weight: 800;
+}
+@media (min-width: 600px) {
+  .bike-label > div > span:not(.territory-check) { font-size: 12px; }
+}

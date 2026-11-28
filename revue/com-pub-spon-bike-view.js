@@ -100,9 +100,9 @@ function bikeFailure(text = bikeWords().error) {
   node.append(button);
 }
 
-function createBikeMap(data, fixture, onChoose, makeLabel) {
+function createBikeMap(data, fixture, onChoose) {
   const frame = bikeElement("map-frame");
-  const map = L.map("campaign-map", {zoomControl: false, minZoom: 10, maxZoom: 19, zoomSnap: .25});
+  const map = L.map("campaign-map", {zoomControl: false, doubleClickZoom: !onChoose, minZoom: 10, maxZoom: 19, zoomSnap: .25});
   let center = data.times.profiles[fixture].center;
   const recenter = () => map.setView(center, map.getSize().x < 550 ? 13.5 : 14, {animate: false});
   recenter();
@@ -114,18 +114,50 @@ function createBikeMap(data, fixture, onChoose, makeLabel) {
     item => [item.dataset.band, getComputedStyle(item).getPropertyValue("--band").trim()]));
   map.attributionControl.addAttribution('<a href="https://maps.amsterdam.nl/gebiedsindeling/">Amsterdam · CC0</a> · <a href="https://www.pdok.nl/introductie/-/article/basisregistratie-topografie-topnl">Kadaster/PDOK · TOP10NL · CC BY 4.0</a>');
   let bands = {};
+  // Leaflet suppresses drag clicks, but a browser can still synthesize a click after a pinch.
+  const pointers = new Map();
+  let gestureMoved = false;
+  const surface = map.getContainer();
+  surface.addEventListener("pointerdown", event => {
+    if (!pointers.size) gestureMoved = false;
+    pointers.set(event.pointerId, [event.clientX, event.clientY]);
+    if (pointers.size > 1) gestureMoved = true;
+  }, true);
+  window.addEventListener("pointermove", event => {
+    const start = pointers.get(event.pointerId);
+    if (start && Math.hypot(event.clientX - start[0], event.clientY - start[1]) > 5) gestureMoved = true;
+  }, true);
+  window.addEventListener("pointerup", event => pointers.delete(event.pointerId), true);
+  window.addEventListener("pointercancel", event => {
+    if (pointers.delete(event.pointerId)) gestureMoved = true;
+  }, true);
+  map.on("dragstart zoomstart", () => { gestureMoved = true; });
   const labels = new Map();
   const outline = L.geoJSON(data.wijken, {smoothFactor: 0, style: () => ({
     color: "white", weight: 2, fillOpacity: 1, className: "territory-outline"
   }), onEachFeature(feature, polygon) {
-    polygon.on("click", () => onChoose?.(feature));
-    const marker = L.marker(feature.properties.label, {
-      icon: L.divIcon({className: "district-marker", iconSize: [0, 0]}),
+    polygon.on("click", () => {
+      if (!gestureMoved && bands[feature.id] !== "home") onChoose?.(feature);
+    });
+    const label = document.createElement("span");
+    label.textContent = feature.properties.buurtnaam;
+    const check = document.createElement("span");
+    check.className = "territory-check";
+    check.textContent = "✓";
+    check.ariaHidden = "true";
+    check.hidden = true;
+    const content = document.createElement("div");
+    content.append(label, check);
+    L.marker(feature.properties.label, {
+      icon: L.divIcon({className: "district-marker bike-label", html: content, iconSize: [0, 0]}),
       keyboard: false, pane: "tooltipPane", interactive: false
     }).addTo(map);
-    labels.set(feature.id, {marker, polygon, feature});
+    labels.set(feature.id, {polygon, label, check, selected: false});
   }}).addTo(map);
-  const overlays = L.layerGroup([L.geoJSON(data.areas, {interactive: false, smoothFactor: 0,
+  const areaPane = map.createPane("areaOutlines");
+  areaPane.style.zIndex = "410";
+  areaPane.style.pointerEvents = "none";
+  const overlays = L.layerGroup([L.geoJSON(data.areas, {pane: "areaOutlines", interactive: false, smoothFactor: 0,
     style: {className: "area-outline", color: "#463365", weight: 4, opacity: 1, fill: false}})]);
   const names = data.areas.features.map(feature => {
     const name = document.createElement("span");
@@ -143,16 +175,13 @@ function createBikeMap(data, fixture, onChoose, makeLabel) {
     }
     const overlap = (a, b) => a.left < b.right + 3 && a.right > b.left - 3 &&
       a.top < b.bottom + 3 && a.bottom > b.top - 3;
-    for (const {marker, polygon} of labels.values()) {
-      const element = marker.getElement();
-      const text = element.firstChild;
-      if (!text) continue;
+    const fit = (element, polygon, offsets) => {
       element.hidden = false;
-      text.style.translate = "";
-      const box = text.getBoundingClientRect();
+      element.style.translate = "";
+      const box = element.getBoundingClientRect();
       const path = polygon.getElement();
       const inverse = path.getScreenCTM()?.inverse();
-      const offset = inverse && [[0, 0], [0, -16], [0, 16], [-20, 0], [20, 0]].find(([x, y]) => {
+      const offset = inverse && offsets.find(([x, y]) => {
         const rect = {left: box.left + x, top: box.top + y, right: box.right + x, bottom: box.bottom + y};
         if (rect.left < view.left || rect.top < view.top || rect.right > view.right ||
             rect.bottom > view.bottom - 20 || occupied.some(other => overlap(rect, other))) return false;
@@ -162,23 +191,34 @@ function createBikeMap(data, fixture, onChoose, makeLabel) {
         return true;
       });
       element.hidden = !offset;
-      if (offset) text.style.translate = offset[0] + "px " + offset[1] + "px";
+      if (offset) element.style.translate = offset[0] + "px " + offset[1] + "px";
+    };
+    for (const {polygon, check, selected} of labels.values()) {
+      check.hidden = !selected;
+      if (selected) fit(check, polygon, [[0, 0]]);
     }
+    for (const {polygon, label} of labels.values()) {
+      fit(label, polygon, [[0, 0], [0, -16], [0, 16], [-20, 0], [20, 0]]);
+    }
+  }
+
+  function setSelection(selected) {
+    for (const [id, entry] of labels) {
+      const checked = bands[id] === "direct" && selected.has(id);
+      if (entry.selected === checked) continue;
+      entry.selected = checked;
+      entry.polygon.setStyle({color: checked ? "#362446" : "white", weight: checked ? 5 : 2});
+      if (checked) entry.polygon.bringToFront();
+    }
+    placeLabels();
   }
 
   function draw(newBands) {
     bands = newBands;
     outline.setStyle(feature => ({fillColor: fills[bands[feature.id]]}));
-    for (const {feature, marker, polygon} of labels.values()) {
-      const band = bands[feature.id];
-      const label = makeLabel?.(feature, band, true) || document.createElement("span");
-      if (!makeLabel) label.textContent = feature.properties.buurtnaam;
-      if (label.tagName === "BUTTON") {
-        label.style.pointerEvents = "auto";
-        L.DomEvent.disableClickPropagation(label);
-      }
-      marker.getElement().replaceChildren(label);
-      polygon.getElement().classList.toggle("is-action", Boolean(onChoose && band !== "home"));
+    for (const [id, {polygon}] of labels) {
+      polygon.getElement().dataset.wijk = id;
+      polygon.getElement().classList.toggle("is-action", Boolean(onChoose && bands[id] !== "home"));
     }
     placeLabels();
   }
@@ -209,7 +249,7 @@ function createBikeMap(data, fixture, onChoose, makeLabel) {
   map.on("moveend zoomend resize", placeLabels);
   new ResizeObserver(() => map.invalidateSize()).observe(map.getContainer());
   document.fonts.ready.then(placeLabels);
-  return {draw, setFixture(name) {
+  return {draw, setSelection, setFixture(name) {
     center = data.times.profiles[name].center;
     pin.setLatLng(center);
     recenter();

@@ -22,7 +22,9 @@ function chooseBikeNeighborhood(feature) {
   if (bands[id] === "direct") {
     if (selected.has(id)) selected.delete(id);
     else selected.add(id);
-    for (const {button, icon} of checkboxControls.get(id) || []) syncBikeControl(button, icon, id);
+    const control = checkboxControls.get(id);
+    if (control) syncBikeControl(control.button, control.icon, id);
+    view.setSelection(selected);
     persistBikeDraft();
   }
   if (bands[id] !== "other") return;
@@ -41,9 +43,9 @@ function syncBikeControl(button, icon, id) {
   if (icon) icon.textContent = checked ? "✓" : "";
 }
 
-function makeBikeControl(feature, band, inMap) {
+function makeBikeControl(feature, band) {
   const checkbox = band === "direct";
-  const action = checkbox || (!inMap && band === "other" && !bikeLocked);
+  const action = checkbox || (band === "other" && !bikeLocked);
   const label = document.createElement(action ? "button" : "span");
   const name = document.createElement("span");
   name.textContent = feature.properties.buurtnaam;
@@ -57,29 +59,25 @@ function makeBikeControl(feature, band, inMap) {
     label.disabled = Boolean(bikeLocked);
   } else if (action) label.ariaHasPopup = "dialog";
   let icon;
-  if (inMap) label.append(name);
-  else {
-    label.classList.add("zone-row");
-    label.dataset.band = band;
-    const swatch = document.createElement("span");
-    swatch.className = "zone-swatch";
-    swatch.ariaHidden = "true";
-    label.append(swatch);
-    if (checkbox) {
-      icon = document.createElement("span");
-      icon.className = "zone-check";
-      icon.ariaHidden = "true";
-      label.append(icon);
-    }
-    const caption = document.createElement("small");
-    caption.className = "zone-status";
-    caption.textContent = bikeWords()[band];
-    name.append(caption);
-    label.append(name);
-  }
+  label.classList.add("zone-row");
+  label.dataset.band = band;
+  const swatch = document.createElement("span");
+  swatch.className = "zone-swatch";
+  swatch.ariaHidden = "true";
+  label.append(swatch);
   if (checkbox) {
-    if (!checkboxControls.has(feature.id)) checkboxControls.set(feature.id, []);
-    checkboxControls.get(feature.id).push({button: label, icon});
+    icon = document.createElement("span");
+    icon.className = "zone-check";
+    icon.ariaHidden = "true";
+    label.append(icon);
+  }
+  const caption = document.createElement("small");
+  caption.className = "zone-status";
+  caption.textContent = bikeWords()[band];
+  name.append(caption);
+  label.append(name);
+  if (checkbox) {
+    checkboxControls.set(feature.id, {button: label, icon});
     syncBikeControl(label, icon, feature.id);
   }
   return label;
@@ -108,7 +106,7 @@ function renderBikeList() {
     el.open = hadGroups ? opened.has(el.dataset.group) : group.children.some(child => bands[child.id] === "home");
     const title = document.createElement("summary");
     title.textContent = group.name;
-    el.append(title, ...group.children.map(feature => makeBikeControl(feature, bands[feature.id], false)));
+    el.append(title, ...group.children.map(feature => makeBikeControl(feature, bands[feature.id])));
     container.append(el);
   }
 }
@@ -120,6 +118,7 @@ function refreshBike() {
   bikeElement("campaign-lock").hidden = !bikeLocked;
   checkboxControls.clear();
   view.draw(bands);
+  view.setSelection(selected);
   renderBikeList();
 }
 
@@ -138,7 +137,7 @@ async function startBike() {
   const previous = bikeLocked?.selected || draft.selected;
   selected = new Set(Array.isArray(previous) ? previous.filter(id => bands[id] === "direct") : []);
   for (const [id, reason] of Array.isArray(draft.requests) ? draft.requests : []) bikeRequests.set(id, reason);
-  view = createBikeMap(bikeData, bikeFixture, bikeLocked ? null : chooseBikeNeighborhood, makeBikeControl);
+  view = createBikeMap(bikeData, bikeFixture, bikeLocked ? null : chooseBikeNeighborhood);
   refreshBike();
   bikeElement("map-status").textContent = "";
   if (!bikeLocked) bikeElement("continue").disabled = false;
