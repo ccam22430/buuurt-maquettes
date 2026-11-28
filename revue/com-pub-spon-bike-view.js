@@ -156,12 +156,46 @@ function createBikeMap(data, fixture, onChoose) {
     if (pointers.delete(event.pointerId)) gestureMoved = true;
   }, true);
   map.on("dragstart zoomstart", () => { gestureMoved = true; });
+  const freeAreaNotice = document.createElement("div");
+  freeAreaNotice.setAttribute("role", "status");
+  freeAreaNotice.setAttribute("aria-live", "polite");
+  Object.assign(freeAreaNotice.style, {
+    position: "absolute", bottom: "32px", left: "50%", transform: "translateX(-50%)",
+    zIndex: "800", maxWidth: "calc(100% - 24px)", width: "max-content",
+    padding: "10px 14px", borderRadius: "10px", background: "#ffffff",
+    color: "#175c36", border: "1px solid #b9d9c4", boxShadow: "0 2px 9px #0002",
+    fontSize: "13px", fontWeight: "700", textAlign: "center", pointerEvents: "none"
+  });
+  freeAreaNotice.hidden = true;
+  surface.append(freeAreaNotice);
+  let freeAreaNoticeTimer;
+  function showFreeAreaNotice() {
+    clearTimeout(freeAreaNoticeTimer);
+    freeAreaNotice.textContent = {
+      fr: "Zone gratuite déjà incluse.",
+      nl: "Gratis gebied al inbegrepen.",
+      en: "Free area already included."
+    }[bikeLanguage.value];
+    freeAreaNotice.hidden = false;
+    freeAreaNoticeTimer = setTimeout(() => {
+      freeAreaNotice.hidden = true;
+      freeAreaNotice.textContent = "";
+    }, 3000);
+  }
+  bikeLanguage.addEventListener("change", () => {
+    if (!freeAreaNotice.hidden) showFreeAreaNotice();
+  });
   const labels = new Map();
   const outline = L.geoJSON(data.wijken, {smoothFactor: 0, style: () => ({
     color: "white", weight: 2, fillOpacity: 1, className: "territory-outline"
   }), onEachFeature(feature, polygon) {
     polygon.on("click", () => {
-      if (!gestureMoved && bands[feature.id] !== "home") onChoose?.(feature);
+      if (gestureMoved) return;
+      if (bands[feature.id] === "home") {
+        showFreeAreaNotice();
+        return;
+      }
+      onChoose?.(feature);
     });
     const label = document.createElement("span");
     label.textContent = feature.properties.buurtnaam;
@@ -242,7 +276,7 @@ function createBikeMap(data, fixture, onChoose) {
     outline.setStyle(feature => ({fillColor: fills[bands[feature.id]]}));
     for (const [id, {polygon}] of labels) {
       polygon.getElement().dataset.wijk = id;
-      polygon.getElement().classList.toggle("is-action", Boolean(onChoose && bands[id] !== "home"));
+      polygon.getElement().classList.toggle("is-action", Boolean(onChoose || bands[id] === "home"));
     }
     placeLabels();
   }

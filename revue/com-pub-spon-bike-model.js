@@ -34,7 +34,11 @@ function saveBikeConfig(actor, thresholds, storage, now = new Date()) {
   if (actor?.id !== bikeAdmin.id || actor.role !== bikeAdmin.role) throw new Error("forbidden");
   if (!validBikeThresholds(thresholds)) throw new Error("thresholds");
   const current = readBikeConfig(storage);
-  if (current.global.local === thresholds.local && current.global.standard === thresholds.standard) return current;
+  if (thresholds.extension && (typeof validGeoAuto !== "function" || !validGeoAuto(thresholds.extension))) {
+    throw new Error("extension thresholds");
+  }
+  if (current.global.local === thresholds.local && current.global.standard === thresholds.standard &&
+      JSON.stringify(current.global.extension) === JSON.stringify(thresholds.extension)) return current;
   const next = {...current, global: {...thresholds}, history: [{
     admin: actor.id, at: now.toISOString(), scope: "global",
     before: current.global, after: {...thresholds}

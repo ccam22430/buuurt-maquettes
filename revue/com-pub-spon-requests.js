@@ -11,7 +11,7 @@ const requestDecision = bikeElement("request-decision");
 const requestScope = bikeElement("request-scope");
 const requestUntil = bikeElement("request-until");
 const actorForRequest = () => requestAdmin ? extensionAdmin(sessionStorage) : extensionActor(requestFixture);
-const statuses = ["pending", "clarify", "accepted", "refused"];
+const statuses = ["pending", "clarify", "accepted", "refused", "revoked"];
 let displayed;
 let pressMap;
 let mapData;
@@ -26,7 +26,7 @@ function ownRequests() {
   return actor ? extensionRecords(localStorage).filter(record => requestAdmin || extensionOwns(actor, record)) : [];
 }
 function renderRequestList(requests) {
-  const words = bikeWords();
+  const words = {...bikeWords(), ...geoAutoWords(bikeLanguage.value)};
   bikeElement("request-count").textContent = requestAdmin ? words.actionCount + " : " +
     requests.filter(r => r.status === "pending").length : "";
   const filter = requestFilter.value;
@@ -65,7 +65,7 @@ async function renderRequestMap(record) {
 }
 
 function renderRequestDetail(record) {
-  const words = bikeWords();
+  const words = {...bikeWords(), ...geoAutoWords(bikeLanguage.value)};
   displayed = record;
   bikeElement("request-zone").textContent = record.zoneName;
   const mapLink = bikeElement("request-map-link");
@@ -85,16 +85,25 @@ function renderRequestDetail(record) {
   events.replaceChildren();
   for (const event of record.events) {
     const row = document.createElement("li");
-    row.textContent = [words[event.type], dateText(event.at), event.actor, event.message].filter(Boolean).join(" · ");
+    row.textContent = [event.origin === "automatic" ? words.autoOrigin : words[event.type], dateText(event.at), event.actor, event.message].filter(Boolean).join(" · ");
     events.append(row);
   }
-  const canRespond = requestAdmin ? record.status === "pending" : record.status === "clarify";
+  if (requestAdmin && record.assessment) {
+    const row = document.createElement("li");
+    const {outcome, standard, version, metrics, criteria} = record.assessment;
+    row.textContent = [words[outcome], version || "—", standard + " min",
+      (metrics.metres ?? "—") + "/" + (metrics.totalMetres ?? "—") + " m", metrics.addresses ?? "—",
+      criteria.percent + "% / " + criteria.metres + " m / " + criteria.addresses].join(" · ");
+    events.append(row);
+  }
+  const revocable = requestAdmin && record.status === "accepted";
+  const canRespond = requestAdmin ? record.status === "pending" || revocable : record.status === "clarify";
   requestForm.hidden = !canRespond;
   requestDecision.hidden = !requestAdmin;
   bikeElement("request-decision-label").hidden = !requestAdmin;
   const decision = requestDecision.value;
-  requestDecision.replaceChildren(...["accepted", "refused", "clarify"].map(value => new Option(words[value], value)));
-  requestDecision.value = decision || "accepted";
+  requestDecision.replaceChildren(...(revocable ? [new Option(words.revoke, "revoked")] : ["accepted", "refused", "clarify"].map(value => new Option(words[value], value))));
+  requestDecision.value = revocable ? "revoked" : decision === "revoked" ? "accepted" : decision || "accepted";
   const scope = requestScope.value;
   requestScope.replaceChildren(...["shop", "ad", "until"].map(value => {
     const opt = new Option(words[value], value);
@@ -119,7 +128,7 @@ function updateRequestFields() {
 function renderRequests() {
   translateBike();
   const actor = actorForRequest();
-  const words = bikeWords();
+  const words = {...bikeWords(), ...geoAutoWords(bikeLanguage.value)};
   const back = bikeElement("request-back");
   const url = requestId ? extensionLink(requestFixture, bikeLanguage.value, {admin: requestAdmin, ad: requestAd}) :
     new URL(requestAdmin ? "adm-geo-003.html" : "com-pub-spon-003.html", bikeUrl);
@@ -150,17 +159,17 @@ bikeElement("request-admin-login").onclick = () => {
 bikeElement("menu").onclick = () => bikeElement("campaign-menu").showModal();
 requestFilter.onchange = renderRequests;
 requestDecision.onchange = requestScope.onchange = updateRequestFields;
-requestForm.onsubmit = event => {
+requestForm.onsubmit = async event => {
   event.preventDefault();
   if (!displayed) return;
   try {
-    extensionChange(localStorage, actorForRequest(), displayed.id, {
+    await geoAutoSerialize(() => extensionChange(localStorage, actorForRequest(), displayed.id, {
       action: requestAdmin ? requestDecision.value : "reply",
       note: bikeElement("request-reply").value,
       scope: requestScope.value,
       until: requestUntil.value ? requestUntil.value + "T23:59:59" : "",
       revision: displayed.events.length
-    });
+    }));
     bikeElement("request-reply").value = "";
     window.dispatchEvent(new Event("buuurt-notifications-change"));
     requestStatus.textContent = "";

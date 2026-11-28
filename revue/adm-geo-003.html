@@ -17,12 +17,19 @@
 <label><span data-t="home"></span> <output id="local-value" for="local"></output><input type="range" id="local" step="1"></label>
 <label><span data-t="direct"></span> <output id="standard-value" for="standard"></output><input type="range" id="standard" step="1"></label>
 <label><span data-t="fixtureLabel"></span><select id="fixture"></select></label>
+<fieldset>
+<legend data-geo="autoSettings"></legend>
+<label><span data-geo="autoPercent"></span><input id="auto-percent" type="number" min="1" max="100" required></label>
+<label><span data-geo="autoMetres"></span><input id="auto-metres" type="number" min="1" max="100000" required></label>
+<label><span data-geo="autoAddresses"></span><input id="auto-addresses" type="number" min="1" max="100000" required></label>
+</fieldset>
 <div class="admin-actions">
 <button class="cta" id="save-geo" type="submit" data-t="saveGeo"></button>
 <button type="button" class="dialog-back" id="cancel-geo" data-t="cancel"></button>
 <button type="button" class="dialog-back" id="reset-geo" data-t="reset"></button>
 </div>
 </form>
+<details><summary data-geo="autoSettings"></summary><ul id="auto-preview"></ul></details>
 <p class="bike-note" data-t="estimate"></p>
 <div class="level-switch" role="group" aria-label="Niveau géographique">
 <button type="button" id="wijken" data-t="wijken" aria-pressed="true"></button>
@@ -51,4 +58,4 @@
 </section>
 </main></div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-<script src="com-pub-spon-geography.js?v=bike-1"></script><script src="com-pub-spon-draft.js"></script><script src="com-pub-spon-copy.js?v=typography"></script><script src="com-pub-spon-bike-model.js?v=1"></script><script src="buuurt-extension-store.js?v=1"></script><script src="buuurt-extension-copy.js?v=1"></script><script src="com-pub-spon-bike-view.js?v=2"></script><script src="com-pub-spon-bike-admin.js?v=2"></script><script src="buuurt-shared-header.js?v=extension-1"></script></body></html>
+<script src="com-pub-spon-geography.js?v=bike-1"></script><script src="com-pub-spon-draft.js"></script><script src="com-pub-spon-copy.js?v=typography"></script><script src="com-pub-spon-bike-model.js?v=geo-auto-1"></script><script src="buuurt-geo-auto.js?v=1"></script><script src="buuurt-extension-store.js?v=geo-auto-1"></script><script src="buuurt-extension-copy.js?v=1"></script><script src="com-pub-spon-bike-view.js?v=2"></script><script src="com-pub-spon-bike-admin.js?v=geo-auto-1"></script><script src="buuurt-shared-header.js?v=extension-1"></script></body></html>

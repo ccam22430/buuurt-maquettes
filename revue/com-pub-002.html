@@ -98,7 +98,7 @@ input[type=range]{width:100%;accent-color:var(--brand)}
 <button type="button" class="primary continue">Publier gratuitement</button>
 <p class="status-message" role="status" hidden></p>
 </div>
-<section class="free-confirmation" hidden aria-labelledby="fr-COM-PUB-GRA-001"><div class="confirmation-back-row"><a class="buuurt-standard-back" href="com-pub-001.html#fr-MER-PUB-001"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6M9 12h12"/></svg><span>Retour</span></a></div>
+<section class="free-confirmation" hidden aria-labelledby="fr-COM-PUB-GRA-001"><div class="confirmation-back-row"><a class="buuurt-standard-back confirmation-back" href="com-pub-002.html#fr-MER-PUB-002"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6M9 12h12"/></svg><span>Retour</span></a></div>
 <span class="confirmation-check" aria-hidden="true">✓</span>
 <h1 id="fr-COM-PUB-GRA-001" tabindex="-1">Votre annonce est publiée</h1>
 <p class="intro">Elle est visible dans le fil du quartier.</p>
@@ -157,7 +157,7 @@ input[type=range]{width:100%;accent-color:var(--brand)}
 <button type="button" class="primary continue">Gratis publiceren</button>
 <p class="status-message" role="status" hidden></p>
 </div>
-<section class="free-confirmation" hidden aria-labelledby="nl-COM-PUB-GRA-001"><div class="confirmation-back-row"><a class="buuurt-standard-back" href="com-pub-001.html#nl-MER-PUB-001"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6M9 12h12"/></svg><span>Terug</span></a></div>
+<section class="free-confirmation" hidden aria-labelledby="nl-COM-PUB-GRA-001"><div class="confirmation-back-row"><a class="buuurt-standard-back confirmation-back" href="com-pub-002.html#nl-MER-PUB-002"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6M9 12h12"/></svg><span>Terug</span></a></div>
 <span class="confirmation-check" aria-hidden="true">✓</span>
 <h1 id="nl-COM-PUB-GRA-001" tabindex="-1">Je bericht is gepubliceerd</h1>
 <p class="intro">Het is zichtbaar in de buurtfeed.</p>
@@ -216,7 +216,7 @@ input[type=range]{width:100%;accent-color:var(--brand)}
 <button type="button" class="primary continue">Publish for free</button>
 <p class="status-message" role="status" hidden></p>
 </div>
-<section class="free-confirmation" hidden aria-labelledby="en-COM-PUB-GRA-001"><div class="confirmation-back-row"><a class="buuurt-standard-back" href="com-pub-001.html#en-MER-PUB-001"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6M9 12h12"/></svg><span>Back</span></a></div>
+<section class="free-confirmation" hidden aria-labelledby="en-COM-PUB-GRA-001"><div class="confirmation-back-row"><a class="buuurt-standard-back confirmation-back" href="com-pub-002.html#en-MER-PUB-002"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6M9 12h12"/></svg><span>Back</span></a></div>
 <span class="confirmation-check" aria-hidden="true">✓</span>
 <h1 id="en-COM-PUB-GRA-001" tabindex="-1">Your post is live</h1>
 <p class="intro">It’s visible in the neighbourhood feed.</p>
@@ -264,6 +264,21 @@ function renderFreeConfirmation(){
 document.querySelectorAll(".screen").forEach(screen=>{
  const lang=screen.lang,step=screen.querySelector(".choice-step"),setup=screen.querySelector(".sponsored-setup");
  const confirmation=screen.querySelector(".free-confirmation");
+ const confirmationBack=confirmation.querySelector(".confirmation-back");
+ const choiceUrl=()=>{const url=new URL(location.href);url.searchParams.delete("etape");url.searchParams.set("lang",lang);url.hash=lang+"-MER-PUB-002";return url;};
+ const syncConfirmationBack=()=>{confirmationBack.href=choiceUrl().href;};
+ syncConfirmationBack();
+ window.addEventListener("popstate",syncConfirmationBack);
+ confirmationBack.addEventListener("click",event=>{
+  if(event.button!==0||event.ctrlKey||event.metaKey||event.shiftKey||event.altKey)return;
+  event.preventDefault();
+  history.pushState(null,"",choiceUrl());
+  setup.hidden=true;
+  renderFreeConfirmation();
+  const heading=step.querySelector("h1");
+  heading.setAttribute("tabindex","-1");
+  heading.focus();
+ });
  const action=step.querySelector(".continue");
  const selectedMode=()=>step.querySelector('input[type="radio"]:checked').value;
  const updateAction=()=>{
@@ -276,7 +291,7 @@ document.querySelectorAll(".screen").forEach(screen=>{
  const budgetHint=document.createElement("p");budgetHint.className="status-message";budgetHint.textContent={fr:"Budgets indicatifs : les tarifs définitifs seront ajustés selon les données du quartier pilote.",nl:"Indicatieve budgetten: de definitieve tarieven worden afgestemd op de gegevens van de pilotbuurt.",en:"Indicative budgets: final pricing will be calibrated using pilot neighbourhood data."}[lang];screen.querySelector(".budget-options").after(budgetHint);
  action.addEventListener("click",()=>{
   if(selectedMode()==="free"){showFreeConfirmation();confirmation.querySelector("h1").focus();return;}
-  const destination = new URL("com-pub-spon-001.html", location.href);
+  const destination = new URL("com-pub-spon-003.html", location.href);
   destination.search = location.search;
   destination.searchParams.delete("etape");
   destination.searchParams.set("lang", lang);

@@ -45,15 +45,24 @@ function extensionApply(bands, storage, fixture, ad) {
   return Object.fromEntries(Object.entries(bands).map(([id, band]) =>
     [id, band === "other" && allowed.has(id) ? "direct" : band]));
 }
-function extensionSubmit(storage, actor, {zone, name, note, ad, band}, now = new Date()) {
+function extensionSubmit(storage, actor, {zone, name, note, ad, band, evidence}, now = new Date()) {
   const official = extensionActor(actor?.fixture);
   if (!official || !extensionOwns(actor, official) || band !== "other" || !zone || !note.trim()) throw Error("forbidden");
   const records = extensionRecords(storage);
-  const duplicate = records.find(r => extensionOwns(actor, r) && r.zone === zone &&
-    ["pending", "clarify"].includes(r.status));
+  const related = records.filter(r => extensionOwns(actor, r) && r.zone === zone);
+  const duplicate = related.find(r => ["pending", "clarify"].includes(r.status) ||
+    (r.status === "accepted" && extensionAuthorized(storage, actor.fixture, ad, now.getTime()).has(zone)));
   if (duplicate) return {...duplicate, duplicate: true};
+  const blocked = related.some(r => ["revoked", "refused"].includes(r.status));
+  const accepted = evidence?.outcome === "automatic" && !blocked;
+  const authorization = accepted ? {scope: "shop"} : undefined;
   const created = {id: crypto.randomUUID(), ...official, zone, zoneName: name, ad, created: now.toISOString(),
-    status: "pending", events: [{type: "submitted", actor: actor.merchant, at: now.toISOString(), message: note.trim()}]};
+    status: accepted ? "accepted" : "pending", authorization,
+    events: [{type: "submitted", actor: actor.merchant, at: now.toISOString(), message: note.trim()}]};
+  if (evidence) created.assessment = {...evidence, outcome: blocked ? "manual" : evidence.outcome};
+  if (accepted) created.events.push({type: "accepted", origin: "automatic", actor: "geo-engine",
+    at: now.toISOString(), authorization, reason: "accessible-road-and-residential-thresholds"});
+
   storage.setItem(extensionKey, JSON.stringify([created, ...records]));
   return created;
 }
@@ -65,7 +74,8 @@ function extensionChange(storage, actor, id, {action, note = "", scope, until, r
   const admin = actor?.role === "geo-admin" && actor.id === "review-admin";
   const reply = action === "reply" && record.status === "clarify" && extensionOwns(actor, record);
   const decision = admin && record.status === "pending" && ["accepted", "refused", "clarify"].includes(action);
-  if (!reply && !decision) throw Error("forbidden");
+  const revoke = admin && record.status === "accepted" && action === "revoked";
+  if (!reply && !decision && !revoke) throw Error("forbidden");
   if (action !== "accepted" && !note.trim()) throw Error("message");
   let authorization;
   if (action === "accepted") {
@@ -74,7 +84,7 @@ function extensionChange(storage, actor, id, {action, note = "", scope, until, r
     authorization = {scope, ...(scope === "until" ? {until: new Date(until).toISOString()} : {})};
   }
   const updated = {...record, status: reply ? "pending" : action, authorization, events: [...record.events,
-    {type: action, actor: admin ? actor.id : actor.merchant, at: now.toISOString(), message: note.trim(), authorization}]};
+    {type: action, actor: admin ? actor.id : actor.merchant, at: now.toISOString(), message: note.trim(), authorization, origin: admin ? "administrative" : undefined}]};
   records[index] = updated;
   storage.setItem(extensionKey, JSON.stringify(records));
   return updated;

@@ -19,6 +19,16 @@ function persistBikeDraft() {
     thresholds: bikeSettings, fixture: bikeFixture, network: bikeNetwork}, bikeScope());
 }
 
+function extensionPage(id) {
+  const extension = new URL("com-pub-spon-extension.html", bikeUrl);
+  extension.searchParams.set("zone", id);
+  extension.searchParams.set("fixture", bikeFixture);
+  extension.searchParams.set("lang", bikeLanguage.value);
+  if (currentAd) extension.searchParams.set("ad", currentAd);
+  extension.searchParams.set("v", "geo-auto-1");
+  return extension;
+}
+
 function chooseBikeNeighborhood(feature) {
   if (bikeLocked) return;
   refreshExtensionRights();
@@ -38,13 +48,7 @@ function chooseBikeNeighborhood(feature) {
       bikeElement("message").textContent = bikeWords().storageError;
       return;
     }
-    const extension = new URL("com-pub-spon-extension.html", bikeUrl);
-    extension.searchParams.set("zone", id);
-    extension.searchParams.set("fixture", bikeFixture);
-    extension.searchParams.set("lang", bikeLanguage.value);
-    if (currentAd) extension.searchParams.set("ad", currentAd);
-    extension.searchParams.set("v", "extension-page-20261128");
-    location.assign(extension);
+    location.assign(extensionPage(id));
     return;
   }
   active = id;
@@ -207,24 +211,49 @@ async function startBike() {
 }
 
 bikeElement("menu").onclick = () => bikeElement("campaign-menu").showModal();
-bikeElement("extension-form").onsubmit = event => {
+bikeElement("extension-form").onsubmit = async event => {
   if (event.submitter?.formMethod === "dialog") return;
   event.preventDefault();
   const reason = bikeElement("reason").value.trim();
   if (!reason || bikeLocked) return;
   refreshExtensionRights();
-  let submitted;
+  const submit = bikeElement("extension-form").querySelector(".cta");
+  if (submit.disabled) return;
+  submit.disabled = true;
+  const zone = active;
+  const name = bikeElement("district-name").textContent;
   try {
-    submitted = extensionSubmit(localStorage, extensionActor(bikeFixture), {zone: active,
-      name: bikeElement("district-name").textContent, note: reason, ad: currentAd, band: bands[active]});
+    if (!persistBikeDraft()) throw Error("draft");
+    const evidence = await loadGeoAutoEvidence();
+    if (!bikeDialog.open || zone !== active) return;
+    const submitted = await geoAutoSerialize(() => {
+      const config = readBikeConfig(localStorage);
+      const settings = resolveBikeThresholds(config, "amsterdam", bikeFixture);
+      const base = classifyBikeSeconds(bikeData.times.profiles[bikeFixture].wijken[zone]?.seconds, settings);
+      const band = extensionAuthorized(localStorage, bikeFixture, currentAd).has(zone) ? "direct" : base;
+      const assessment = geoAutoEvaluate(evidence, bikeData.times, bikeFixture, zone, settings.standard,
+        config.global.extension);
+      return extensionSubmit(localStorage, extensionActor(bikeFixture), {
+        zone, name, note: reason, ad: currentAd, band, evidence: assessment
+      });
+    });
+    if (!submitted.duplicate) bikeRequests.set(zone, reason);
+    if (!submitted.duplicate && submitted.status === "accepted") {
+      selected.add(zone);
+      if (!persistBikeDraft() || !writeSponsorDraft({extensionReceipt: submitted.id}, bikeScope())) throw Error("draft");
+      const destination = extensionPage(zone);
+      destination.searchParams.set("receipt", submitted.id);
+      location.assign(destination);
+      return;
+    }
+    const saved = persistBikeDraft();
+    bikeElement("message").textContent = saved ? bikeWords()[submitted.duplicate ? "duplicate" : "sent"] : bikeWords().storageError;
+    if (saved) bikeDialog.close();
   } catch {
     bikeElement("message").textContent = bikeWords().invalid;
-    return;
+  } finally {
+    submit.disabled = false;
   }
-  if (!submitted.duplicate) bikeRequests.set(active, reason);
-  const saved = persistBikeDraft();
-  bikeElement("message").textContent = saved ? bikeWords()[submitted.duplicate ? "duplicate" : "sent"] : bikeWords().storageError;
-  if (saved) bikeDialog.close();
 };
 bikeElement("continue").onclick = () => {
   refreshExtensionRights();

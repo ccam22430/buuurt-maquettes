@@ -68,3 +68,7 @@ The eligibility resolver rechecks the beneficiary, ad (where applicable), status
 This is a same-origin, same-browser demonstration in two tabs using localStorage for requests, notifications, grants and audit events and sessionStorage for the explicitly opened demo admin role. Application guards cover invalid transitions, ownership, stale revision and eligibility. Browser storage and the demo role are inspectable and editable. A production integration needs authenticated role/ownership checks, atomic revision-checked writes on the server, durable notifications and an audit trail that merchant accounts cannot alter. Do not import the local browser grants into V1.
 
 Automated checks include 19 Node tests and Chromium browser flows. Browser scenarios cover acceptance with ad-only eligibility, refusal with explanation, clarification and reply followed by acceptance, deep links from the notification bell, the highlighted wijk, duplicates, reloading and scope isolation. Node tests additionally probe unauthorized writes, wrong-shop replies, expired grants, stale decisions and preservation of confirmed snapshot state. Mobile iPhone/Android and narrow viewport tests are simulations. A physical iPhone and real authenticated accounts were not used.
+
+## Conditional extension approval
+
+See the [calibration and technical record](../geo-auto-extension/README.md) for the 28 November decision, aggregate BAG evidence, and review implementation.

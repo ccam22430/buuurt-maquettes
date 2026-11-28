@@ -1,7 +1,9 @@
 "use strict";
 
 let settings = {...readBikeConfig(localStorage).global};
-let data, mapView;
+let data, mapView, autoEvidence;
+const autoPreview = bikeElement("auto-preview");
+const autoFields = ["percent", "metres", "addresses"];
 const adminWorkspace = bikeElement("admin-workspace");
 const fixture = bikeElement("fixture");
 const status = bikeElement("map-status");
@@ -19,7 +21,10 @@ function showHistory() {
     const date = new Intl.DateTimeFormat(bikeLanguage.value, {dateStyle: "medium", timeStyle: "medium",
       timeZone: "Europe/Amsterdam"}).format(new Date(row.at));
     item.textContent = [date, row.admin, row.scope,
-      row.before.local + "/" + row.before.standard + " → " + row.after.local + "/" + row.after.standard + " min"].join(" · ");
+      [row.before, row.after].map(value => {
+        const {percent, metres, addresses} = value.extension || geoAutoDefaults;
+        return value.local + "/" + value.standard + " min · " + percent + "% · " + metres + " m · " + addresses;
+      }).join(" → ")].join(" · ");
     list.append(item);
   }
 }
@@ -33,8 +38,32 @@ function preview() {
   standard.value = settings.standard;
   bikeElement("local-value").value = settings.local + " min";
   bikeElement("standard-value").value = settings.standard + " min";
-  if (mapView) mapView.draw(bikeBands(data, fixture.value, settings));
+  for (const key of autoFields) bikeElement("auto-" + key).value = (settings.extension || geoAutoDefaults)[key];
+  if (mapView) {
+    mapView.draw(bikeBands(data, fixture.value, settings));
+    previewAuto();
+  }
 }
+
+function previewAuto() {
+  const words = geoAutoWords(bikeLanguage.value);
+  const bands = bikeBands(data, fixture.value, settings);
+  const rows = data.wijken.features.filter(({id}) => bands[id] === "other").map(feature => {
+    const result = geoAutoEvaluate(autoEvidence, data.times, fixture.value, feature.id, settings.standard, settings.extension);
+    const item = document.createElement("li");
+    const {metres, percent, addresses} = result.metrics;
+    item.textContent = [feature.properties.buurtnaam, words[result.outcome], metres !== null ? metres + " m" : "—",
+      percent !== null ? new Intl.NumberFormat(bikeLanguage.value, {maximumFractionDigits: 1}).format(percent) + "%" : "—",
+      addresses ?? "—"].join(" · ");
+    return item;
+  });
+  autoPreview.replaceChildren(...rows);
+}
+
+for (const key of autoFields) bikeElement("auto-" + key).oninput = () => {
+  settings.extension = Object.fromEntries(autoFields.map(field => [field, bikeElement("auto-" + field).valueAsNumber]));
+  if (data) previewAuto();
+};
 
 function fillFixtures() {
   const current = fixture.value;
@@ -53,7 +82,7 @@ async function openAdmin() {
   showHistory();
   fillFixtures();
   try {
-    data = await loadBikeData();
+    [data, autoEvidence] = await Promise.all([loadBikeData(), loadGeoAutoEvidence()]);
     mapView = createBikeMap(data, fixture.value);
     preview();
     status.textContent = "";
@@ -106,8 +135,11 @@ bikeElement("geo-settings").onsubmit = event => {
 };
 bikeElement("menu").onclick = () => bikeElement("campaign-menu").showModal();
 translateBike();
+translateGeoAuto(bikeLanguage.value);
 bikeLanguageChange(() => {
   fillFixtures();
+  translateGeoAuto(bikeLanguage.value);
+  if (data) previewAuto();
   showHistory();
 });
 if (sessionActor()) openAdmin();
