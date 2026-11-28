@@ -51,6 +51,7 @@ function renderRequestList(requests) {
 
 let requestNetwork;
 let requestNetworkRevision = 0;
+let requestMapFixture;
 const requestKind = bikeElement("network-kind");
 const requestMinutes = bikeElement("network-minutes");
 function requestThresholds(record) {
@@ -61,6 +62,15 @@ function previewRequestMap() {
   if (!record || !requestNetwork || !pressMap) return;
   const settings = requestThresholds(record);
   const grants = networkGrants(localStorage, record.fixture, record.ad);
+  const active = bikeElement("network-active");
+  const words = networkWords(bikeLanguage.value);
+  active.replaceChildren(...grants.map(grant => {
+    const item = document.createElement("li");
+    const district = mapData.wijken.features.find(feature => feature.id === grant.zone);
+    item.textContent = [words[grant.kind], grant.kind === "targeted" ? district?.properties.buurtnaam : "",
+      grant.minutes + " min", grant.until ? dateText(grant.until) : ""].filter(Boolean).join(" · ");
+    return item;
+  }));
   const base = networkBands(requestNetwork, mapData.wijken.features, settings, grants);
   const minutes = requestMinutes.valueAsNumber;
   const preview = requestAdmin && record.status === "pending" && requestDecision.value === "accepted" &&
@@ -77,13 +87,15 @@ function previewRequestMap() {
 
 async function renderRequestMap(record) {
   const revision = ++requestNetworkRevision;
+  requestNetwork = null;
   try {
     mapData ||= await loadBikeData();
     const data = await loadNetworkZones(record.fixture, mapData.times);
     if (revision !== requestNetworkRevision) return;
     requestNetwork = data;
     if (!pressMap) pressMap = createBikeMap(mapData, record.fixture);
-    else pressMap.setFixture(record.fixture);
+    else if (requestMapFixture !== record.fixture) pressMap.setFixture(record.fixture);
+    requestMapFixture = record.fixture;
     previewRequestMap();
     pressMap.highlight(record.zone);
   } catch {
