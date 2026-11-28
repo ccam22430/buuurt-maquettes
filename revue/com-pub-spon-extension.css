@@ -8,7 +8,7 @@
 #extension-dialog #extension-form {
   display: flex;
   flex-direction: column;
-  max-block-size: calc(var(--extension-viewport-height, 100dvh) - 24px);
+  max-block-size: calc(100dvh - 24px);
 }
 #extension-dialog .extension-header,
 #extension-dialog .extension-actions {
@@ -48,17 +48,38 @@
 }
 #extension-dialog .extension-actions { border-top: 1px solid var(--line); }
 #extension-dialog .extension-actions button { margin: 0; }
-@media (max-width: 767px), (pointer: coarse) and (max-width: 950px) {
-  #extension-dialog {
-    position: fixed;
-    inset: auto 0 var(--extension-viewport-bottom, 0px);
-    margin: 0;
-    inline-size: 100%;
-    border-radius: 18px 18px 0 0;
-    padding-inline: env(safe-area-inset-left, 0px) env(safe-area-inset-right, 0px);
-    padding-block-end: env(safe-area-inset-bottom, 0px);
-  }
-  #extension-dialog #extension-form {
-    max-block-size: calc(var(--extension-viewport-height, 100dvh) - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 8px);
-  }
+
+.extension-page {
+  inline-size: 100%;
+  max-inline-size: 480px;
+  margin-inline: auto;
+  padding: 16px 16px 24px;
+  padding: 16px max(16px, env(safe-area-inset-right, 0px)) max(24px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+  overflow-wrap: anywhere;
+}
+.extension-page .back { margin-block-end: 16px; }
+.extension-page #district-name { margin-block: 12px 20px; }
+.extension-page form { display: grid; gap: 12px; }
+.extension-page textarea {
+  min-inline-size: 0;
+  inline-size: 100%;
+  max-inline-size: 100%;
+  min-block-size: 112px;
+  padding: 10px 12px;
+  font-size: 16px;
+  line-height: 1.4;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  resize: vertical;
+}
+.extension-page .cta { justify-self: stretch; }
+.extension-page #extension-status:empty { display: none; }
+
+.extension-page form[hidden] { display: none; }
+.extension-request .head {
+  padding-block-start: max(8px, env(safe-area-inset-top, 0px));
+  padding-inline: max(16px, env(safe-area-inset-left, 0px)) max(16px, env(safe-area-inset-right, 0px));
+}
+.extension-request .buuurt-official-head .buuurt-official-language #lang {
+  font-size: 16px !important;
 }

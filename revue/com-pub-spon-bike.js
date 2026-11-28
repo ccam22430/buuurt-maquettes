@@ -28,11 +28,23 @@ function chooseBikeNeighborhood(feature) {
     persistBikeDraft();
   }
   if (bands[id] !== "other") return;
+  if (matchMedia("(max-width: 767px), (pointer: coarse) and (max-width: 950px)").matches) {
+    if (!persistBikeDraft()) {
+      bikeElement("message").textContent = bikeWords().storageError;
+      return;
+    }
+    const extension = new URL("com-pub-spon-extension.html", bikeUrl);
+    extension.searchParams.set("zone", id);
+    extension.searchParams.set("fixture", bikeFixture);
+    extension.searchParams.set("lang", bikeLanguage.value);
+    extension.searchParams.set("v", "extension-page-20261128");
+    location.assign(extension);
+    return;
+  }
   active = id;
   bikeElement("district-name").textContent = feature.properties.buurtnaam;
   bikeElement("reason").value = bikeRequests.get(id) || "";
   bikeDialog.showModal();
-  syncExtensionViewport();
 }
 
 function syncBikeControl(button, icon, id) {
@@ -140,20 +152,14 @@ async function startBike() {
   refreshBike();
   bikeElement("map-status").textContent = "";
   if (!bikeLocked) bikeElement("continue").disabled = false;
+  if (bikeUrl.searchParams.get("extension") === "sent") {
+    bikeElement("message").textContent = bikeWords().saved;
+    bikeUrl.searchParams.delete("extension");
+    history.replaceState(null, "", bikeUrl);
+  }
 }
 
 bikeElement("menu").onclick = () => bikeElement("campaign-menu").showModal();
-const extensionViewport = window.visualViewport;
-function syncExtensionViewport() {
-  if (!bikeDialog.open || !extensionViewport) return;
-  const bottom = document.documentElement.clientHeight - extensionViewport.height - extensionViewport.offsetTop;
-  bikeDialog.style.setProperty("--extension-viewport-height", extensionViewport.height + "px");
-  bikeDialog.style.setProperty("--extension-viewport-bottom", Math.max(0, bottom) + "px");
-}
-extensionViewport?.addEventListener("resize", syncExtensionViewport);
-extensionViewport?.addEventListener("scroll", syncExtensionViewport);
-window.addEventListener("resize", syncExtensionViewport);
-
 bikeElement("extension-form").onsubmit = event => {
   if (event.submitter?.formMethod === "dialog") return;
   event.preventDefault();
@@ -182,6 +188,12 @@ function translateExtensionClose() {
   bikeElement("extension-close").ariaLabel = bikeWords().close;
 }
 translateExtensionClose();
+window.addEventListener("pageshow", event => {
+  if (!event.persisted || !bikeFixture) return;
+  const {requests} = readSponsorDraft(bikeScope());
+  bikeRequests.clear();
+  for (const [id, reason] of Array.isArray(requests) ? requests : []) bikeRequests.set(id, reason);
+});
 bikeLanguageChange(() => {
   translateExtensionClose();
   if (view) refreshBike();

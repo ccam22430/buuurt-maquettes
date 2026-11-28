@@ -64,7 +64,7 @@ function translateBike() {
   document.documentElement.lang = bikeLanguage.value;
   for (const element of document.querySelectorAll("[data-t]")) element.textContent = words[element.dataset.t];
   for (const [id, key] of [["zoom-in", "zoomIn"], ["zoom-out", "zoomOut"], ["recenter", "recenter"], ["fullscreen", "fullscreen"]]) {
-    bikeElement(id).ariaLabel = words[key];
+    bikeElement(id)?.setAttribute("aria-label", words[key]);
   }
 }
 

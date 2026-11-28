@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="nl" data-buuurt-font="nunito">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>BUUURT — Demande d’extension</title>
+<link rel="stylesheet" href="buuurt-theme.css">
+<link rel="stylesheet" href="com-pub-spon-map.css?v=commercial-v1">
+<link rel="stylesheet" href="com-pub-spon-territory.css?v=typography-2">
+<link rel="stylesheet" href="com-pub-spon-extension.css?v=2">
+</head>
+<body class="extension-request">
+<div class="phone"><header class="head"><button type="button" aria-label="Menu" id="menu" aria-haspopup="dialog">☰</button><img class="official-logo" src="data/buuurt-sponsor-logo.jpg" alt="BUUURT — logo officiel" style="width:145px;height:67px;object-fit:contain;max-width:calc(100% - 110px)"><div style="display:flex;align-items:center;gap:5px"><select id="lang" aria-label="Langue / Taal / Language" style="width:65px;border:0;background:white;font-weight:800"><option value="fr">🌐 FR</option><option value="nl">🌐 NL</option><option value="en">🌐 EN</option></select><button aria-label="Notifications" id="bell" style="position:relative;font-size:19px">♧<span class="count" style="position:absolute;right:-4px;top:-5px;background:#19161b;color:white;border-radius:12px;font-size:10px;padding:1px 4px">1</span></button></div></header>
+<dialog id="campaign-menu" class="buuurt-official-modal" aria-labelledby="menu-heading">
+ <h2 id="menu-heading">Menu BUUURT</h2>
+ <nav><p><a href="index.html" id="review-link" data-t="library">Maquettes BUUURT</a></p></nav>
+ <form method="dialog"><button id="close-menu" data-t="close">Fermer</button></form>
+</dialog>
+<main class="extension-page">
+<a class="back" id="extension-back" href="com-pub-spon-003.html" data-t="back"></a>
+<h1 data-t="extensionTitle"></h1>
+<p id="district-name"></p>
+<p id="extension-status" role="status"></p>
+<form id="extension-form" hidden>
+<label for="reason" data-t="reason"></label>
+<textarea id="reason" name="reason" rows="4" maxlength="1000" required></textarea>
+<p class="intro" data-t="humanReview"></p>
+<button class="cta" type="submit" data-t="extensionSend"></button>
+</form>
+</main>
+</div>
+<script src="com-pub-spon-geography.js?v=bike-1"></script>
+<script src="com-pub-spon-draft.js"></script>
+<script src="com-pub-spon-copy.js?v=typography"></script>
+<script src="com-pub-spon-bike-model.js?v=1"></script>
+<script src="com-pub-spon-bike-view.js?v=3"></script>
+<script src="com-pub-spon-extension.js?v=1"></script>
+<script src="buuurt-shared-header.js"></script>
+</body>
+</html>
