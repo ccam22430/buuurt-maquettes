@@ -59,3 +59,7 @@ Statut : VALIDÉ PAR LE FONDATEUR — base de travail V1, sans engagement commer
 The founder's six decisions for the review screen are recorded in [the graphical review log](diagnostics/com-pub-spon-001/harmonisation/README.md). The final graphic validation is pending. The extension action uses the existing pink brand token, the home label is retained at low zoom, and the approved title, explanation, legend and functional selection wording are in the three-language catalogue. The geography and commercial rules are unchanged.
 
 [COM-PUB-SPON-002](diagnostics/com-pub-spon-002/README.md) is a separate Amsterdam experiment using the official gebied/wijk hierarchy, with no default additional selection. Its rule set and draft are scoped to that experiment.
+
+## Commercial V1 review addendum
+
+The [commercial acceptance and decision log](diagnostics/commercial-v1/README.md) records the flexible budget, campaign guarantee, cumulative territory capacity, review-only strategy and geographic scenarios. The initial launch assumptions derive from [issue #17](https://github.com/ccam22430/buuurt-maquettes/issues/17). Commercial activation remains an explicit decision.

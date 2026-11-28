@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="nl" data-buuurt-font="nunito">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BUUURT — Commercial review</title>
+<link rel="stylesheet" href="buuurt-theme.css">
+<link rel="stylesheet" href="com-pub-spon-map.css?v=levels-1">
+<link rel="stylesheet" href="com-pub-spon-territory.css?v=typography-2">
+<link rel="stylesheet" href="buuurt-commercial.css?v=1">
+</head>
+<body>
+<div class="phone"><header class="head"><button type="button" aria-label="Menu" id="menu" aria-haspopup="dialog">☰</button><img class="official-logo" src="data/buuurt-sponsor-logo.jpg" alt="BUUURT — logo officiel" style="width:145px;height:67px;object-fit:contain;max-width:calc(100% - 110px)"><div style="display:flex;align-items:center;gap:5px"><select id="lang" aria-label="Langue / Taal / Language" style="width:65px;border:0;background:white;font-weight:800"><option value="fr">🌐 FR</option><option value="nl">🌐 NL</option><option value="en">🌐 EN</option></select><button aria-label="Notifications" id="bell" style="position:relative;font-size:19px">♧<span class="count" style="position:absolute;right:-4px;top:-5px;background:#19161b;color:white;border-radius:12px;font-size:10px;padding:1px 4px">1</span></button></div></header>
+<dialog id="campaign-menu" class="buuurt-official-modal" aria-labelledby="menu-heading">
+ <h2 id="menu-heading">Menu BUUURT</h2>
+ <nav><p><a href="index.html" id="review-link" data-t="library">Maquettes BUUURT</a></p><p><a href="com-pub-002.html#fr-MER-PUB-002" id="choice-link" data-t="choice">Choix du mode de publication</a></p></nav>
+ <form method="dialog"><button id="close-menu" data-t="close">Fermer</button></form>
+</dialog>
+<main class="body commercial-panel">
+<a class="back commercial-back" id="commercial-return" href="index.html"></a>
+<h1 id="panel-title"></h1>
+<p class="commercial-note" id="panel-demo"></p>
+<button type="button" id="commercial-admin-login" class="cta" hidden></button>
+<nav id="commercial-admin-nav" hidden></nav>
+<p id="panel-status" role="status"></p>
+<div id="panel-content"></div>
+</main></div>
+<script src="com-pub-spon-bike-model.js?v=2"></script>
+<script src="buuurt-extension-store.js?v=1"></script>
+<script src="buuurt-commercial.js?v=1"></script>
+<script src="buuurt-commercial-copy.js?v=1"></script>
+<script src="buuurt-commercial-geo.js?v=1"></script><script src="buuurt-commercial-admin.js?v=1"></script>
+<script src="buuurt-shared-header.js?v=extension-1"></script>
+</body></html>

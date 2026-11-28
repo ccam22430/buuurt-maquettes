@@ -7,7 +7,7 @@ const translations = {
   en: ["Choose your sponsored package", "Packages", "target impressions", "Indicative duration", "Selected territories",
     "Back", "Continue", "Campaign summary", "Live capacity and permissions must be checked before confirmation.",
     "days", "No additional territories selected.", "The selection is unavailable.", "BUUURT prototypes", "Publication method", "Close"],
-  fr: ["Choisissez votre forfait sponsorisé", "Forfaits", "impressions cibles", "Durée indicative", "Territoires sélectionnés",
+  fr: ["Choisissez votre forfait sponsorisé", "Forfaits", "affichages à l’écran", "Durée indicative", "Territoires sélectionnés",
     "Retour", "Continuer", "Récapitulatif de la campagne", "La capacité et les droits réels doivent être contrôlés avant toute confirmation.",
     "jours", "Aucun territoire supplémentaire sélectionné.", "La sélection est indisponible.", "Maquettes BUUURT", "Choix du mode de publication", "Fermer"]
 };
@@ -84,7 +84,7 @@ function translatePackage() {
     back.searchParams.delete("draft");
     if (engagedBike) back.searchParams.set("campaign", bikeId);
   }
-  document.querySelector(".back").href = back;
+  (document.querySelector("#legacy-package .back") || document.querySelector(".back")).href = back;
   $("choice-link").href = back;
   $("selection-summary").textContent = selectionUnavailable ? words.error :
     selectedNames?.length ? selectedNames.join(" · ") : selectedNames ? words.empty : "";
@@ -155,6 +155,12 @@ async function showSelectedDistricts() {
     identifiers = bikeBudgetSelection();
     if (!identifiers.length) throw new Error("No eligible bike selection");
     displayedBikeSelection = identifiers;
+    if (!engagedBike) {
+      selectedNames = identifiers.map(code => names.get(code));
+      initCommercialBudget(features, names);
+      budgetPage.hidden = false;
+      return;
+    }
   }
   selectedNames = identifiers.map(code => names.get(code)).filter(Boolean);
   $("continue").disabled = false;

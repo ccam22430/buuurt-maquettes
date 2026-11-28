@@ -3,7 +3,7 @@
 const extensionCopy = {
   fr: {
     duplicate: "Une demande pour ce quartier est déjà en cours de traitement.",
-    explain: "Ce quartier se situe en dehors de votre zone de diffusion habituelle.\n\nAfin de préserver la pertinence des annonces locales pour les habitants, BUUURT examine les demandes de diffusion au-delà de cette zone.",
+    explain: "BUUURT privilégie le commerce de proximité afin de proposer aux habitants des annonces pertinentes. Si votre clientèle s'étend au-delà de votre territoire local, vous pouvez demander à élargir votre zone de diffusion.",
     why: "Pourquoi souhaitez-vous diffuser votre annonce dans ce quartier ?",
     example: "Par exemple : une partie de ma clientèle habite dans ce quartier.",
     free: "Votre demande est gratuite et sera examinée par l’équipe BUUURT.",
@@ -20,7 +20,7 @@ const extensionCopy = {
   },
   nl: {
     duplicate: "Er wordt al een aanvraag voor deze wijk behandeld.",
-    explain: "Deze wijk ligt buiten je gebruikelijke verspreidingsgebied.\n\nOm lokale advertenties relevant te houden, beoordeelt BUUURT aanvragen buiten dit gebied.",
+    explain: "BUUURT geeft voorrang aan lokale winkels om inwoners relevante advertenties te tonen. Als je klantenkring verder reikt dan je lokale gebied, kun je een uitbreiding van je verspreidingsgebied aanvragen.",
     why: "Waarom wil je je advertentie in deze wijk tonen?", example: "Bijvoorbeeld: een deel van mijn klanten woont in deze wijk.",
     free: "Je aanvraag is gratis en wordt beoordeeld door het BUUURT-team.",
     sent: "Je aanvraag is verstuurd. Je ontvangt een melding zodra het BUUURT-team deze heeft beoordeeld.",
@@ -35,7 +35,7 @@ const extensionCopy = {
   },
   en: {
     duplicate: "A request for this neighborhood is already being reviewed.",
-    explain: "This neighborhood is outside your usual distribution area.\n\nTo keep local ads relevant, BUUURT reviews requests to advertise beyond that area.",
+    explain: "BUUURT prioritizes local shops so residents see relevant ads. If your customers live beyond your local area, you can request an extension to your distribution area.",
     why: "Why would you like to show your ad in this neighborhood?", example: "For example: some of my customers live in this neighborhood.",
     free: "Your request is free and will be reviewed by the BUUURT team.",
     sent: "Your request was sent. You’ll receive a notification once the BUUURT team has reviewed it.",

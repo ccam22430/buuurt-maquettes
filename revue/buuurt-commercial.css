@@ -1,0 +1,16 @@
+#commercial-budget[hidden], #legacy-package[hidden], [hidden].commercial-back,
+#commercial-reduce[hidden], .commercial-panel[hidden] { display: none !important; }
+.commercial-back { margin-block-end: 16px; }
+#commercial-budget h2, .commercial-panel h2 { font-size: 18px; margin-block: 18px 6px; }
+.commercial-calendar { display: flex; align-items: center; border: 1px solid #b0a8b1; border-radius: 12px; padding-inline: 12px; gap: 8px; }
+.commercial-calendar > span { color: var(--buuurt-pink-dark); font-size: 23px; }
+.commercial-calendar select { min-height: 52px; inline-size: 100%; border: 0; font-size: 17px; background: white; }
+#commercial-volume { display: block; inline-size: 100%; min-height: 44px; accent-color: var(--buuurt-pink); }
+.commercial-price { font-size: 22px; font-weight: 800; }
+.commercial-note { font-size: 13px; color: #59515a; }
+.commercial-panel form { display: grid; gap: 10px; }
+.commercial-panel :is(input,select) { min-height: 44px; max-inline-size: 100%; font-size: 16px; }
+.commercial-panel form label { display: grid; gap: 4px; }
+.commercial-panel .commercial-card { border: 1px solid #ddd4de; padding: 12px; border-radius: 12px; margin-block: 10px; overflow-wrap: anywhere; }
+.commercial-panel progress { width: 100%; accent-color: var(--buuurt-pink); }
+.commercial-panel .cta, #commercial-next { max-inline-size: 100%; }
