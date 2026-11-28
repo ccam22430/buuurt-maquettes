@@ -276,7 +276,11 @@ document.querySelectorAll(".screen").forEach(screen=>{
  const budgetHint=document.createElement("p");budgetHint.className="status-message";budgetHint.textContent={fr:"Budgets indicatifs : les tarifs définitifs seront ajustés selon les données du quartier pilote.",nl:"Indicatieve budgetten: de definitieve tarieven worden afgestemd op de gegevens van de pilotbuurt.",en:"Indicative budgets: final pricing will be calibrated using pilot neighbourhood data."}[lang];screen.querySelector(".budget-options").after(budgetHint);
  action.addEventListener("click",()=>{
   if(selectedMode()==="free"){showFreeConfirmation();confirmation.querySelector("h1").focus();return;}
-  step.hidden=true;setup.hidden=false;screen.querySelector(".content").scrollTop=0;
+  const destination = new URL("com-pub-spon-001.html", location.href);
+  destination.search = location.search;
+  destination.searchParams.delete("etape");
+  destination.searchParams.set("lang", lang);
+  location.assign(destination);
  });
  const goBack=()=>{setup.hidden=true;step.hidden=false;};
  screen.querySelectorAll(".back-choice").forEach(el=>el.addEventListener("click",e=>{e.preventDefault();goBack();}));

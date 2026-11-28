@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="nl" data-buuurt-font="nunito">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BUUURT — Sponsored campaign package</title>
+<link rel="stylesheet" href="buuurt-theme.css">
+<link rel="stylesheet" href="com-pub-spon-map.css?v=commercial-v1">
+</head>
+<body>
+<div class="phone"><header class="head"><button type="button" aria-label="Menu" id="menu" aria-haspopup="dialog">☰</button><img class="official-logo" src="data/buuurt-sponsor-logo.jpg" alt="BUUURT — logo officiel" style="width:145px;height:67px;object-fit:contain;max-width:calc(100% - 110px)"><div style="display:flex;align-items:center;gap:5px"><select id="lang" aria-label="Langue / Taal / Language" style="width:65px;border:0;background:white;font-weight:800"><option value="fr">🌐 FR</option><option value="nl">🌐 NL</option><option value="en">🌐 EN</option></select><button aria-label="Notifications" id="bell" style="position:relative;font-size:19px">♧<span class="count" style="position:absolute;right:-4px;top:-5px;background:#19161b;color:white;border-radius:12px;font-size:10px;padding:1px 4px">1</span></button></div></header>
+<dialog id="campaign-menu" class="buuurt-official-modal" aria-labelledby="menu-heading">
+ <h2 id="menu-heading">Menu BUUURT</h2>
+ <nav><p><a href="index.html" id="review-link" data-t="library">Maquettes BUUURT</a></p><p><a href="com-pub-002.html#fr-MER-PUB-002" id="choice-link" data-t="choice">Choix du mode de publication</a></p></nav>
+ <form method="dialog"><button id="close-menu" data-t="close">Fermer</button></form>
+</dialog>
+<main class="body">
+<h1 data-t="title"></h1>
+<fieldset class="package-options" aria-labelledby="package-title">
+<legend id="package-title" data-t="packages"></legend>
+<label class="package-option"><input type="radio" name="budget" value="15" checked> <span>500 <span data-t="impressions"></span></span><strong>15 €</strong></label>
+<label class="package-option"><input type="radio" name="budget" value="30"> <span>1 200 <span data-t="impressions"></span></span><strong>30 €</strong></label>
+<label class="package-option"><input type="radio" name="budget" value="50"> <span>2 500 <span data-t="impressions"></span></span><strong>50 €</strong></label>
+</fieldset>
+<label for="duration" data-t="duration"></label>
+<select id="duration">
+<option value="3">3</option><option value="7" selected>7</option><option value="14">14</option><option value="30">30</option>
+</select>
+<section aria-labelledby="selection-title">
+<h2 id="selection-title" data-t="selection"></h2>
+<p id="selection-summary" role="status"></p>
+</section>
+<nav class="step-actions">
+<a class="back" href="com-pub-spon-001.html" data-t="back"></a>
+<button class="cta" id="continue" type="button" data-t="next" disabled></button>
+</nav>
+<section id="campaign-review" hidden tabindex="-1">
+<h2 data-t="review"></h2>
+<p id="review-summary"></p>
+<p data-t="done"></p>
+</section>
+</main>
+</div>
+<script src="com-pub-spon-geography.js?v=commercial-v1"></script><script src="com-pub-spon-draft.js"></script>
+<script src="com-pub-spon-package.js?v=commercial-v1"></script>
+<script src="buuurt-shared-header.js"></script>
+</body>
+</html>

@@ -1,0 +1,157 @@
+:root { --pink: #FB0153; --ink: #17151a; --line: #e8e4e8; }
+* { box-sizing: border-box; }
+body { margin: 0; background: white; color: var(--ink); font-size: 15px; }
+.phone { max-width: 780px; margin: auto; }
+.head { min-height: 72px; padding: 8px 16px; border-bottom: 1px solid var(--line); }
+.head > div { display: flex; align-items: center; gap: 5px; }
+.official-logo { width: 130px; max-height: 58px; object-fit: contain; }
+.body { padding: 16px clamp(14px, 4vw, 28px) 20px; }
+h1 { margin: 0 0 6px; font-size: clamp(23px, 5.7vw, 31px); font-weight: 900; line-height: 1.15; }
+.intro { margin: 0 0 14px; color: #4e4850; }
+.map-wrap { position: relative; }
+.map { height: clamp(290px, calc(100dvh - 375px), 580px); border-radius: 15px; background: #f6f5f6; }
+.map-tools { position: absolute; z-index: 500; top: 9px; right: 9px; display: grid; gap: 5px; }
+.map-tools button { width: 44px; height: 44px; border: 1px solid var(--line); border-radius: 9px; background: #fff; color: var(--ink); box-shadow: 0 1px 5px #0002; cursor: pointer; font-size: 23px; }
+#recenter, #fullscreen { font-size: 0; }
+#recenter::after, #fullscreen::after { font-size: 22px; line-height: 1; }
+#recenter::after { content: "◎"; }
+#fullscreen::after { content: "⛶"; }
+.map-wrap.is-expanded { position: fixed; inset: 0; z-index: 900; background: white; }
+.map-wrap.is-expanded .map { height: 100%; border-radius: 0; }
+body.map-expanded { overflow: hidden; }
+.campaign-legend { display: grid; grid-template-columns: 1fr 1fr; gap: 5px 12px; margin: 10px 0; padding: 0; list-style: none; font-size: 12px; }
+.campaign-legend li::before { display: inline-block; content: ""; width: 12px; height: 12px; border-radius: 3px; background: var(--band); margin-inline-end: 5px; vertical-align: -1px; border: 1px solid #0002; }
+[data-band="home"] { --band: #8ce26d; }
+[data-band="direct"] { --band: #ffdd4d; }
+[data-band="second"] { --band: #ff719f; }
+[data-band="other"] { --band: #c5c8ce; }
+.district-marker > button, .district-marker > span {
+  position: absolute;
+  inset: 0 auto auto 0;
+  transform: translate(-50%, -50%);
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 2px;
+  width: max-content;
+  max-width: 132px;
+  padding: 1px;
+  border: 0;
+  background: transparent;
+  color: #121212;
+  font-size: 11px;
+  font-weight: 800;
+  text-align: center;
+  white-space: normal;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
+  line-height: 1.1;
+}
+.district-marker > button { cursor: pointer; }
+.shop-pin svg { display: block; width: 100%; height: 100%; }
+.district-marker[hidden], #extension-form[hidden] { display: none; }
+#district-list { max-height: 260px; overflow: auto; }
+#district-list button { display: block; width: 100%; text-align: left; min-height: 44px; background: white; border: 0; border-bottom: 1px solid var(--line); cursor: pointer; }
+#district-list button[aria-checked="true"]::after { content: " ✓"; }
+#district-list > span { display: block; padding: 8px 0; }
+summary { font-size: 13px; cursor: pointer; }
+.scope { font-size: 13px; }
+#map-status:empty, #message:empty { display: none; }
+.step-actions { display: flex; gap: 12px; margin-top: 14px; }
+.back, .cta, .extension, .dialog-back, #gray-selection {
+  min-height: 46px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 8px 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: white;
+  color: var(--ink);
+  font: inherit;
+  font-weight: 800;
+  text-decoration: none;
+  cursor: pointer;
+}
+.back svg { width: 20px; height: 20px; }
+.step-actions .cta { flex: 1; }
+.cta { background: var(--pink); color: white; border-color: var(--pink); }
+.cta:disabled { opacity: .5; cursor: default; }
+.extension { color: #a90039; border-color: var(--pink); }
+#extension-dialog { padding: 20px; border: 0; border-radius: 18px; width: min(450px, calc(100% - 24px)); max-height: 90dvh; }
+#extension-dialog::backdrop { background: #0007; }
+#extension-dialog h2 { margin-top: 0; font-size: 21px; }
+#extension-dialog p { white-space: pre-line; }
+#extension-dialog textarea { width: 100%; min-height: 70px; }
+.dialog-back, #gray-selection { margin-top: 8px; }
+#gray-selection { margin-bottom: 8px; }
+#gray-selection::before { content: "□"; }
+#gray-selection[aria-checked="true"]::before { content: "✓"; }
+.package-options { display: grid; gap: 8px; padding: 0; margin: 12px 0; border: 0; }
+.package-option { display: flex; align-items: center; gap: 10px; min-height: 46px; padding: 10px; border: 1px solid var(--line); border-radius: 10px; cursor: pointer; }
+.package-option strong { margin-left: auto; }
+.package-option:has(:checked) { border-color: var(--pink); background: #fff3f7; }
+.package-option input { accent-color: var(--pink); }
+
+.campaign-name { margin: 0 0 9px; font-size: 18px; font-weight: 900; }
+.campaign-steps { position: relative; display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; margin: 0 0 15px; padding: 0; list-style: none; text-align: center; font-size: 11px; }
+.campaign-steps::before { content: ""; position: absolute; top: 13px; inset-inline: 12.5%; height: 1px; background: #a3a0a5; }
+.campaign-steps li { position: relative; display: grid; justify-items: center; gap: 3px; min-width: 0; }
+.campaign-steps li > span { display: grid; place-items: center; width: 27px; height: 27px; border: 1px solid #a3a0a5; border-radius: 50%; color: var(--ink); background: white; font-size: 14px; }
+.campaign-steps [aria-current] { color: #bc003e; }
+.campaign-steps [aria-current] > span { background: var(--pink); border-color: var(--pink); color: white; }
+.body:has(.campaign-steps) .map { height: clamp(270px, calc(100dvh - 445px), 580px); }
+.map-tools #recenter { grid-row: 1; }
+.step-actions > .back, .step-actions > .cta { flex: 1; }
+.step-actions > .back { color: #bc003e; border-color: var(--pink); }
+#district-list .district-category { display: block; color: #534f55; font-size: 11px; }
+#district-list [data-selected="true"]::after { content: " ✓"; color: #a80039; }
+.district-marker > [data-selected]::after { content: ""; display: grid; place-items: center; width: 14px; height: 14px; border: 1.5px solid #212121; border-radius: 3px; background: white; }
+.district-marker > [data-selected="true"]::after { content: "✓"; background: var(--pink); border-color: #a80039; color: white; }
+
+
+.district-marker > button.district-label-inline {
+  grid-template-columns: auto auto;
+  align-items: center;
+  column-gap: 4px;
+}
+.district-label-inline > span { min-width: 0; }
+.district-label-inline::after { grid-column: 1; grid-row: 1; }
+.district-label-inline > span { grid-column: 2; grid-row: 1; }
+
+#reference-toggle {
+  min-height: 44px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: white;
+  color: #a80039;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+}
+#reference-status:empty { display: none; }
+#reference-shop { margin: 8px 0; font-size: 12px; }
+
+.reference-controls { margin-top: 14px; }
+
+@media (max-width: 499px) {
+  .body:has(.campaign-steps) .historic-map:not(.is-expanded) .map {
+    height: clamp(355px, 43dvh, 440px);
+  }
+}
+
+/* Labels remain legible on both the coloured map and the street reference. */
+.district-marker > button, .district-marker > span {
+  text-shadow: 0 0 2px #fff, 0 0 2px #fff;
+}
+#district-list button:focus-visible, .district-marker button:focus-visible {
+  outline: 2px solid #19171c;
+  outline-offset: 2px;
+}
+@media (min-width: 600px) {
+  .district-marker > button, .district-marker > span { font-size: 12px; }
+}
+.map .leaflet-control-attribution { font-size: 9px; }

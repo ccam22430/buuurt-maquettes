@@ -1,0 +1,92 @@
+{
+  "gapsSquareMetres": {
+    "land": 351240.18,
+    "water": 382083.75,
+    "unclassified": 0.0
+  },
+  "candidates": {
+    "Amstelveen": {
+      "originalOverlapSquareMetres": {
+        "land": 27779.53,
+        "water": 11835.42,
+        "unclassified": 0.0
+      },
+      "contacts": [
+        {
+          "borough": "Oost-Watergraafsmeer",
+          "exactMetres": {
+            "land": 0.0,
+            "water": 0.0,
+            "unclassified": 0.0
+          },
+          "provisionalMetres": {
+            "land": 0.0,
+            "water": 441.41,
+            "unclassified": 0.0
+          }
+        },
+        {
+          "borough": "Zuideramstel",
+          "exactMetres": {
+            "land": 0.0,
+            "water": 0.0,
+            "unclassified": 0.0
+          },
+          "provisionalMetres": {
+            "land": 2265.24,
+            "water": 1503.33,
+            "unclassified": 0.0
+          }
+        }
+      ]
+    },
+    "Diemen": {
+      "originalOverlapSquareMetres": {
+        "land": 22101.66,
+        "water": 29408.04,
+        "unclassified": 0.0
+      },
+      "contacts": [
+        {
+          "borough": "Oost-Watergraafsmeer",
+          "exactMetres": {
+            "land": 0.0,
+            "water": 0.0,
+            "unclassified": 0.0
+          },
+          "provisionalMetres": {
+            "land": 1246.17,
+            "water": 15.58,
+            "unclassified": 0.0
+          }
+        },
+        {
+          "borough": "Zeeburg",
+          "exactMetres": {
+            "land": 0.0,
+            "water": 0.0,
+            "unclassified": 0.0
+          },
+          "provisionalMetres": {
+            "land": 25.25,
+            "water": 2301.34,
+            "unclassified": 0.0
+          }
+        },
+        {
+          "borough": "Zuidoost",
+          "exactMetres": {
+            "land": 0.0,
+            "water": 0.0,
+            "unclassified": 0.0
+          },
+          "provisionalMetres": {
+            "land": 2720.51,
+            "water": 792.87,
+            "unclassified": 0.0
+          }
+        }
+      ]
+    }
+  }
+}
