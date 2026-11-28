@@ -65,4 +65,3 @@ const copy = {
     library: "Maquettes BUUURT", choice: "Choix du mode de publication", close: "Fermer", menu: "Menu BUUURT"
   }
 };
-
