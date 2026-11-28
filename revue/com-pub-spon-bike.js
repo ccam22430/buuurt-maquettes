@@ -4,11 +4,14 @@ const bikeCampaignId = bikeUrl.searchParams.get("campaign");
 const bikeLocked = readBikeCampaign(localStorage, bikeCampaignId);
 const bikeDialog = bikeElement("extension-dialog");
 const bikeRequests = new Map();
+let baseBands;
+let extensionExpiryTimer;
+const currentAd = extensionAd(bikeUrl);
 let bikeData, bikeFixture, bikeSettings, bikeNetwork, bands, selected, view, active;
 const checkboxControls = new Map();
 
 function bikeScope() {
-  return sponsorDraftScope(bikeProfile) + ":" + bikeFixture;
+  return extensionDraftScope(bikeProfile, bikeFixture, currentAd);
 }
 
 function persistBikeDraft() {
@@ -18,6 +21,7 @@ function persistBikeDraft() {
 
 function chooseBikeNeighborhood(feature) {
   if (bikeLocked) return;
+  refreshExtensionRights();
   const id = feature.id;
   if (bands[id] === "direct") {
     if (selected.has(id)) selected.delete(id);
@@ -38,6 +42,7 @@ function chooseBikeNeighborhood(feature) {
     extension.searchParams.set("zone", id);
     extension.searchParams.set("fixture", bikeFixture);
     extension.searchParams.set("lang", bikeLanguage.value);
+    if (currentAd) extension.searchParams.set("ad", currentAd);
     extension.searchParams.set("v", "extension-page-20261128");
     location.assign(extension);
     return;
@@ -134,7 +139,33 @@ function updateTerritoryGate() {
   bikeElement("continue").disabled = !count || Boolean(bikeLocked);
 }
 
+function refreshExtensionRights() {
+  if (bikeLocked || !baseBands || !view) return;
+  clearTimeout(extensionExpiryTimer);
+  const actor = extensionActor(bikeFixture);
+  const now = Date.now();
+  const expiry = Math.min(...extensionRecords(localStorage)
+    .filter(record => extensionOwns(actor, record) && record.status === "accepted")
+    .map(record => Date.parse(record.authorization?.until))
+    .filter(time => time > now));
+  if (Number.isFinite(expiry)) {
+    extensionExpiryTimer = setTimeout(refreshExtensionRights, Math.min(expiry - now, 2147483647));
+  }
+  const next = extensionApply(baseBands, localStorage, bikeFixture, currentAd);
+  if (!Object.keys(next).some(id => next[id] !== bands[id])) return;
+  bands = next;
+  selected = new Set(eligibleBikeSelection([...selected], bands));
+  refreshBike();
+  persistBikeDraft();
+}
+window.addEventListener("storage", event => {
+  if (event.key === extensionKey) refreshExtensionRights();
+});
+window.addEventListener("focus", refreshExtensionRights);
+
 function refreshBike() {
+  bikeElement("extension-requests").href = extensionLink(bikeFixture, bikeLanguage.value, {ad: currentAd});
+  bikeElement("reason").placeholder = bikeWords().example;
   const note = bikeElement("fixture-note");
   note.hidden = bikeFixture === "dolores";
   note.textContent = bikeFixtureNames()[bikeFixture];
@@ -156,16 +187,20 @@ async function startBike() {
   bikeFixture = Object.hasOwn(bikeData.times.profiles, request) ? request : "dolores";
   bikeSettings = bikeLocked?.thresholds || resolveBikeThresholds(readBikeConfig(localStorage), "amsterdam", bikeFixture);
   bikeNetwork = bikeLocked?.network || bikeData.times.version;
-  bands = bikeLocked?.bands || bikeBands(bikeData, bikeFixture, bikeSettings);
+  baseBands = bikeBands(bikeData, bikeFixture, bikeSettings);
+  bands = bikeLocked?.bands || extensionApply(baseBands, localStorage, bikeFixture, currentAd);
+  installExtensionBell(extensionActor(bikeFixture), () => bikeLanguage.value, currentAd);
   const draft = readSponsorDraft(bikeScope());
   const previous = bikeLocked?.selected || draft.selected;
   selected = new Set(Array.isArray(previous) ? previous.filter(id => bands[id] === "direct") : []);
   for (const [id, reason] of Array.isArray(draft.requests) ? draft.requests : []) bikeRequests.set(id, reason);
   view = createBikeMap(bikeData, bikeFixture, bikeLocked ? null : chooseBikeNeighborhood);
   refreshBike();
+  refreshExtensionRights();
   bikeElement("map-status").textContent = "";
-  if (bikeUrl.searchParams.get("extension") === "sent") {
-    bikeElement("message").textContent = bikeWords().saved;
+  const extensionFeedback = bikeUrl.searchParams.get("extension");
+  if (["sent", "duplicate"].includes(extensionFeedback)) {
+    bikeElement("message").textContent = bikeWords()[extensionFeedback];
     bikeUrl.searchParams.delete("extension");
     history.replaceState(null, "", bikeUrl);
   }
@@ -177,16 +212,27 @@ bikeElement("extension-form").onsubmit = event => {
   event.preventDefault();
   const reason = bikeElement("reason").value.trim();
   if (!reason || bikeLocked) return;
-  bikeRequests.set(active, reason);
+  refreshExtensionRights();
+  let submitted;
+  try {
+    submitted = extensionSubmit(localStorage, extensionActor(bikeFixture), {zone: active,
+      name: bikeElement("district-name").textContent, note: reason, ad: currentAd, band: bands[active]});
+  } catch {
+    bikeElement("message").textContent = bikeWords().invalid;
+    return;
+  }
+  if (!submitted.duplicate) bikeRequests.set(active, reason);
   const saved = persistBikeDraft();
-  bikeElement("message").textContent = saved ? bikeWords().saved : bikeWords().storageError;
+  bikeElement("message").textContent = saved ? bikeWords()[submitted.duplicate ? "duplicate" : "sent"] : bikeWords().storageError;
   if (saved) bikeDialog.close();
 };
 bikeElement("continue").onclick = () => {
+  refreshExtensionRights();
   if (bikeLocked || !selected || !extraBikeTerritories().length || !persistBikeDraft()) return;
   const next = new URL("com-pub-spon-package.html", bikeUrl);
   next.searchParams.set("demo", bikeProfile);
   next.searchParams.set("fixture", bikeFixture);
+  if (currentAd) next.searchParams.set("ad", currentAd);
   next.searchParams.set("lang", bikeLanguage.value);
   const id = crypto.randomUUID();
   const draft = readSponsorDraft(bikeScope());
@@ -202,6 +248,7 @@ function translateExtensionClose() {
 translateExtensionClose();
 window.addEventListener("pageshow", event => {
   if (!event.persisted || !bikeFixture) return;
+  refreshExtensionRights();
   const {requests, selected: stored} = readSponsorDraft(bikeScope());
   if (!bikeLocked) {
     selected = new Set(eligibleBikeSelection(stored, bands));

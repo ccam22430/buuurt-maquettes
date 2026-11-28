@@ -53,9 +53,20 @@ function init(){
   const bell=document.createElement('button');bell.type='button';bell.className='buuurt-official-bell';bell.innerHTML=bellSvg;
   const badge=document.createElement('span');badge.className='buuurt-official-count';badge.textContent=String(count);badge.hidden=count===0;bell.append(badge);
   const currentLang=()=>{const v=select.value?.toLowerCase()||'nl';return words[v]?v:'nl'};
-  const label=()=>bell.setAttribute('aria-label',words[currentLang()][0]+(count?' ('+count+')':''));
+  const label=()=>{
+   if(window.buuurtReviewNotifications)count=window.buuurtReviewNotifications().filter(item=>item.unread).length;
+   badge.textContent=String(count);badge.hidden=count===0;
+   bell.setAttribute('aria-label',words[currentLang()][0]+(count?' ('+count+')':''));
+  };
+  window.addEventListener('buuurt-notifications-change',label);
+  window.addEventListener('storage',label);
   label();select.addEventListener('change',label);
-  bell.addEventListener('click',()=>{const w=words[currentLang()];const modal=document.createElement('dialog');modal.className='buuurt-official-modal';const title=document.createElement('h2');title.textContent=w[0];const p=document.createElement('p');p.textContent=count?w[2]+' '+count:w[1];const close=document.createElement('button');close.type='button';close.textContent=w[3];close.onclick=()=>modal.close();modal.append(title,p,close);modal.addEventListener('close',()=>{modal.remove();bell.focus()},{once:true});document.body.append(modal);modal.showModal()});
+  bell.addEventListener('click',()=>{const w=words[currentLang()];const modal=document.createElement('dialog');modal.className='buuurt-official-modal';const title=document.createElement('h2');title.textContent=w[0];const p=document.createElement('p');p.textContent=count?w[2]+' '+count:w[1];const close=document.createElement('button');close.type='button';close.textContent=w[3];close.onclick=()=>modal.close();modal.append(title);
+  const items=window.buuurtReviewNotifications?.();
+  if(items?.length){const ul=document.createElement('ul');for(const item of items){
+   const li=document.createElement('li');const link=document.createElement('a');link.href=item.href;link.textContent=item.label;
+   link.onclick=()=>{item.markRead();label()};li.append(link);ul.append(li);
+  }modal.append(ul)}else modal.append(p);modal.append(close);modal.addEventListener('close',()=>{modal.remove();bell.focus()},{once:true});document.body.append(modal);modal.showModal()});
   if(existing)existing.replaceWith(bell);else right.append(bell);
   if(bell.parentElement!==right)right.append(bell);
   if(!menu.matches('button')&&!menu.onclick){menu.addEventListener('click',()=>{const modal=document.createElement('dialog');modal.className='buuurt-official-modal';modal.innerHTML='<h2>Menu BUUURT</h2><p>Navigation de démonstration</p><button type="button">Fermer</button>';modal.querySelector('button').onclick=()=>modal.close();modal.addEventListener('close',()=>modal.remove(),{once:true});document.body.append(modal);modal.showModal()})}

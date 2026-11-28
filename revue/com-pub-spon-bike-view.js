@@ -76,7 +76,7 @@ const bikeElement = id => document.getElementById(id);
 const bikeUrl = new URL(location.href);
 const bikeLanguage = bikeElement("lang");
 bikeLanguage.value = Object.hasOwn(bikeText, bikeUrl.searchParams.get("lang")) ? bikeUrl.searchParams.get("lang") : "nl";
-const bikeWords = () => ({...copy[bikeLanguage.value], ...bikeText[bikeLanguage.value]});
+const bikeWords = () => ({...copy[bikeLanguage.value], ...bikeText[bikeLanguage.value], ...(typeof extensionWords === "function" ? extensionWords(bikeLanguage.value) : {})});
 const bikeFixtureNames = () => ({dolores: "Dolores Del Dia Vintage & Modern", pilot: "Jan Evertsenstraat 55-H",
   border: bikeWords().border, canal: bikeWords().canal, junction: bikeWords().junction});
 
@@ -273,7 +273,13 @@ function createBikeMap(data, fixture, onChoose) {
   map.on("moveend zoomend resize", placeLabels);
   new ResizeObserver(() => map.invalidateSize()).observe(map.getContainer());
   document.fonts.ready.then(placeLabels);
-  return {draw, setSelection, setFixture(name) {
+  return {draw, setSelection, highlight(id) {
+    const entry = labels.get(id);
+    if (!entry) return;
+    entry.polygon.setStyle({color: "#362446", weight: 5, dashArray: "8 4"});
+    entry.polygon.bringToFront();
+    map.fitBounds(entry.polygon.getBounds().extend(center), {padding: [28, 28], maxZoom: 14});
+  }, setFixture(name) {
     center = data.times.profiles[name].center;
     pin.setLatLng(center);
     recenter();

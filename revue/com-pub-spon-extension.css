@@ -83,3 +83,12 @@
 .extension-request .buuurt-official-head .buuurt-official-language #lang {
   font-size: 16px !important;
 }
+.extension-explain { white-space: pre-line; }
+.extension-page select, .extension-page input { font-size: 16px; }
+.requests-page { overflow-wrap: anywhere; }
+.requests-page ul, .requests-page ol { padding-inline-start: 22px; }
+.requests-page li { margin-block: 8px; }
+.requests-page #request-action { display: grid; gap: 8px; margin-block: 20px; }
+.requests-page :is(textarea, select, input) { max-inline-size: 100%; min-inline-size: 0; font-size: 16px; }
+.requests-page textarea { width: 100%; }
+.requests-page .back { margin-block-end: 12px; }

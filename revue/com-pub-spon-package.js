@@ -27,21 +27,25 @@ const isBike = profile === "amsterdam-bike";
 const bikeId = isBike && (url.searchParams.get("campaign") || url.searchParams.get("draft"));
 const bikeFixture = isBike && url.searchParams.get("fixture");
 let engagedBike = isBike && readBikeCampaign(localStorage, bikeId);
-const scope = isBike ? sponsorDraftScope(profile) + ":" + bikeFixture + ":" + bikeId : sponsorDraftScope(profile) + (profile === "amsterdam-levels" && url.searchParams.get("fixture") === "border" ? ":border" : "");
+const scope = isBike ? extensionDraftScope(profile, bikeFixture, extensionAd(url)) + ":" + bikeId : sponsorDraftScope(profile) + (profile === "amsterdam-levels" && url.searchParams.get("fixture") === "border" ? ":border" : "");
 const draft = readSponsorDraft(scope);
 let selectedNames;
 let selectionUnavailable = false;
 let bikeBandsForBudget;
 let displayedBikeSelection;
 const budgetPage = document.querySelector("main");
-if (isBike) budgetPage.hidden = true;
+if (isBike) {
+  budgetPage.hidden = true;
+  installExtensionBell(extensionActor(bikeFixture), () => language.value, extensionAd(url));
+}
 
 function bikeBudgetSelection() {
   if (!bikeBandsForBudget) return [];
   if (engagedBike) return eligibleBikeSelection(engagedBike.selected, bikeBandsForBudget);
-  const current = readSponsorDraft(sponsorDraftScope(profile) + ":" + bikeFixture);
-  const latest = new Set(eligibleBikeSelection(current.selected, bikeBandsForBudget));
-  return eligibleBikeSelection(readSponsorDraft(scope).selected, bikeBandsForBudget)
+  const activeBands = extensionApply(bikeBandsForBudget, localStorage, bikeFixture, extensionAd(url));
+  const current = readSponsorDraft(extensionDraftScope(profile, bikeFixture, extensionAd(url)));
+  const latest = new Set(eligibleBikeSelection(current.selected, activeBands));
+  return eligibleBikeSelection(readSponsorDraft(scope).selected, activeBands)
     .filter(id => latest.has(id));
 }
 
@@ -49,6 +53,8 @@ function returnToBikeTerritory() {
   const map = new URL("com-pub-spon-003.html", url);
   map.searchParams.set("lang", language.value);
   if (bikeFixture) map.searchParams.set("fixture", bikeFixture);
+  const ad = extensionAd(url);
+  if (ad) map.searchParams.set("ad", ad);
   map.searchParams.set("v", "territory-gate-20261128");
   location.replace(map);
 }
@@ -104,7 +110,7 @@ $("continue").onclick = () => {
   savePackage();
   if (isBike && !engagedBike) {
     try {
-      engagedBike = engageBikeCampaign(localStorage, bikeId, {...draft, selected: verified, bands: bikeBandsForBudget});
+      engagedBike = engageBikeCampaign(localStorage, bikeId, {...draft, selected: verified, bands: extensionApply(bikeBandsForBudget, localStorage, bikeFixture, extensionAd(url))});
       url.searchParams.delete("draft");
       url.searchParams.set("campaign", bikeId);
       history.replaceState(null, "", url);

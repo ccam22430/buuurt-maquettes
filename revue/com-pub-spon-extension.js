@@ -1,7 +1,9 @@
 "use strict";
 
 const fixture = bikeUrl.searchParams.get("fixture") || "dolores";
-const scope = sponsorDraftScope(bikeProfile) + ":" + fixture;
+const ad = extensionAd(bikeUrl);
+const scope = extensionDraftScope(bikeProfile, fixture, ad);
+const actor = extensionActor(fixture);
 const zone = bikeUrl.searchParams.get("zone");
 const commentScope = scope + ":extension:" + zone;
 const reason = bikeElement("reason");
@@ -14,10 +16,14 @@ function updateReturn() {
   destination.searchParams.set("lang", bikeLanguage.value);
   destination.searchParams.set("fixture", fixture);
   destination.searchParams.set("v", "extension-page-20261128");
+  if (ad) destination.searchParams.set("ad", ad);
   back.href = destination;
+  bikeElement("extension-requests").href = extensionLink(fixture, bikeLanguage.value, {ad});
+  reason.placeholder = bikeWords().example;
 }
 updateReturn();
 translateBike();
+installExtensionBell(actor, () => bikeLanguage.value, ad);
 bikeLanguageChange(updateReturn);
 bikeElement("menu").onclick = () => bikeElement("campaign-menu").showModal();
 
@@ -29,20 +35,28 @@ form.onsubmit = event => {
   const draft = readSponsorDraft(scope);
   if (draft.bands?.[zone] !== "other") return;
   const requests = new Map(Array.isArray(draft.requests) ? draft.requests : []);
-  requests.set(zone, text);
+  let submitted;
+  try {
+    submitted = extensionSubmit(localStorage, actor, {zone, name: bikeElement("district-name").textContent,
+      note: text, ad, band: extensionApply(draft.bands, localStorage, fixture, ad)[zone]});
+  } catch {
+    status.textContent = bikeWords().invalid;
+    return;
+  }
+  if (!submitted.duplicate) requests.set(zone, text);
   if (!writeSponsorDraft({requests: [...requests]}, scope)) {
     status.textContent = bikeWords().storageError;
     return;
   }
   writeSponsorDraft({reason: null}, commentScope);
   const destination = new URL(back.href);
-  destination.searchParams.set("extension", "sent");
+  destination.searchParams.set("extension", submitted.duplicate ? "duplicate" : "sent");
   location.replace(destination);
 };
 
 async function showExtensionForm() {
   const draft = readSponsorDraft(scope);
-  if (!zone || draft.bands?.[zone] !== "other") throw new Error("zone");
+  if (!actor || !zone || draft.bands?.[zone] !== "other") throw new Error("zone");
   const response = await fetch("data/amsterdam-levels-wijken.geojson");
   if (!response.ok) throw new Error("geography");
   const {features} = await response.json();

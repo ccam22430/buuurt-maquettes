@@ -44,6 +44,8 @@ function fillFixtures() {
 
 async function openAdmin() {
   if (!sessionActor() || mapView) return;
+  installExtensionBell(extensionAdmin(sessionStorage), () => bikeLanguage.value);
+  bikeElement("extension-requests").href = extensionLink(null, bikeLanguage.value, {admin: true});
   bikeElement("demo-admin").hidden = true;
   adminWorkspace.hidden = false;
   bikeElement("save-geo").disabled = true;
