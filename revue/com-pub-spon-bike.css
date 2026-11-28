@@ -1,0 +1,22 @@
+.campaign-legend { grid-template-columns: repeat(auto-fit, minmax(145px, 1fr)); }
+.bike-note { color: #534c56; font-size: 13px; }
+.territory-outline { cursor: default; }
+.territory-outline.is-action { cursor: pointer; }
+.area-name { background: #fffef5; color: #33284a; border: 1px solid #514268; font-weight: 800; }
+.area-name::before { display: none; }
+#district-list .zone-row > .zone-swatch { flex: 0 0 9px; }
+#district-list .zone-row > .zone-check { flex: 0 0 16px; }
+#district-list summary { font-weight: 700; }
+.geo-settings { display: grid; gap: 12px; margin-block: 16px; }
+.geo-settings label { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; }
+.geo-settings input { grid-column: 1 / -1; width: 100%; accent-color: var(--buuurt-pink); }
+.geo-settings select { max-width: 100%; }
+.geo-settings output { font-weight: 800; color: var(--buuurt-pink-dark); }
+.admin-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.admin-actions button { margin: 0; }
+#geo-history { padding-inline-start: 22px; font-size: 13px; max-height: 320px; overflow: auto; overflow-wrap: anywhere; }
+#geo-history li { margin-bottom: 8px; }
+#map-status { white-space: pre-wrap; }
+[hidden] { display: none !important; }
+.geo-settings label:has(select) { grid-template-columns: minmax(0, 1fr); }
+.geo-settings select { width: 100%; min-height: 44px; }

@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="nl" data-buuurt-font="nunito"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BUUURT — ADM-GEO-003 — Paramètres géographiques</title><link rel="stylesheet" href="buuurt-theme.css"><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""><link rel="stylesheet" href="com-pub-spon-map.css?v=commercial-v1"><link rel="stylesheet" href="com-pub-spon-territory.css?v=typography-2"><link rel="stylesheet" href="com-pub-spon-levels.css?v=1"><link rel="stylesheet" href="com-pub-spon-bike.css?v=1"></head><body>
+<div class="phone"><header class="head"><button type="button" aria-label="Menu" id="menu" aria-haspopup="dialog">☰</button><img class="official-logo" src="data/buuurt-sponsor-logo.jpg" alt="BUUURT — logo officiel" style="width:145px;height:67px;object-fit:contain;max-width:calc(100% - 110px)"><div style="display:flex;align-items:center;gap:5px"><select id="lang" aria-label="Langue / Taal / Language" style="width:65px;border:0;background:white;font-weight:800"><option value="fr">🌐 FR</option><option value="nl">🌐 NL</option><option value="en">🌐 EN</option></select><button aria-label="Notifications" id="bell" style="position:relative;font-size:19px">♧<span class="count" style="position:absolute;right:-4px;top:-5px;background:#19161b;color:white;border-radius:12px;font-size:10px;padding:1px 4px">1</span></button></div></header>
+<dialog id="campaign-menu" class="buuurt-official-modal" aria-labelledby="menu-heading">
+ <h2 id="menu-heading">Menu BUUURT</h2>
+ <nav><p><a href="index.html" id="review-link" data-t="library">Maquettes BUUURT</a></p><p><a href="com-pub-002.html#fr-MER-PUB-002" id="choice-link" data-t="choice">Choix du mode de publication</a></p></nav>
+ <form method="dialog"><button id="close-menu" data-t="close">Fermer</button></form>
+</dialog>
+<main class="body">
+<h1 data-t="adminTitle"></h1>
+<p class="intro" data-t="adminDemo"></p>
+<button class="cta" id="demo-admin" type="button" data-t="enterAdmin"></button>
+<p id="map-status" role="status"></p>
+<section id="admin-workspace" hidden>
+<p id="admin-actor" data-t="actor"></p>
+<form class="geo-settings" id="geo-settings">
+<label><span data-t="home"></span> <output id="local-value" for="local"></output><input type="range" id="local" step="1"></label>
+<label><span data-t="direct"></span> <output id="standard-value" for="standard"></output><input type="range" id="standard" step="1"></label>
+<label><span data-t="fixtureLabel"></span><select id="fixture"></select></label>
+<div class="admin-actions">
+<button class="cta" id="save-geo" type="submit" data-t="saveGeo"></button>
+<button type="button" class="dialog-back" id="cancel-geo" data-t="cancel"></button>
+<button type="button" class="dialog-back" id="reset-geo" data-t="reset"></button>
+</div>
+</form>
+<p class="bike-note" data-t="estimate"></p>
+<div class="level-switch" role="group" aria-label="Niveau géographique">
+<button type="button" id="wijken" data-t="wijken" aria-pressed="true"></button>
+<button type="button" id="areas" data-t="areas" aria-pressed="false"></button>
+</div>
+<div class="levels-layout">
+<div>
+<div class="map-wrap" id="map-frame">
+<div id="campaign-map" class="map" role="region" aria-label="Carte / Kaart / Map"></div>
+<div class="map-tools">
+<button type="button" id="zoom-in" aria-label="Zoom in">+</button>
+<button type="button" id="zoom-out" aria-label="Zoom out">−</button>
+<button type="button" id="recenter" data-t="recenter"></button>
+<button type="button" id="fullscreen" data-t="fullscreen" aria-pressed="false"></button>
+</div></div>
+<ul class="campaign-legend">
+<li data-band="home" data-t="home"></li><li data-band="direct" data-t="direct"></li>
+<li data-band="other" data-t="other"></li>
+</ul>
+</div>
+<section id="zone-list" aria-labelledby="history-title">
+<h2 id="history-title" data-t="history"></h2>
+<ol id="geo-history"></ol>
+</section>
+</div>
+</section>
+</main></div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="com-pub-spon-geography.js?v=bike-1"></script><script src="com-pub-spon-draft.js"></script><script src="com-pub-spon-copy.js?v=typography"></script><script src="com-pub-spon-bike-model.js?v=1"></script><script src="com-pub-spon-bike-view.js?v=1"></script><script src="com-pub-spon-bike-admin.js?v=1"></script><script src="buuurt-shared-header.js"></script></body></html>

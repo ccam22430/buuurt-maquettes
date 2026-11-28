@@ -23,7 +23,11 @@ const options = [...document.querySelectorAll("[name=budget]")];
 const chosenBudget = () => options.find(option => option.checked).value;
 const targets = {15: 500, 30: 1200, 50: 2500};
 const profile = url.searchParams.get("demo") || defaultReviewProfile;
-const scope = sponsorDraftScope(profile) + (profile === "amsterdam-levels" && url.searchParams.get("fixture") === "border" ? ":border" : "");
+const isBike = profile === "amsterdam-bike";
+const bikeId = isBike && (url.searchParams.get("campaign") || url.searchParams.get("draft"));
+const bikeFixture = isBike && url.searchParams.get("fixture");
+let engagedBike = isBike && readBikeCampaign(localStorage, bikeId);
+const scope = isBike ? sponsorDraftScope(profile) + ":" + bikeFixture + ":" + bikeId : sponsorDraftScope(profile) + (profile === "amsterdam-levels" && url.searchParams.get("fixture") === "border" ? ":border" : "");
 const draft = readSponsorDraft(scope);
 let selectedNames;
 let selectionUnavailable = false;
@@ -49,6 +53,10 @@ function translatePackage() {
   const back = new URL(reviewProfiles[profile]?.mapPage || "com-pub-spon-001.html", url);
   back.search = url.search;
   back.searchParams.set("lang", lang);
+  if (isBike) {
+    back.searchParams.delete("draft");
+    if (engagedBike) back.searchParams.set("campaign", bikeId);
+  }
   document.querySelector(".back").href = back;
   $("choice-link").href = back;
   $("selection-summary").textContent = selectionUnavailable ? words.error :
@@ -68,19 +76,33 @@ language.addEventListener("change", () => {
 $("menu").onclick = () => $("campaign-menu").showModal();
 $("continue").onclick = () => {
   savePackage();
+  if (isBike && !engagedBike) {
+    try {
+      engagedBike = engageBikeCampaign(localStorage, bikeId, draft);
+      url.searchParams.delete("draft");
+      url.searchParams.set("campaign", bikeId);
+      history.replaceState(null, "", url);
+      translatePackage();
+    } catch {
+      selectionUnavailable = true;
+      translatePackage();
+      return;
+    }
+  }
   $("campaign-review").hidden = false;
   $("campaign-review").focus();
 };
 translatePackage();
 
 async function showSelectedDistricts() {
-  if (!Array.isArray(draft.selected)) throw new Error("No saved territory selection");
+  const identifiers = engagedBike?.selected || draft.selected;
+  if (!Array.isArray(identifiers)) throw new Error("No saved territory selection");
   if (!Object.hasOwn(reviewProfiles, profile)) throw new Error("Unknown review profile");
   const response = await fetch("data/" + sponsorDataset(reviewProfiles[profile]) + ".geojson");
   if (!response.ok) throw new Error("Territory snapshot unavailable");
   const {features} = await response.json();
   const names = new Map(features.map(feature => [feature.id, feature.properties.buurtnaam]));
-  selectedNames = draft.selected.map(code => names.get(code)).filter(Boolean);
+  selectedNames = identifiers.map(code => names.get(code)).filter(Boolean);
   $("continue").disabled = false;
   translatePackage();
 }

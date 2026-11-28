@@ -10,6 +10,7 @@ const reviewProfiles = {
   amsterdam: {region: "amsterdam", dataset: "amsterdam-commercial-v1", water: true, merchantId: "geo-06-amsterdam", bagId: "0363200000145991",
     address: "Jan Evertsenstraat 55-H, Amsterdam", center: [52.3707909, 4.8556261]},
   "amsterdam-levels": {region: "amsterdam", dataset: "amsterdam-levels-wijken", mapPage: "com-pub-spon-002.html"},
+  "amsterdam-bike": {region: "amsterdam", dataset: "amsterdam-levels-wijken", mapPage: "com-pub-spon-003.html"},
   graft: {region: "graft", merchantId: "geo-06-graft", bagId: "0365200000002169",
     address: "Raadhuisstraat 24, Graft", center: [52.56244524, 4.83183462]}
 };
