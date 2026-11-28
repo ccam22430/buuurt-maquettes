@@ -1,0 +1,64 @@
+#extension-dialog {
+  inline-size: min(450px, calc(100% - 32px));
+  max-inline-size: 100%;
+  max-block-size: none;
+  padding: 0;
+  overflow: hidden;
+}
+#extension-dialog #extension-form {
+  display: flex;
+  flex-direction: column;
+  max-block-size: calc(var(--extension-viewport-height, 100dvh) - 24px);
+}
+#extension-dialog .extension-header,
+#extension-dialog .extension-actions {
+  display: flex;
+  flex-wrap: wrap;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 12px 16px;
+}
+#extension-dialog .extension-header h2 { flex: 1; min-inline-size: 0; margin: 0; }
+#extension-dialog .extension-close {
+  inline-size: 44px;
+  block-size: 44px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: white;
+  color: var(--ink);
+  font-size: 24px;
+  cursor: pointer;
+}
+#extension-dialog .extension-content {
+  min-block-size: 0;
+  padding: 0 16px;
+  overflow: auto;
+  overscroll-behavior: contain;
+  overflow-wrap: anywhere;
+}
+#extension-dialog .extension-content p { margin-block: 0 12px; }
+#extension-dialog #reason {
+  display: block;
+  max-inline-size: 100%;
+  margin-block: 6px 12px;
+  font-size: 16px;
+  resize: vertical;
+}
+#extension-dialog .extension-actions { border-top: 1px solid var(--line); }
+#extension-dialog .extension-actions button { margin: 0; }
+@media (max-width: 767px), (pointer: coarse) and (max-width: 950px) {
+  #extension-dialog {
+    position: fixed;
+    inset: auto 0 var(--extension-viewport-bottom, 0px);
+    margin: 0;
+    inline-size: 100%;
+    border-radius: 18px 18px 0 0;
+    padding-inline: env(safe-area-inset-left, 0px) env(safe-area-inset-right, 0px);
+    padding-block-end: env(safe-area-inset-bottom, 0px);
+  }
+  #extension-dialog #extension-form {
+    max-block-size: calc(var(--extension-viewport-height, 100dvh) - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 8px);
+  }
+}

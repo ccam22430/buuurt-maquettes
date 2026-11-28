@@ -31,9 +31,8 @@ function chooseBikeNeighborhood(feature) {
   active = id;
   bikeElement("district-name").textContent = feature.properties.buurtnaam;
   bikeElement("reason").value = bikeRequests.get(id) || "";
-  bikeElement("extension-form").hidden = true;
-  bikeElement("extend").hidden = false;
   bikeDialog.showModal();
+  syncExtensionViewport();
 }
 
 function syncBikeControl(button, icon, id) {
@@ -144,12 +143,19 @@ async function startBike() {
 }
 
 bikeElement("menu").onclick = () => bikeElement("campaign-menu").showModal();
-bikeElement("extend").onclick = () => {
-  bikeElement("extension-form").hidden = false;
-  bikeElement("extend").hidden = true;
-  bikeElement("reason").focus();
-};
+const extensionViewport = window.visualViewport;
+function syncExtensionViewport() {
+  if (!bikeDialog.open || !extensionViewport) return;
+  const bottom = document.documentElement.clientHeight - extensionViewport.height - extensionViewport.offsetTop;
+  bikeDialog.style.setProperty("--extension-viewport-height", extensionViewport.height + "px");
+  bikeDialog.style.setProperty("--extension-viewport-bottom", Math.max(0, bottom) + "px");
+}
+extensionViewport?.addEventListener("resize", syncExtensionViewport);
+extensionViewport?.addEventListener("scroll", syncExtensionViewport);
+window.addEventListener("resize", syncExtensionViewport);
+
 bikeElement("extension-form").onsubmit = event => {
+  if (event.submitter?.formMethod === "dialog") return;
   event.preventDefault();
   const reason = bikeElement("reason").value.trim();
   if (!reason || bikeLocked) return;
@@ -172,5 +178,12 @@ bikeElement("continue").onclick = () => {
 };
 translateBike();
 bikeElement("map-status").textContent = bikeWords().loading;
-bikeLanguageChange(() => { if (view) refreshBike(); });
+function translateExtensionClose() {
+  bikeElement("extension-close").ariaLabel = bikeWords().close;
+}
+translateExtensionClose();
+bikeLanguageChange(() => {
+  translateExtensionClose();
+  if (view) refreshBike();
+});
 startBike().catch(() => bikeFailure());

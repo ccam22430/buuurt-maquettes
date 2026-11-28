@@ -2,6 +2,7 @@
 
 const bikeText = {
   fr: {
+    extensionTitle: "Demande d’extension", extensionSend: "Envoyer ma demande", extensionCancel: "Annuler",
     home: "Zone locale gratuite", direct: "Extension sponsorisée standard", other: "Extension sur demande",
     wijken: "Sous-quartiers", areas: "Voir les quartiers", list: "Territoires",
     estimate: "Temps estimés sur le réseau cyclable. La limite s’applique à au moins la moitié des voies parcourables du sous-quartier.",
@@ -17,6 +18,7 @@ const bikeText = {
     canal: "Point fictif · canal Brouwersgracht", junction: "Point fictif · plusieurs limites administratives"
   },
   nl: {
+    extensionTitle: "Uitbreidingsaanvraag", extensionSend: "Mijn aanvraag versturen", extensionCancel: "Annuleren",
     home: "Gratis lokaal gebied", direct: "Standaard gesponsord uitbreidingsgebied", other: "Uitbreiding op aanvraag",
     wijken: "Wijken", areas: "Gebieden bekijken", list: "Gebieden",
     estimate: "Geschatte tijden op het fietsnetwerk. De grens geldt voor minstens de helft van de berijdbare wegen in de wijk.",
@@ -32,6 +34,7 @@ const bikeText = {
     canal: "Fictief punt · Brouwersgracht", junction: "Fictief punt · meerdere gebiedsgrenzen"
   },
   en: {
+    extensionTitle: "Extension request", extensionSend: "Send my request", extensionCancel: "Cancel",
     home: "Free local area", direct: "Standard sponsored extension", other: "Extension by request",
     wijken: "Neighborhoods", areas: "Show areas", list: "Territories",
     estimate: "Estimated bicycle network times. The time limit applies to at least half of the neighborhood’s rideable roads.",
