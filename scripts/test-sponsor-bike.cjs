@@ -68,3 +68,14 @@ test("all official wijken have data and route examples cross area boundaries", (
   assert.equal(band(canal, feature("Haarlemmerbuurt")), "home");
   assert(neighborhoods.some(n => n.properties.parent === feature("Nieuwmarkt/Lastage").properties.parent && band(junction, n) === "other"));
 });
+
+test("a bike campaign cannot be confirmed with only the free area or a pending extension", () => {
+  const store = storage();
+  const id = "ef4deace-1b93-4bbb-ac64-2243cd1b77ca";
+  const base = {thresholds: bikeDefaults, fixture: "dolores", bands: {green: "home", gray: "other"},
+    requests: [["gray", "Request awaiting review"]]};
+  for (const selected of [[], ["green"], ["gray"], ["green", "gray", "invalid"]]) {
+    assert.throws(() => engageBikeCampaign(store, id, {...base, selected}), /territory/);
+    assert.equal(readBikeCampaign(store, id), null);
+  }
+});

@@ -25,6 +25,7 @@ function chooseBikeNeighborhood(feature) {
     const control = checkboxControls.get(id);
     if (control) syncBikeControl(control.button, control.icon, id);
     view.setSelection(selected);
+    updateTerritoryGate();
     persistBikeDraft();
   }
   if (bands[id] !== "other") return;
@@ -122,6 +123,17 @@ function renderBikeList() {
   }
 }
 
+function extraBikeTerritories() {
+  return eligibleBikeSelection([...selected], bands);
+}
+
+function updateTerritoryGate() {
+  const count = extraBikeTerritories().length;
+  bikeElement("territory-count").textContent = bikeWords().territoryCount + " : " + count;
+  bikeElement("territory-required").hidden = count > 0 || Boolean(bikeLocked);
+  bikeElement("continue").disabled = !count || Boolean(bikeLocked);
+}
+
 function refreshBike() {
   const note = bikeElement("fixture-note");
   note.hidden = bikeFixture === "dolores";
@@ -131,6 +143,7 @@ function refreshBike() {
   view.draw(bands);
   view.setSelection(selected);
   renderBikeList();
+  updateTerritoryGate();
 }
 
 async function startBike() {
@@ -151,7 +164,6 @@ async function startBike() {
   view = createBikeMap(bikeData, bikeFixture, bikeLocked ? null : chooseBikeNeighborhood);
   refreshBike();
   bikeElement("map-status").textContent = "";
-  if (!bikeLocked) bikeElement("continue").disabled = false;
   if (bikeUrl.searchParams.get("extension") === "sent") {
     bikeElement("message").textContent = bikeWords().saved;
     bikeUrl.searchParams.delete("extension");
@@ -171,7 +183,7 @@ bikeElement("extension-form").onsubmit = event => {
   if (saved) bikeDialog.close();
 };
 bikeElement("continue").onclick = () => {
-  if (bikeLocked || !persistBikeDraft()) return;
+  if (bikeLocked || !selected || !extraBikeTerritories().length || !persistBikeDraft()) return;
   const next = new URL("com-pub-spon-package.html", bikeUrl);
   next.searchParams.set("demo", bikeProfile);
   next.searchParams.set("fixture", bikeFixture);
@@ -190,7 +202,13 @@ function translateExtensionClose() {
 translateExtensionClose();
 window.addEventListener("pageshow", event => {
   if (!event.persisted || !bikeFixture) return;
-  const {requests} = readSponsorDraft(bikeScope());
+  const {requests, selected: stored} = readSponsorDraft(bikeScope());
+  if (!bikeLocked) {
+    selected = new Set(eligibleBikeSelection(stored, bands));
+    view.setSelection(selected);
+    for (const [id, control] of checkboxControls) syncBikeControl(control.button, control.icon, id);
+    updateTerritoryGate();
+  }
   bikeRequests.clear();
   for (const [id, reason] of Array.isArray(requests) ? requests : []) bikeRequests.set(id, reason);
 });

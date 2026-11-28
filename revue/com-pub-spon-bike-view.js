@@ -2,6 +2,13 @@
 
 const bikeText = {
   fr: {
+    territoryIntro: "Votre annonce est diffusée gratuitement dans les zones vertes.",
+    territoryAction: "Pour toucher davantage de clients, sélectionnez directement sur la carte les zones jaunes dans lesquelles vous souhaitez également diffuser votre annonce.",
+    legendHome: "Diffusion gratuite",
+    legendDirect: "Cliquez pour élargir votre diffusion",
+    legendOther: "Accessible sur demande",
+    territoryCount: "Zones supplémentaires sélectionnées",
+    territoryRequired: "Sélectionnez au moins une zone jaune pour continuer.",
     extensionTitle: "Demande d’extension", extensionSend: "Envoyer ma demande", extensionCancel: "Annuler",
     home: "Zone locale gratuite", direct: "Extension sponsorisée standard", other: "Extension sur demande",
     wijken: "Sous-quartiers", areas: "Voir les quartiers", list: "Territoires",
@@ -18,6 +25,13 @@ const bikeText = {
     canal: "Point fictif · canal Brouwersgracht", junction: "Point fictif · plusieurs limites administratives"
   },
   nl: {
+    territoryIntro: "Je advertentie wordt gratis getoond in de groene gebieden.",
+    territoryAction: "Wil je meer klanten bereiken? Selecteer dan direct op de kaart de gele gebieden waarin je je advertentie ook wilt tonen.",
+    legendHome: "Gratis verspreiding",
+    legendDirect: "Klik om je bereik te vergroten",
+    legendOther: "Beschikbaar op aanvraag",
+    territoryCount: "Geselecteerde extra gebieden",
+    territoryRequired: "Selecteer minstens één geel gebied om verder te gaan.",
     extensionTitle: "Uitbreidingsaanvraag", extensionSend: "Mijn aanvraag versturen", extensionCancel: "Annuleren",
     home: "Gratis lokaal gebied", direct: "Standaard gesponsord uitbreidingsgebied", other: "Uitbreiding op aanvraag",
     wijken: "Wijken", areas: "Gebieden bekijken", list: "Gebieden",
@@ -34,6 +48,13 @@ const bikeText = {
     canal: "Fictief punt · Brouwersgracht", junction: "Fictief punt · meerdere gebiedsgrenzen"
   },
   en: {
+    territoryIntro: "Your ad is shown for free in the green areas.",
+    territoryAction: "To reach more customers, select the yellow areas directly on the map where you would also like your ad to appear.",
+    legendHome: "Free distribution",
+    legendDirect: "Click to extend your reach",
+    legendOther: "Available on request",
+    territoryCount: "Additional areas selected",
+    territoryRequired: "Select at least one yellow area to continue.",
     extensionTitle: "Extension request", extensionSend: "Send my request", extensionCancel: "Cancel",
     home: "Free local area", direct: "Standard sponsored extension", other: "Extension by request",
     wijken: "Neighborhoods", areas: "Show areas", list: "Territories",

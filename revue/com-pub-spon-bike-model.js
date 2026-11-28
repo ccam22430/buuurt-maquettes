@@ -56,6 +56,12 @@ function readBikeCampaign(storage, id) {
   }
 }
 
+function eligibleBikeSelection(selected, bands) {
+  if (!Array.isArray(selected) || !bands) return [];
+  return [...new Set(selected)].filter(code => typeof code === "string" &&
+    Object.hasOwn(bands, code) && bands[code] === "direct");
+}
+
 function engageBikeCampaign(storage, id, draft) {
   const existing = readBikeCampaign(storage, id);
   if (existing) return existing;
@@ -63,8 +69,10 @@ function engageBikeCampaign(storage, id, draft) {
       !Array.isArray(draft.selected) || !draft.bands || typeof draft.fixture !== "string") {
     throw new Error("campaign");
   }
+  const selected = eligibleBikeSelection(draft.selected, draft.bands);
+  if (!selected.length) throw new Error("territory");
   const snapshot = {
-    thresholds: {...draft.thresholds}, selected: [...new Set(draft.selected)].filter(code => draft.bands[code] === "direct"),
+    thresholds: {...draft.thresholds}, selected,
     bands: {...draft.bands}, fixture: draft.fixture, network: draft.network
   };
   storage.setItem(bikeCampaignKey(id), JSON.stringify(snapshot));
@@ -73,5 +81,5 @@ function engageBikeCampaign(storage, id, draft) {
 
 if (typeof module !== "undefined") module.exports = {
   bikeDefaults, bikeAdmin, validBikeThresholds, resolveBikeThresholds, classifyBikeSeconds,
-  readBikeConfig, saveBikeConfig, engageBikeCampaign, readBikeCampaign
+  readBikeConfig, saveBikeConfig, engageBikeCampaign, readBikeCampaign, eligibleBikeSelection
 };

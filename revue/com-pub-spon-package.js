@@ -31,6 +31,27 @@ const scope = isBike ? sponsorDraftScope(profile) + ":" + bikeFixture + ":" + bi
 const draft = readSponsorDraft(scope);
 let selectedNames;
 let selectionUnavailable = false;
+let bikeBandsForBudget;
+let displayedBikeSelection;
+const budgetPage = document.querySelector("main");
+if (isBike) budgetPage.hidden = true;
+
+function bikeBudgetSelection() {
+  if (!bikeBandsForBudget) return [];
+  if (engagedBike) return eligibleBikeSelection(engagedBike.selected, bikeBandsForBudget);
+  const current = readSponsorDraft(sponsorDraftScope(profile) + ":" + bikeFixture);
+  const latest = new Set(eligibleBikeSelection(current.selected, bikeBandsForBudget));
+  return eligibleBikeSelection(readSponsorDraft(scope).selected, bikeBandsForBudget)
+    .filter(id => latest.has(id));
+}
+
+function returnToBikeTerritory() {
+  const map = new URL("com-pub-spon-003.html", url);
+  map.searchParams.set("lang", language.value);
+  if (bikeFixture) map.searchParams.set("fixture", bikeFixture);
+  map.searchParams.set("v", "territory-gate-20261128");
+  location.replace(map);
+}
 
 for (const option of options) {
   if (option.value === draft.budget) option.checked = true;
@@ -75,10 +96,15 @@ language.addEventListener("change", () => {
 });
 $("menu").onclick = () => $("campaign-menu").showModal();
 $("continue").onclick = () => {
+  const verified = isBike && bikeBudgetSelection();
+  if (isBike && (!verified.length || verified.join() !== displayedBikeSelection?.join())) {
+    returnToBikeTerritory();
+    return;
+  }
   savePackage();
   if (isBike && !engagedBike) {
     try {
-      engagedBike = engageBikeCampaign(localStorage, bikeId, draft);
+      engagedBike = engageBikeCampaign(localStorage, bikeId, {...draft, selected: verified, bands: bikeBandsForBudget});
       url.searchParams.delete("draft");
       url.searchParams.set("campaign", bikeId);
       history.replaceState(null, "", url);
@@ -95,18 +121,45 @@ $("continue").onclick = () => {
 translatePackage();
 
 async function showSelectedDistricts() {
-  const identifiers = engagedBike?.selected || draft.selected;
+  const snapshot = engagedBike || draft;
+  let identifiers = snapshot.selected;
   if (!Array.isArray(identifiers)) throw new Error("No saved territory selection");
   if (!Object.hasOwn(reviewProfiles, profile)) throw new Error("Unknown review profile");
   const response = await fetch("data/" + sponsorDataset(reviewProfiles[profile]) + ".geojson");
   if (!response.ok) throw new Error("Territory snapshot unavailable");
   const {features} = await response.json();
   const names = new Map(features.map(feature => [feature.id, feature.properties.buurtnaam]));
+  if (isBike) {
+    if (!/^[\da-f-]{36}$/i.test(bikeId || "") || !validBikeThresholds(snapshot.thresholds) ||
+        snapshot.fixture !== bikeFixture) throw new Error("Invalid bike draft");
+    if (engagedBike) {
+      // Existing campaigns retain the eligibility recorded when they were confirmed.
+      bikeBandsForBudget = Object.fromEntries(features.map(({id}) => [id, snapshot.bands?.[id]]));
+    } else {
+      const timesResponse = await fetch("data/amsterdam-bike-times.json");
+      if (!timesResponse.ok) throw new Error("Bike times unavailable");
+      const times = await timesResponse.json();
+      if (snapshot.network !== times.version || !Object.hasOwn(times.profiles, bikeFixture)) {
+        throw new Error("Invalid bike network");
+      }
+      const {wijken} = times.profiles[bikeFixture];
+      bikeBandsForBudget = Object.fromEntries(features.map(({id}) =>
+        [id, classifyBikeSeconds(wijken[id]?.seconds, snapshot.thresholds)]));
+    }
+    identifiers = bikeBudgetSelection();
+    if (!identifiers.length) throw new Error("No eligible bike selection");
+    displayedBikeSelection = identifiers;
+  }
   selectedNames = identifiers.map(code => names.get(code)).filter(Boolean);
   $("continue").disabled = false;
+  if (isBike) budgetPage.hidden = false;
   translatePackage();
 }
 showSelectedDistricts().catch(() => {
+  if (isBike) {
+    returnToBikeTerritory();
+    return;
+  }
   selectionUnavailable = true;
   translatePackage();
 });
