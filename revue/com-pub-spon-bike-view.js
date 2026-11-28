@@ -132,6 +132,8 @@ function createBikeMap(data, fixture, onChoose) {
     item => [item.dataset.band, getComputedStyle(item).getPropertyValue("--band").trim()]));
   map.attributionControl.addAttribution('<a href="https://maps.amsterdam.nl/gebiedsindeling/">Amsterdam · CC0</a>');
   let bands = {};
+  let contextReady = false;
+  const isOverview = () => contextReady && map.getZoom() < 11.75;
   // Leaflet suppresses drag clicks, but a browser can still synthesize a click after a pinch.
   const pointers = new Map();
   let gestureMoved = false;
@@ -184,7 +186,7 @@ function createBikeMap(data, fixture, onChoose) {
     color: "white", weight: 2, fillOpacity: 1, className: "territory-outline"
   }), onEachFeature(feature, polygon) {
     polygon.on("click", () => {
-      if (gestureMoved) return;
+      if (gestureMoved || isOverview()) return;
       if (!networkMode && bands[feature.id] === "home") {
         showFreeAreaNotice();
         return;
@@ -236,7 +238,7 @@ function createBikeMap(data, fixture, onChoose) {
             iconSize:[24,24],iconAnchor:[12,12]}), keyboard:false})
             .on("click", event => {
               L.DomEvent.stopPropagation(event.originalEvent);
-              if (!gestureMoved) onChoose(labels.get(id).polygon.feature, category);
+              if (!gestureMoved && !isOverview()) onChoose(labels.get(id).polygon.feature, category);
             });
           indicators.addLayer(indicator);
           layer.indicator = indicator;
@@ -244,7 +246,7 @@ function createBikeMap(data, fixture, onChoose) {
       }
       layer.on("click", event => {
         L.DomEvent.stopPropagation(event.originalEvent);
-        if (gestureMoved) return;
+        if (gestureMoved || isOverview()) return;
         if (category === "home") showFreeAreaNotice();
         else onChoose?.(labels.get(id).polygon.feature, category);
       });
@@ -264,6 +266,53 @@ function createBikeMap(data, fixture, onChoose) {
   });
   for (const label of names) overlays.addLayer(label);
 
+  let explicitAreas = false;
+  let municipalityNames;
+  function updateDetail() {
+    const overview = isOverview();
+    const areaView = !overview && (explicitAreas || (contextReady && map.getZoom() < 13));
+    if (areaView !== map.hasLayer(overlays)) {
+      if (areaView) overlays.addTo(map);
+      else overlays.remove();
+    }
+    if (municipalityNames && overview !== map.hasLayer(municipalityNames)) {
+      if (overview) municipalityNames.addTo(map);
+      else municipalityNames.remove();
+    }
+    outline.setStyle({opacity: overview || areaView ? 0 : 1});
+    boundaries.setStyle({opacity: overview || areaView ? 0 : 1});
+    bikeElement("areas").ariaPressed = String(areaView);
+    bikeElement("wijken").ariaPressed = String(!overview && !areaView);
+    placeLabels();
+  }
+
+  async function loadContext() {
+    const response = await fetch("data/amsterdam-map-context.json?v=1");
+    if (!response.ok) throw Error("Context unavailable");
+    const {municipalities, water} = await response.json();
+    const basePane = map.createPane("municipalContext");
+    basePane.style.zIndex = "390";
+    basePane.style.pointerEvents = "none";
+    const waterPane = map.createPane("contextWater");
+    waterPane.style.zIndex = "402";
+    waterPane.style.pointerEvents = "none";
+    L.geoJSON(municipalities, {pane:"municipalContext", interactive:false, smoothFactor:0,
+      style:{className:"context-municipality", color:"#878d97", weight:1.25, fillColor:"#c4c8ce", fillOpacity:1}
+    }).addTo(map);
+    L.geoJSON(water, {pane:"contextWater", interactive:false,
+      style:{className:"context-water", stroke:false, fillColor:"#dceff8", fillOpacity:1}
+    }).addTo(map);
+    municipalityNames = L.layerGroup(municipalities.features.map(feature => {
+      const text = document.createElement("span");
+      text.textContent = feature.properties.name;
+      return L.tooltip({permanent:true, interactive:false, direction:"center", className:"context-town-label"})
+        .setLatLng(feature.properties.label).setContent(text);
+    }));
+    map.attributionControl.addAttribution('<a href="https://api.pdok.nl/kadaster/brk-bestuurlijke-gebieden/ogc/v1">Kadaster/PDOK</a> · <a href="https://data.overheid.nl/dataset/81148-bestand-bodemgebruik-2010">CBS eau</a> · CC BY 4.0');
+    contextReady = true;
+    updateDetail();
+  }
+
   function placeLabels() {
     const view = map.getContainer().getBoundingClientRect();
     const occupied = [pin.getElement().getBoundingClientRect(), frame.querySelector(".map-tools").getBoundingClientRect()];
@@ -272,6 +321,23 @@ function createBikeMap(data, fixture, onChoose) {
     }
     const overlap = (a, b) => a.left < b.right + 3 && a.right > b.left - 3 &&
       a.top < b.bottom + 3 && a.bottom > b.top - 3;
+    if (municipalityNames && map.hasLayer(municipalityNames)) {
+      municipalityNames.eachLayer(layer => {
+        const element = layer.getElement();
+        element.style.visibility = "";
+        const box = element.getBoundingClientRect();
+        if (occupied.some(other => overlap(box, other))) element.style.visibility = "hidden";
+        else occupied.push(box);
+      });
+    }
+    access.eachLayer(layer => {
+      const marker = layer.indicator?.getElement();
+      if (!marker) return;
+      marker.style.visibility = "";
+      const box = marker.getBoundingClientRect();
+      if (map.getZoom() < 13.5 || occupied.some(other => overlap(box, other))) marker.style.visibility = "hidden";
+      else occupied.push(box);
+    });
     const fit = (element, polygon, offsets) => {
       element.hidden = false;
       element.style.translate = "";
@@ -291,11 +357,12 @@ function createBikeMap(data, fixture, onChoose) {
       if (offset) element.style.translate = offset[0] + "px " + offset[1] + "px";
     };
     for (const {polygon, check, selected} of labels.values()) {
-      check.hidden = !selected;
-      if (selected) fit(check, polygon, [[0, 0]]);
+      check.hidden = !selected || isOverview() || map.hasLayer(overlays);
+      if (!check.hidden) fit(check, polygon, [[0, 0]]);
     }
     for (const {polygon, label} of labels.values()) {
-      fit(label, polygon, [[0, 0], [0, -16], [0, 16], [-20, 0], [20, 0]]);
+      if (isOverview() || (contextReady && map.hasLayer(overlays))) label.hidden = true;
+      else fit(label, polygon, [[0, 0], [0, -16], [0, 16], [-20, 0], [20, 0]]);
     }
   }
 
@@ -330,11 +397,9 @@ function createBikeMap(data, fixture, onChoose) {
   }
 
   function setOverlay(visible) {
-    if (visible) overlays.addTo(map);
-    else overlays.remove();
-    bikeElement("areas").ariaPressed = String(visible);
-    bikeElement("wijken").ariaPressed = String(!visible);
-    placeLabels();
+    explicitAreas = visible;
+    if (contextReady && map.getZoom() < 13) map.setZoom(13);
+    updateDetail();
   }
   function fullscreen() {
     const expanded = frame.classList.toggle("is-expanded");
@@ -352,7 +417,9 @@ function createBikeMap(data, fixture, onChoose) {
   document.addEventListener("keydown", event => {
     if (event.key === "Escape" && !document.querySelector("dialog[open]") && frame.classList.contains("is-expanded")) fullscreen();
   });
-  map.on("moveend zoomend resize", placeLabels);
+  map.on("moveend resize", placeLabels);
+  map.on("zoomend", updateDetail);
+  if (onChoose && new URL(location.href).pathname.endsWith("/com-pub-spon-003.html")) loadContext().catch(() => {});
   new ResizeObserver(() => map.invalidateSize()).observe(map.getContainer());
   document.fonts.ready.then(placeLabels);
   return {draw, drawNetwork, setSelection, highlight(id) {

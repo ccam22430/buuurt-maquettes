@@ -51,3 +51,13 @@ body [data-band="extended"] { --band: #ff9f43; }
 .radius-choice span { visibility:hidden; }
 .radius-choice.is-selected { border-color:#e90049; background:#e90049; }
 .radius-choice.is-selected span { visibility:visible; }
+
+.context-town-label {
+  font: 800 12px/1.25 Nunito, sans-serif;
+  color: #263343;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  white-space: nowrap;
+  text-shadow: 0 0 4px white, 0 0 4px white;
+}
