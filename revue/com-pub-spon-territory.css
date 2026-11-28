@@ -39,3 +39,4 @@ button, .back, .cta { font-weight: 700; }
 }
 #extend[hidden] { display: none; }
 #extension-dialog .dialog-back { background: white; border-color: #aaa4aa; }
+html .buuurt-official-head .buuurt-official-count { font-family: var(--buuurt-font) !important; }
