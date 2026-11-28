@@ -196,7 +196,9 @@ function refreshBike() {
   legacy.hidden = !extensionRecords(localStorage).some(record =>
     extensionOwns(extensionActor(bikeFixture), record) && record.status === "accepted" && !record.authorization?.metres);
   legacy.textContent = radiusRequestWords(bikeLanguage.value).legacy;
-  bikeElement("network-orange").textContent = networkWords(bikeLanguage.value).extended;
+  const orangeLegend = bikeElement("network-orange");
+  orangeLegend.hidden = !networkLayers?.layers.some(layer => layer.properties.category === "extended");
+  orangeLegend.textContent = networkWords(bikeLanguage.value).extended;
   note.textContent = bikeFixtureNames()[bikeFixture];
   bikeElement("campaign-lock").hidden = !bikeLocked;
   checkboxControls.clear();
