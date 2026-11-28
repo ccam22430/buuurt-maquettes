@@ -48,6 +48,12 @@ function commercialPrice(volume, config) {
     low[1] + ratio * (high[1] - low[1]));
 }
 
+function commercialMixedPrice(volume, orange, uplift, config) {
+  if (!Number.isSafeInteger(orange) || orange < 0 || orange > volume || !Number.isInteger(uplift) || uplift < 0) return null;
+  const base = commercialPrice(volume, config);
+  return base === null ? null : base + Math.round(base * orange * uplift / (volume * 100));
+}
+
 // Pools represent disjoint sets of opportunities. A shared pool appears once per day.
 function commercialCapacity({zones, days, shop, config, pools, orders, now = Date.now(), validUntil = Infinity}) {
   const start = Math.floor(now / commercialDay);
@@ -62,13 +68,13 @@ function commercialCapacity({zones, days, shop, config, pools, orders, now = Dat
       const key = pool.id + ":" + day;
       const safe = Math.floor(pool.daily * (100 - config.margin) / 100);
       const active = orders.filter(order => !order.released && (order.state !== "held" || order.expires > now));
-      const booked = active.reduce((total, order) => total + (order.allocation[key] || 0), 0);
+      const booked = active.reduce((total, order) => total + (order.allocation[key] || 0) + (pool.previousPool ? order.allocation[pool.previousPool + ":" + day] || 0 : 0), 0);
       const personal = active.filter(order => order.shop === shop)
-        .reduce((total, order) => total + (order.allocation[key] || 0), 0);
+        .reduce((total, order) => total + (order.allocation[key] || 0) + (pool.previousPool ? order.allocation[pool.previousPool + ":" + day] || 0 : 0), 0);
       const left = Math.max(0, safe - booked);
       const share = Math.max(0, Math.floor(safe * config.quota / 100) - personal);
       const usable = Math.min(left, share);
-      buckets.push({key, usable});
+      buckets.push({key, usable, band: pool.band});
       estimate += pool.daily;
       commercializable += safe;
       reserved += booked;
@@ -91,17 +97,24 @@ function commercialOrder(state, input, pools, now = Date.now()) {
   const {minimum, step} = state.config;
   if (!commercialDurations.includes(input.days) || !Number.isSafeInteger(input.volume) ||
       input.volume < minimum || (input.volume - minimum) % step || input.volume > capacity.max) throw Error("capacity");
+  const segmented = input.orange !== undefined;
   let remaining = input.volume;
+  const counts = {direct: input.volume - input.orange, extended: input.orange};
   const allocation = {};
-  for (const {key, usable} of capacity.buckets) {
-    const amount = Math.min(remaining, usable);
+  for (const {key, usable, band} of capacity.buckets) {
+    const amount = Math.min(segmented ? (counts[band] || 0) : remaining, usable);
+    if (segmented && amount) counts[band] -= amount;
     if (amount) allocation[key] = amount;
     remaining -= amount;
     if (!remaining) break;
   }
+  if (remaining) throw Error("segmented capacity");
+  const paid = segmented ? commercialMixedPrice(input.volume, input.orange, input.uplift, state.config) :
+    commercialPrice(input.volume, state.config);
+  if (paid === null) throw Error("price");
   const order = {id: input.id, shop: input.shop, shopName: input.shopName, ad: input.ad,
     zones: [...input.zones], names: [...input.names], volume: input.volume, days: input.days,
-    validUntil: input.validUntil, paid: commercialPrice(input.volume, state.config), created: now,
+    validUntil: input.validUntil, paid, ...(segmented ? {orange:input.orange, uplift:input.uplift, geographicSnapshot:input.geographicSnapshot} : {}), created: now,
     state: "held", expires: now + 10 * 60000, allocation, delivered: 0, events: []};
   state.orders.push(order);
   return order;
@@ -151,5 +164,5 @@ async function commercialLocked(fn) {
 }
 
 if (typeof module !== "undefined") module.exports = {commercialDefaults, commercialCapacity,
-  commercialValid, commercialPrice, commercialOrder, commercialCampaignStatus, commercialDelivery,
+  commercialValid, commercialPrice, commercialMixedPrice, commercialOrder, commercialCampaignStatus, commercialDelivery,
   commercialProrata, commercialRecommendation};

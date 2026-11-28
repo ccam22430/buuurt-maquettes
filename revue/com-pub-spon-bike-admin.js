@@ -1,9 +1,8 @@
 "use strict";
 
 let settings = {...readBikeConfig(localStorage).global};
-let data, mapView, autoEvidence;
-const autoPreview = bikeElement("auto-preview");
-const autoFields = ["percent", "metres", "addresses"];
+let data, mapView, previewRevision = 0;
+const uplift = bikeElement("network-uplift");
 const adminWorkspace = bikeElement("admin-workspace");
 const fixture = bikeElement("fixture");
 const status = bikeElement("map-status");
@@ -21,15 +20,12 @@ function showHistory() {
     const date = new Intl.DateTimeFormat(bikeLanguage.value, {dateStyle: "medium", timeStyle: "medium",
       timeZone: "Europe/Amsterdam"}).format(new Date(row.at));
     item.textContent = [date, row.admin, row.scope,
-      [row.before, row.after].map(value => {
-        const {percent, metres, addresses} = value.extension || geoAutoDefaults;
-        return value.local + "/" + value.standard + " min · " + percent + "% · " + metres + " m · " + addresses;
-      }).join(" → ")].join(" · ");
+      row.before.local + "/" + row.before.standard + " → " + row.after.local + "/" + row.after.standard + " min · " + (row.before.uplift ?? 50) + "% → " + (row.after.uplift ?? 50) + "%"].join(" · ");
     list.append(item);
   }
 }
 
-function preview() {
+async function preview() {
   local.min = bikeMin;
   local.max = settings.standard - 1;
   standard.min = settings.local + 1;
@@ -38,32 +34,15 @@ function preview() {
   standard.value = settings.standard;
   bikeElement("local-value").value = settings.local + " min";
   bikeElement("standard-value").value = settings.standard + " min";
-  for (const key of autoFields) bikeElement("auto-" + key).value = (settings.extension || geoAutoDefaults)[key];
-  if (mapView) {
-    mapView.draw(bikeBands(data, fixture.value, settings));
-    previewAuto();
-  }
+  uplift.value = settings.uplift ?? 50;
+  bikeElement("network-uplift-label").textContent = networkWords(bikeLanguage.value).uplift;
+  if (!mapView) return;
+  const revision = ++previewRevision;
+  try {
+    const result = await loadNetworkZones(fixture.value, data.times);
+    if (revision === previewRevision) mapView.drawNetwork(networkBands(result, data.wijken.features, settings));
+  } catch { if (revision === previewRevision) status.textContent = bikeWords().error; }
 }
-
-function previewAuto() {
-  const words = geoAutoWords(bikeLanguage.value);
-  const bands = bikeBands(data, fixture.value, settings);
-  const rows = data.wijken.features.filter(({id}) => bands[id] === "other").map(feature => {
-    const result = geoAutoEvaluate(autoEvidence, data.times, fixture.value, feature.id, settings.standard, settings.extension);
-    const item = document.createElement("li");
-    const {metres, percent, addresses} = result.metrics;
-    item.textContent = [feature.properties.buurtnaam, words[result.outcome], metres !== null ? metres + " m" : "—",
-      percent !== null ? new Intl.NumberFormat(bikeLanguage.value, {maximumFractionDigits: 1}).format(percent) + "%" : "—",
-      addresses ?? "—"].join(" · ");
-    return item;
-  });
-  autoPreview.replaceChildren(...rows);
-}
-
-for (const key of autoFields) bikeElement("auto-" + key).oninput = () => {
-  settings.extension = Object.fromEntries(autoFields.map(field => [field, bikeElement("auto-" + field).valueAsNumber]));
-  if (data) previewAuto();
-};
 
 function fillFixtures() {
   const current = fixture.value;
@@ -82,7 +61,7 @@ async function openAdmin() {
   showHistory();
   fillFixtures();
   try {
-    [data, autoEvidence] = await Promise.all([loadBikeData(), loadGeoAutoEvidence()]);
+    data = await loadBikeData();
     mapView = createBikeMap(data, fixture.value);
     preview();
     status.textContent = "";
@@ -122,6 +101,7 @@ bikeElement("reset-geo").onclick = () => {
   preview();
   status.textContent = bikeWords().resetGeo;
 };
+uplift.oninput = () => { settings.uplift = uplift.valueAsNumber; };
 bikeElement("geo-settings").onsubmit = event => {
   event.preventDefault();
   if (!mapView) return;
@@ -135,11 +115,9 @@ bikeElement("geo-settings").onsubmit = event => {
 };
 bikeElement("menu").onclick = () => bikeElement("campaign-menu").showModal();
 translateBike();
-translateGeoAuto(bikeLanguage.value);
 bikeLanguageChange(() => {
   fillFixtures();
-  translateGeoAuto(bikeLanguage.value);
-  if (data) previewAuto();
   showHistory();
+  preview();
 });
 if (sessionActor()) openAdmin();

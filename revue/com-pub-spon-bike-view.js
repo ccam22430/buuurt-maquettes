@@ -191,11 +191,11 @@ function createBikeMap(data, fixture, onChoose) {
   }), onEachFeature(feature, polygon) {
     polygon.on("click", () => {
       if (gestureMoved) return;
-      if (bands[feature.id] === "home") {
+      if (!networkMode && bands[feature.id] === "home") {
         showFreeAreaNotice();
         return;
       }
-      onChoose?.(feature);
+      onChoose?.(feature, networkMode ? "other" : undefined);
     });
     const label = document.createElement("span");
     label.textContent = feature.properties.buurtnaam;
@@ -212,6 +212,36 @@ function createBikeMap(data, fixture, onChoose) {
     }).addTo(map);
     labels.set(feature.id, {polygon, label, check, selected: false});
   }}).addTo(map);
+  const accessPane = map.createPane("networkAccess");
+  accessPane.style.zIndex = "403";
+  const access = L.geoJSON(null, {pane: "networkAccess", smoothFactor: 0, style: {stroke: false, fillOpacity: 1}}).addTo(map);
+  const boundariesPane = map.createPane("districtBoundaries");
+  boundariesPane.style.zIndex = "406";
+  boundariesPane.style.pointerEvents = "none";
+  const boundaries = L.geoJSON(data.wijken, {pane: "districtBoundaries", interactive: false, smoothFactor: 0,
+    style: {color: "white", weight: 1.5, fill: false}});
+  let networkMode = false;
+  function drawNetwork(result) {
+    networkMode = true;
+    bands = result.bands;
+    outline.setStyle({fillColor: fills.other});
+    boundaries.addTo(map);
+    access.clearLayers();
+    access.addData(result.layers);
+    access.eachLayer(layer => {
+      const {id, category} = layer.feature.properties;
+      layer.setStyle({fillColor: category === "extended" ? "#ff9f43" : fills[category]});
+      layer.getElement().dataset.portion = category;
+      layer.getElement().dataset.wijk = id;
+      layer.on("click", event => {
+        L.DomEvent.stopPropagation(event.originalEvent);
+        if (gestureMoved) return;
+        if (category === "home") showFreeAreaNotice();
+        else onChoose?.(labels.get(id).polygon.feature, category);
+      });
+    });
+    placeLabels();
+  }
   const areaPane = map.createPane("areaOutlines");
   areaPane.style.zIndex = "410";
   areaPane.style.pointerEvents = "none";
@@ -261,6 +291,15 @@ function createBikeMap(data, fixture, onChoose) {
   }
 
   function setSelection(selected) {
+    if (networkMode) {
+      access.eachLayer(layer => {
+        const {id, category} = layer.feature.properties;
+        const checked = category !== "home" && selected.has(category === "extended" ? orangeKey(id) : id);
+        layer.setStyle({stroke: checked, color: "#362446", weight: checked ? 1.25 : 0});
+        layer.getElement().setAttribute("data-selected", String(checked));
+      });
+      return;
+    }
     for (const [id, entry] of labels) {
       const checked = bands[id] === "direct" && selected.has(id);
       if (entry.selected === checked) continue;
@@ -307,7 +346,7 @@ function createBikeMap(data, fixture, onChoose) {
   map.on("moveend zoomend resize", placeLabels);
   new ResizeObserver(() => map.invalidateSize()).observe(map.getContainer());
   document.fonts.ready.then(placeLabels);
-  return {draw, setSelection, highlight(id) {
+  return {draw, drawNetwork, setSelection, highlight(id) {
     const entry = labels.get(id);
     if (!entry) return;
     entry.polygon.setStyle({color: "#362446", weight: 5, dashArray: "8 4"});

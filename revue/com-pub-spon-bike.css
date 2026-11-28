@@ -43,3 +43,5 @@
 @media (min-width: 600px) {
   .bike-label > div > span:not(.territory-check) { font-size: 12px; }
 }
+
+body [data-band="extended"] { --band: #ff9f43; }

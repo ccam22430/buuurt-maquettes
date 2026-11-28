@@ -34,22 +34,11 @@ test("marginal links and roads without residential service require human review"
   }
 });
 
-test("automatic rights are isolated, audited, idempotent and revocable without silent reapproval", () => {
-  const db = storage(), actor = extensionActor("dolores");
-  const params = {zone: landlust, name: "Landlust", band: "other", ad: "demo-ad-001", note: "Test",
-    evidence: project(landlust)};
-  const approved = extensionSubmit(db, actor, params);
-  assert.equal(approved.status, "accepted");
-  assert.equal(approved.events[1].origin, "automatic");
-  assert.equal(approved.assessment.version, evidence.version);
-  const bands = {[landlust]: "other", free: "home", existing: "direct"};
-  assert.deepEqual(extensionApply(bands, db, "dolores", "demo-ad-001"), {...bands, [landlust]: "direct"});
-  assert.deepEqual(extensionApply(bands, db, "pilot", "demo-ad-001"), bands);
-  assert.equal(extensionSubmit(db, actor, params).duplicate, true);
-  const revoke = {action: "revoked", revision: 2, note: "Review"};
-  assert.throws(() => extensionChange(db, actor, approved.id, revoke));
-  extensionChange(db, {id: "review-admin", role: "geo-admin"}, approved.id, revoke);
-  assert.deepEqual(extensionApply(bands, db, "dolores", "demo-ad-001"), bands);
-  assert.equal(extensionSubmit(db, actor, params).status, "pending");
-  assert.equal(extensionRecords(db)[1].events.length, 3);
+test("historical automatic evidence cannot approve new requests", () => {
+  const db = storage();
+  const request = extensionSubmit(db, extensionActor("dolores"), {
+    zone: landlust, name: "Landlust", band: "other", note: "Test", evidence: project(landlust)
+  });
+  assert.equal(request.status, "pending");
+  assert.deepEqual(extensionApply({[landlust]: "other"}, db, "dolores", null), {[landlust]: "other"});
 });

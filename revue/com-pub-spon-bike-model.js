@@ -34,11 +34,10 @@ function saveBikeConfig(actor, thresholds, storage, now = new Date()) {
   if (actor?.id !== bikeAdmin.id || actor.role !== bikeAdmin.role) throw new Error("forbidden");
   if (!validBikeThresholds(thresholds)) throw new Error("thresholds");
   const current = readBikeConfig(storage);
-  if (thresholds.extension && (typeof validGeoAuto !== "function" || !validGeoAuto(thresholds.extension))) {
-    throw new Error("extension thresholds");
-  }
+  if (thresholds.uplift !== undefined &&
+      (!Number.isInteger(thresholds.uplift) || thresholds.uplift < 0 || thresholds.uplift > 1000)) throw Error("uplift");
   if (current.global.local === thresholds.local && current.global.standard === thresholds.standard &&
-      JSON.stringify(current.global.extension) === JSON.stringify(thresholds.extension)) return current;
+      (current.global.uplift ?? 50) === (thresholds.uplift ?? 50)) return current;
   const next = {...current, global: {...thresholds}, history: [{
     admin: actor.id, at: now.toISOString(), scope: "global",
     before: current.global, after: {...thresholds}
@@ -63,7 +62,7 @@ function readBikeCampaign(storage, id) {
 function eligibleBikeSelection(selected, bands) {
   if (!Array.isArray(selected) || !bands) return [];
   return [...new Set(selected)].filter(code => typeof code === "string" &&
-    Object.hasOwn(bands, code) && bands[code] === "direct");
+    Object.hasOwn(bands, code) && ["direct", "extended"].includes(bands[code]));
 }
 
 function engageBikeCampaign(storage, id, draft) {

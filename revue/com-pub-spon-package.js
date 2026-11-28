@@ -31,7 +31,8 @@ const scope = isBike ? extensionDraftScope(profile, bikeFixture, extensionAd(url
 const draft = readSponsorDraft(scope);
 let selectedNames;
 let selectionUnavailable = false;
-let bikeBandsForBudget;
+let bikeBandsForBudget, budgetNetwork, budgetFeatures;
+function currentNetworkGrants() { return networkGrants(localStorage, bikeFixture, extensionAd(url)); }
 let displayedBikeSelection;
 const budgetPage = document.querySelector("main");
 if (isBike) {
@@ -42,7 +43,8 @@ if (isBike) {
 function bikeBudgetSelection() {
   if (!bikeBandsForBudget) return [];
   if (engagedBike) return eligibleBikeSelection(engagedBike.selected, bikeBandsForBudget);
-  const activeBands = extensionApply(bikeBandsForBudget, localStorage, bikeFixture, extensionAd(url));
+  const activeBands = budgetNetwork ? networkBands(budgetNetwork, budgetFeatures, draft.thresholds, currentNetworkGrants()).bands :
+    extensionApply(bikeBandsForBudget, localStorage, bikeFixture, extensionAd(url));
   const current = readSponsorDraft(extensionDraftScope(profile, bikeFixture, extensionAd(url)));
   const latest = new Set(eligibleBikeSelection(current.selected, activeBands));
   return eligibleBikeSelection(readSponsorDraft(scope).selected, activeBands)
@@ -151,6 +153,14 @@ async function showSelectedDistricts() {
       const {wijken} = times.profiles[bikeFixture];
       bikeBandsForBudget = Object.fromEntries(features.map(({id}) =>
         [id, classifyBikeSeconds(wijken[id]?.seconds, snapshot.thresholds)]));
+    }
+    if (!engagedBike && !draft.portions) throw Error("Outdated draft");
+    if (!engagedBike && draft.portions) {
+      const times = await fetch("data/amsterdam-bike-times.json").then(r => r.json());
+      budgetNetwork = await loadNetworkZones(bikeFixture, times);
+      if (budgetNetwork.version !== draft.portions) throw Error("Outdated geography");
+      budgetFeatures = features;
+      for (const {id} of features) names.set(orangeKey(id), names.get(id));
     }
     identifiers = bikeBudgetSelection();
     if (!identifiers.length) throw new Error("No eligible bike selection");

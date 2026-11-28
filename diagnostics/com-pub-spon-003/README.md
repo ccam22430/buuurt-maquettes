@@ -72,3 +72,5 @@ Automated checks include 19 Node tests and Chromium browser flows. Browser scena
 ## Conditional extension approval
 
 See the [calibration and technical record](../geo-auto-extension/README.md) for the 28 November decision, aggregate BAG evidence, and review implementation.
+
+The [network accessibility review](../geo-network-zones/README.md) supersedes the automatic extension calibration for active COM-PUB-SPON-003.

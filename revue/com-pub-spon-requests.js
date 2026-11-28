@@ -49,24 +49,60 @@ function renderRequestList(requests) {
   }
 }
 
+let requestNetwork;
+let requestNetworkRevision = 0;
+const requestKind = bikeElement("network-kind");
+const requestMinutes = bikeElement("network-minutes");
+function requestThresholds(record) {
+  return resolveBikeThresholds(readBikeConfig(localStorage), "amsterdam", record.fixture);
+}
+function previewRequestMap() {
+  const record = displayed;
+  if (!record || !requestNetwork || !pressMap) return;
+  const settings = requestThresholds(record);
+  const grants = networkGrants(localStorage, record.fixture, record.ad);
+  const base = networkBands(requestNetwork, mapData.wijken.features, settings, grants);
+  const minutes = requestMinutes.valueAsNumber;
+  const preview = requestAdmin && record.status === "pending" && requestDecision.value === "accepted" &&
+    Number.isInteger(minutes) && minutes > settings.standard && minutes <= zoneMax;
+  const proposed = preview ? networkBands(requestNetwork, mapData.wijken.features, settings,
+    [...grants, {kind:requestKind.value, minutes, zone:record.zone}]) : base;
+  const total = result => result.layers.reduce((sum, layer) => sum +
+    (layer.properties.category === "extended" ? layer.properties.surface : 0), 0);
+  bikeElement("network-surface").textContent = preview ?
+    networkWords(bikeLanguage.value).addedSurface + " · " +
+      new Intl.NumberFormat(bikeLanguage.value, {maximumFractionDigits:2}).format((total(proposed)-total(base))/1e6) + " km²" : "";
+  pressMap.drawNetwork(proposed);
+}
+
 async function renderRequestMap(record) {
-  if (!requestAdmin || mapLoading || !actorForRequest()) return;
+  const revision = ++requestNetworkRevision;
   try {
-    mapLoading = true;
     mapData ||= await loadBikeData();
-    bikeElement("request-map-section").hidden = false;
-    pressMap ||= createBikeMap(mapData, record.fixture);
-    const settings = resolveBikeThresholds(readBikeConfig(localStorage), "amsterdam", record.fixture);
-    pressMap.draw(extensionApply(bikeBands(mapData, record.fixture, settings), localStorage, record.fixture, record.ad));
+    const data = await loadNetworkZones(record.fixture, mapData.times);
+    if (revision !== requestNetworkRevision) return;
+    requestNetwork = data;
+    if (!pressMap) pressMap = createBikeMap(mapData, record.fixture);
+    else pressMap.setFixture(record.fixture);
+    previewRequestMap();
     pressMap.highlight(record.zone);
   } catch {
-    requestStatus.textContent = bikeWords().error;
-  } finally { mapLoading = false; }
+    if (revision === requestNetworkRevision) {
+      requestNetwork = null;
+      requestStatus.textContent = bikeWords().error;
+    }
+  }
 }
 
 function renderRequestDetail(record) {
   const words = {...bikeWords(), ...geoAutoWords(bikeLanguage.value)};
   displayed = record;
+  const geo = networkWords(bikeLanguage.value);
+  const previousKind = requestKind.value;
+  requestKind.replaceChildren(new Option(geo.targeted, "targeted"), new Option(geo.global, "global"));
+  requestKind.value = previousKind || "targeted";
+  requestMinutes.min = requestThresholds(record).standard + 1;
+  bikeElement("network-minutes-label").textContent = geo.minutes;
   bikeElement("request-zone").textContent = record.zoneName;
   const mapLink = bikeElement("request-map-link");
   const mapUrl = new URL("com-pub-spon-003.html", bikeUrl);
@@ -79,7 +115,7 @@ function renderRequestDetail(record) {
   const auth = record.authorization;
   const expiry = auth?.until && Date.parse(auth.until) <= Date.now();
   const info = [record.name, record.address, record.category, dateText(record.created), words[record.status]];
-  if (auth) info.push(words[auth.scope], ...(auth.until ? [dateText(auth.until)] : []), ...(expiry ? [words.expired] : []));
+  if (auth) info.push(words[auth.scope], ...(auth.kind ? [geo[auth.kind], auth.minutes + " min", auth.network] : []), ...(auth.until ? [dateText(auth.until)] : []), ...(expiry ? [words.expired] : []));
   bikeElement("request-info").textContent = info.join(" · ");
   const events = bikeElement("request-history");
   events.replaceChildren();
@@ -123,6 +159,8 @@ function updateRequestFields() {
   bikeElement("request-until-label").hidden = requestUntil.hidden;
   requestUntil.required = !requestUntil.hidden;
   bikeElement("request-reply").required = !accepting;
+  requestMinutes.required = accepting;
+  previewRequestMap();
 }
 
 function renderRequests() {
@@ -159,6 +197,7 @@ bikeElement("request-admin-login").onclick = () => {
 bikeElement("menu").onclick = () => bikeElement("campaign-menu").showModal();
 requestFilter.onchange = renderRequests;
 requestDecision.onchange = requestScope.onchange = updateRequestFields;
+requestKind.onchange = requestMinutes.oninput = previewRequestMap;
 requestForm.onsubmit = async event => {
   event.preventDefault();
   if (!displayed) return;
@@ -167,6 +206,10 @@ requestForm.onsubmit = async event => {
       action: requestAdmin ? requestDecision.value : "reply",
       note: bikeElement("request-reply").value,
       scope: requestScope.value,
+      kind: requestAdmin ? requestKind.value : undefined,
+      minutes: requestMinutes.valueAsNumber,
+      standard: requestThresholds(displayed).standard,
+      network: requestNetwork?.version,
       until: requestUntil.value ? requestUntil.value + "T23:59:59" : "",
       revision: displayed.events.length
     }));

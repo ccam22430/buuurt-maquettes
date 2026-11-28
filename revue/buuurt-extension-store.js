@@ -40,33 +40,34 @@ function extensionAuthorized(storage, fixture, ad, now = Date.now()) {
       (auth?.scope === "until" && Date.parse(auth.until) > now);
   }).map(r => r.zone));
 }
+function networkGrants(storage, fixture, ad, now = Date.now()) {
+  const actor = extensionActor(fixture);
+  return extensionRecords(storage).filter(record => extensionOwns(actor, record) &&
+    record.status === "accepted" && record.authorization?.kind &&
+    (record.authorization.scope === "shop" || (record.authorization.scope === "ad" && ad && record.ad === ad) ||
+     (record.authorization.scope === "until" && Date.parse(record.authorization.until) > now)))
+    .map(record => ({zone: record.zone, ...record.authorization}));
+}
+
 function extensionApply(bands, storage, fixture, ad) {
   const allowed = extensionAuthorized(storage, fixture, ad);
   return Object.fromEntries(Object.entries(bands).map(([id, band]) =>
     [id, band === "other" && allowed.has(id) ? "direct" : band]));
 }
-function extensionSubmit(storage, actor, {zone, name, note, ad, band, evidence}, now = new Date()) {
+function extensionSubmit(storage, actor, {zone, name, note, ad, band}, now = new Date()) {
   const official = extensionActor(actor?.fixture);
   if (!official || !extensionOwns(actor, official) || band !== "other" || !zone || !note.trim()) throw Error("forbidden");
   const records = extensionRecords(storage);
   const related = records.filter(r => extensionOwns(actor, r) && r.zone === zone);
   const duplicate = related.find(r => ["pending", "clarify"].includes(r.status) ||
-    (r.status === "accepted" && extensionAuthorized(storage, actor.fixture, ad, now.getTime()).has(zone)));
+    (r.status === "accepted" && !r.authorization?.kind && extensionAuthorized(storage, actor.fixture, ad, now.getTime()).has(zone)));
   if (duplicate) return {...duplicate, duplicate: true};
-  const blocked = related.some(r => ["revoked", "refused"].includes(r.status));
-  const accepted = evidence?.outcome === "automatic" && !blocked;
-  const authorization = accepted ? {scope: "shop"} : undefined;
   const created = {id: crypto.randomUUID(), ...official, zone, zoneName: name, ad, created: now.toISOString(),
-    status: accepted ? "accepted" : "pending", authorization,
-    events: [{type: "submitted", actor: actor.merchant, at: now.toISOString(), message: note.trim()}]};
-  if (evidence) created.assessment = {...evidence, outcome: blocked ? "manual" : evidence.outcome};
-  if (accepted) created.events.push({type: "accepted", origin: "automatic", actor: "geo-engine",
-    at: now.toISOString(), authorization, reason: "accessible-road-and-residential-thresholds"});
-
+    status: "pending", events: [{type: "submitted", actor: actor.merchant, at: now.toISOString(), message: note.trim()}]};
   storage.setItem(extensionKey, JSON.stringify([created, ...records]));
   return created;
 }
-function extensionChange(storage, actor, id, {action, note = "", scope, until, revision}, now = new Date()) {
+function extensionChange(storage, actor, id, {action, note = "", scope, until, revision, kind, minutes, standard, network}, now = new Date()) {
   const records = extensionRecords(storage);
   const index = records.findIndex(r => r.id === id);
   const record = records[index];
@@ -81,15 +82,17 @@ function extensionChange(storage, actor, id, {action, note = "", scope, until, r
   if (action === "accepted") {
     if (!["shop", "ad", "until"].includes(scope) || (scope === "ad" && !record.ad) ||
         (scope === "until" && !(Date.parse(until) > now.getTime()))) throw Error("scope");
-    authorization = {scope, ...(scope === "until" ? {until: new Date(until).toISOString()} : {})};
+    if (kind && (!["targeted", "global"].includes(kind) || !Number.isInteger(minutes) ||
+        !Number.isInteger(standard) || minutes <= standard || minutes > 20 || !network)) throw Error("range");
+    authorization = {scope, ...(kind ? {kind, minutes, standard, network} : {}), ...(scope === "until" ? {until: new Date(until).toISOString()} : {})};
   }
   const updated = {...record, status: reply ? "pending" : action, authorization, events: [...record.events,
-    {type: action, actor: admin ? actor.id : actor.merchant, at: now.toISOString(), message: note.trim(), authorization, origin: admin ? "administrative" : undefined}]};
+    {type: action, actor: admin ? actor.id : actor.merchant, at: now.toISOString(), message: note.trim(), authorization, previous: record.authorization, origin: admin ? "administrative" : undefined}]};
   records[index] = updated;
   storage.setItem(extensionKey, JSON.stringify(records));
   return updated;
 }
 
 if (typeof module !== "undefined") module.exports = {
-  extensionActor, extensionAdmin, extensionRecords, extensionSubmit, extensionChange, extensionApply, extensionAuthorized
+  extensionActor, extensionAdmin, extensionRecords, extensionSubmit, extensionChange, extensionApply, extensionAuthorized, networkGrants
 };

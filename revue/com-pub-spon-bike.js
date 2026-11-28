@@ -4,7 +4,7 @@ const bikeCampaignId = bikeUrl.searchParams.get("campaign");
 const bikeLocked = readBikeCampaign(localStorage, bikeCampaignId);
 const bikeDialog = bikeElement("extension-dialog");
 const bikeRequests = new Map();
-let baseBands;
+let baseBands, networkData, networkLayers;
 let extensionExpiryTimer;
 const currentAd = extensionAd(bikeUrl);
 let bikeData, bikeFixture, bikeSettings, bikeNetwork, bands, selected, view, active;
@@ -16,7 +16,7 @@ function bikeScope() {
 
 function persistBikeDraft() {
   return writeSponsorDraft({selected: [...selected], requests: [...bikeRequests], bands,
-    thresholds: bikeSettings, fixture: bikeFixture, network: bikeNetwork}, bikeScope());
+    thresholds: bikeSettings, fixture: bikeFixture, network: bikeNetwork, portions: networkData?.version}, bikeScope());
 }
 
 function extensionPage(id) {
@@ -29,11 +29,11 @@ function extensionPage(id) {
   return extension;
 }
 
-function chooseBikeNeighborhood(feature) {
+function chooseBikeNeighborhood(feature, portion) {
   if (bikeLocked) return;
   refreshExtensionRights();
-  const id = feature.id;
-  if (bands[id] === "direct") {
+  const id = portion === "extended" ? orangeKey(feature.id) : feature.id;
+  if (["direct", "extended"].includes(bands[id]) && portion !== "other") {
     if (selected.has(id)) selected.delete(id);
     else selected.add(id);
     const control = checkboxControls.get(id);
@@ -42,7 +42,7 @@ function chooseBikeNeighborhood(feature) {
     updateTerritoryGate();
     persistBikeDraft();
   }
-  if (bands[id] !== "other") return;
+  if (portion !== "other" && bands[id] !== "other") return;
   if (matchMedia("(max-width: 767px), (pointer: coarse) and (max-width: 950px)").matches) {
     if (!persistBikeDraft()) {
       bikeElement("message").textContent = bikeWords().storageError;
@@ -65,18 +65,20 @@ function syncBikeControl(button, icon, id) {
 }
 
 function makeBikeControl(feature, band) {
-  const checkbox = band === "direct";
+  const checkbox = ["direct", "extended"].includes(band);
+  const words = networkWords(bikeLanguage.value);
+  const id = band === "extended" ? orangeKey(feature.id) : feature.id;
   const action = checkbox || (band === "other" && !bikeLocked);
   const label = document.createElement(action ? "button" : "span");
   const name = document.createElement("span");
   name.textContent = feature.properties.buurtnaam;
   if (action) {
     label.type = "button";
-    label.onclick = () => chooseBikeNeighborhood(feature);
+    label.onclick = () => chooseBikeNeighborhood(feature, networkData ? band : undefined);
   }
   if (checkbox) {
     label.role = "checkbox";
-    label.ariaLabel = feature.properties.buurtnaam;
+    label.ariaLabel = feature.properties.buurtnaam + (band === "extended" ? " · " + words.extra : "");
     label.disabled = Boolean(bikeLocked);
   } else if (action) label.ariaHasPopup = "dialog";
   let icon;
@@ -94,12 +96,12 @@ function makeBikeControl(feature, band) {
   }
   const caption = document.createElement("small");
   caption.className = "zone-status";
-  caption.textContent = bikeWords()[band];
+  caption.textContent = networkData ? {direct: words.standard, extended: words.extended, other: words.requestGrey}[band] : bikeWords()[band];
   name.append(caption);
   label.append(name);
   if (checkbox) {
-    checkboxControls.set(feature.id, {button: label, icon});
-    syncBikeControl(label, icon, feature.id);
+    checkboxControls.set(id, {button: label, icon});
+    syncBikeControl(label, icon, id);
   }
   return label;
 }
@@ -127,7 +129,17 @@ function renderBikeList() {
     el.open = hadGroups ? opened.has(el.dataset.group) : group.children.some(child => bands[child.id] === "home");
     const title = document.createElement("summary");
     title.textContent = group.name;
-    el.append(title, ...group.children.map(feature => makeBikeControl(feature, bands[feature.id])));
+    el.append(title, ...group.children.flatMap(feature => {
+      const id = feature.id;
+      if (!networkData) return [makeBikeControl(feature, bands[id])];
+      const full = networkLayers?.layers.filter(layer => layer.properties.id === id) || [];
+      const target = full.filter(layer => layer.properties.category === "extended");
+      const rows = [];
+      if (bands[id] === "direct") rows.push(makeBikeControl(feature, "direct"));
+      if (target.length) rows.push(makeBikeControl(feature, "extended"));
+      rows.push(makeBikeControl(feature, "other"));
+      return rows;
+    }));
     container.append(el);
   }
 }
@@ -155,7 +167,18 @@ function refreshExtensionRights() {
   if (Number.isFinite(expiry)) {
     extensionExpiryTimer = setTimeout(refreshExtensionRights, Math.min(expiry - now, 2147483647));
   }
-  const next = extensionApply(baseBands, localStorage, bikeFixture, currentAd);
+  if (networkData) networkLayers = networkBands(networkData, bikeData.wijken.features, bikeSettings,
+    networkGrants(localStorage, bikeFixture, currentAd));
+  const next = networkLayers?.bands || extensionApply(baseBands, localStorage, bikeFixture, currentAd);
+  const signature = JSON.stringify(networkLayers?.layers.map(layer => layer.properties));
+  if (networkData && signature !== view.networkSignature) {
+    view.networkSignature = signature;
+    bands = next;
+    selected = new Set(eligibleBikeSelection([...selected], bands));
+    refreshBike();
+    persistBikeDraft();
+    return;
+  }
   if (!Object.keys(next).some(id => next[id] !== bands[id])) return;
   bands = next;
   selected = new Set(eligibleBikeSelection([...selected], bands));
@@ -172,10 +195,15 @@ function refreshBike() {
   bikeElement("reason").placeholder = bikeWords().example;
   const note = bikeElement("fixture-note");
   note.hidden = bikeFixture === "dolores";
+  bikeElement("network-advice").hidden = !Object.values(bands).includes("extended");
+  const uplift = readBikeConfig(localStorage).global.uplift ?? 50;
+  bikeElement("network-advice").textContent = networkWords(bikeLanguage.value).advice + " (+" + uplift + "%)";
+  bikeElement("network-orange").textContent = networkWords(bikeLanguage.value).extended;
   note.textContent = bikeFixtureNames()[bikeFixture];
   bikeElement("campaign-lock").hidden = !bikeLocked;
   checkboxControls.clear();
-  view.draw(bands);
+  if (networkLayers) view.drawNetwork(networkLayers);
+  else view.draw(bands);
   view.setSelection(selected);
   renderBikeList();
   updateTerritoryGate();
@@ -192,11 +220,16 @@ async function startBike() {
   bikeSettings = bikeLocked?.thresholds || resolveBikeThresholds(readBikeConfig(localStorage), "amsterdam", bikeFixture);
   bikeNetwork = bikeLocked?.network || bikeData.times.version;
   baseBands = bikeBands(bikeData, bikeFixture, bikeSettings);
-  bands = bikeLocked?.bands || extensionApply(baseBands, localStorage, bikeFixture, currentAd);
+  if (!bikeLocked) {
+    networkData = await loadNetworkZones(bikeFixture, bikeData.times);
+    networkLayers = networkBands(networkData, bikeData.wijken.features, bikeSettings,
+      networkGrants(localStorage, bikeFixture, currentAd));
+  }
+  bands = bikeLocked?.bands || networkLayers.bands;
   installExtensionBell(extensionActor(bikeFixture), () => bikeLanguage.value, currentAd);
   const draft = readSponsorDraft(bikeScope());
   const previous = bikeLocked?.selected || draft.selected;
-  selected = new Set(Array.isArray(previous) ? previous.filter(id => bands[id] === "direct") : []);
+  selected = new Set(Array.isArray(previous) ? eligibleBikeSelection(previous, bands) : []);
   for (const [id, reason] of Array.isArray(draft.requests) ? draft.requests : []) bikeRequests.set(id, reason);
   view = createBikeMap(bikeData, bikeFixture, bikeLocked ? null : chooseBikeNeighborhood);
   refreshBike();
@@ -224,28 +257,13 @@ bikeElement("extension-form").onsubmit = async event => {
   const name = bikeElement("district-name").textContent;
   try {
     if (!persistBikeDraft()) throw Error("draft");
-    const evidence = await loadGeoAutoEvidence();
     if (!bikeDialog.open || zone !== active) return;
     const submitted = await geoAutoSerialize(() => {
-      const config = readBikeConfig(localStorage);
-      const settings = resolveBikeThresholds(config, "amsterdam", bikeFixture);
-      const base = classifyBikeSeconds(bikeData.times.profiles[bikeFixture].wijken[zone]?.seconds, settings);
-      const band = extensionAuthorized(localStorage, bikeFixture, currentAd).has(zone) ? "direct" : base;
-      const assessment = geoAutoEvaluate(evidence, bikeData.times, bikeFixture, zone, settings.standard,
-        config.global.extension);
       return extensionSubmit(localStorage, extensionActor(bikeFixture), {
-        zone, name, note: reason, ad: currentAd, band, evidence: assessment
+        zone, name, note: reason, ad: currentAd, band: "other"
       });
     });
     if (!submitted.duplicate) bikeRequests.set(zone, reason);
-    if (!submitted.duplicate && submitted.status === "accepted") {
-      selected.add(zone);
-      if (!persistBikeDraft() || !writeSponsorDraft({extensionReceipt: submitted.id}, bikeScope())) throw Error("draft");
-      const destination = extensionPage(zone);
-      destination.searchParams.set("receipt", submitted.id);
-      location.assign(destination);
-      return;
-    }
     const saved = persistBikeDraft();
     bikeElement("message").textContent = saved ? bikeWords()[submitted.duplicate ? "duplicate" : "sent"] : bikeWords().storageError;
     if (saved) bikeDialog.close();

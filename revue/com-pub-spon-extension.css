@@ -92,6 +92,3 @@
 .requests-page :is(textarea, select, input) { max-inline-size: 100%; min-inline-size: 0; font-size: 16px; }
 .requests-page textarea { width: 100%; }
 .requests-page .back { margin-block-end: 12px; }
-
-#extension-confirmation button { min-height: 44px; margin-top: 0.75rem; width: 100%; }
-#extension-confirmation h2 { margin-top: 0; }
