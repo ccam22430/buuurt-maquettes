@@ -55,3 +55,5 @@ Build using the pinned road extract and Python with NumPy, SciPy, contourpy, pyp
 ```sh
 python scripts/build-amsterdam-isochrone-display.py /path/to/existing-roads.json
 ```
+
+Active geography now follows the [geodesic radius decision](../geo-radius/README.md). The earlier route calculations and prototypes are retained for traceability.

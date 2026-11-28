@@ -6,7 +6,7 @@ function initCommercialBudget(features, names) {
   $c("budget").hidden = false;
   $c("back").hidden = false;
   const originalPools = commercialDemoPools(features);
-  const currentPools = () => budgetNetwork ? networkInventory(originalPools, budgetNetwork, draft.thresholds,
+  const currentPools = () => budgetNetwork ? radiusInventory(originalPools, budgetNetwork, draft.thresholds,
     currentNetworkGrants()) : originalPools;
   const fixture = extensionActor(bikeFixture);
   const ad = extensionAd(url) || "demo-ad";
@@ -22,7 +22,7 @@ function initCommercialBudget(features, names) {
       volume: prefs.volume, id: bikeId, names: zones.map(id => names.get(id) + (id.endsWith(":extended") ?
         " · " + networkWords(language.value).extra : "")), ad,
       ...(budgetNetwork ? {orange: prefs.orange ?? 0, uplift:readBikeConfig(localStorage).global.uplift ?? 50,
-        geographicSnapshot:{version:budgetNetwork.version, thresholds:draft.thresholds, grants:currentNetworkGrants()}} : {})};
+        geographicSnapshot:{version:radiusVersion, thresholds:draft.thresholds, grants:currentNetworkGrants()}} : {})};
   };
   const persist = () => writeSponsorDraft({commercial: prefs}, settingsScope);
   const priceOf = (input, config) => budgetNetwork ?
@@ -144,7 +144,7 @@ function initCommercialBudget(features, names) {
     }
   };
   window.addEventListener("focus", render);
-  window.addEventListener("storage", event => {if (event.key === commercialKey) render();});
+  window.addEventListener("storage", event => {if ([commercialKey, extensionKey, radiusKey, bikeConfigKey].includes(event.key)) render();});
   language.addEventListener("change", render);
   render();
 }

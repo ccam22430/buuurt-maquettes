@@ -67,7 +67,7 @@ function extensionSubmit(storage, actor, {zone, name, note, ad, band}, now = new
   storage.setItem(extensionKey, JSON.stringify([created, ...records]));
   return created;
 }
-function extensionChange(storage, actor, id, {action, note = "", scope, until, revision, kind, minutes, standard, network}, now = new Date()) {
+function extensionChange(storage, actor, id, {action, note = "", scope, until, revision, kind, minutes, metres, standard, network}, now = new Date()) {
   const records = extensionRecords(storage);
   const index = records.findIndex(r => r.id === id);
   const record = records[index];
@@ -75,16 +75,19 @@ function extensionChange(storage, actor, id, {action, note = "", scope, until, r
   const admin = actor?.role === "geo-admin" && actor.id === "review-admin";
   const reply = action === "reply" && record.status === "clarify" && extensionOwns(actor, record);
   const decision = admin && record.status === "pending" && ["accepted", "refused", "clarify"].includes(action);
+  const revise = admin && record.status === "accepted" && action === "accepted" &&
+    !Number.isFinite(record.authorization?.metres) && Number.isSafeInteger(metres);
   const revoke = admin && record.status === "accepted" && action === "revoked";
-  if (!reply && !decision && !revoke) throw Error("forbidden");
+  if (!reply && !decision && !revoke && !revise) throw Error("forbidden");
   if (action !== "accepted" && !note.trim()) throw Error("message");
   let authorization;
   if (action === "accepted") {
     if (!["shop", "ad", "until"].includes(scope) || (scope === "ad" && !record.ad) ||
         (scope === "until" && !(Date.parse(until) > now.getTime()))) throw Error("scope");
-    if (kind && (!["targeted", "global"].includes(kind) || !Number.isInteger(minutes) ||
-        !Number.isInteger(standard) || minutes <= standard || minutes > 20 || !network)) throw Error("range");
-    authorization = {scope, ...(kind ? {kind, minutes, standard, network} : {}), ...(scope === "until" ? {until: new Date(until).toISOString()} : {})};
+    if (kind && (!["targeted", "global"].includes(kind) || !Number.isInteger(standard) || !network ||
+        (metres === undefined ? !Number.isInteger(minutes) || minutes <= standard || minutes > 20 :
+          !Number.isSafeInteger(metres) || metres <= standard || metres > 100000))) throw Error("range");
+    authorization = {scope, ...(kind ? {kind, minutes, metres, standard, network} : {}), ...(scope === "until" ? {until: new Date(until).toISOString()} : {})};
   }
   const updated = {...record, status: reply ? "pending" : action, authorization, events: [...record.events,
     {type: action, actor: admin ? actor.id : actor.merchant, at: now.toISOString(), message: note.trim(), authorization, previous: record.authorization, origin: admin ? "administrative" : undefined}]};

@@ -4,7 +4,7 @@ const bikeCampaignId = bikeUrl.searchParams.get("campaign");
 const bikeLocked = readBikeCampaign(localStorage, bikeCampaignId);
 const bikeDialog = bikeElement("extension-dialog");
 const bikeRequests = new Map();
-let baseBands, networkData, networkLayers, isochroneDisplay;
+let networkData, networkLayers;
 let extensionExpiryTimer;
 const currentAd = extensionAd(bikeUrl);
 let bikeData, bikeFixture, bikeSettings, bikeNetwork, bands, selected, view, active;
@@ -16,7 +16,7 @@ function bikeScope() {
 
 function persistBikeDraft() {
   return writeSponsorDraft({selected: [...selected], requests: [...bikeRequests], bands,
-    thresholds: bikeSettings, fixture: bikeFixture, network: bikeNetwork, portions: networkData?.version}, bikeScope());
+    thresholds: bikeSettings, fixture: bikeFixture, network: bikeNetwork, portions: networkData && radiusVersion}, bikeScope());
 }
 
 function extensionPage(id) {
@@ -43,6 +43,7 @@ function chooseBikeNeighborhood(feature, portion) {
     persistBikeDraft();
   }
   if (portion !== "other" && bands[id] !== "other") return;
+  if (networkLayers && !networkLayers.grey.has(feature.id)) return;
   if (matchMedia("(max-width: 767px), (pointer: coarse) and (max-width: 950px)").matches) {
     if (!persistBikeDraft()) {
       bikeElement("message").textContent = bikeWords().storageError;
@@ -111,16 +112,16 @@ function renderBikeList() {
   const opened = new Set([...container.querySelectorAll("details[open]")].map(el => el.dataset.group));
   const hadGroups = container.children.length > 0;
   const ring = {home: 0, direct: 1, other: 2};
-  const scores = bikeData.times.profiles[bikeFixture].wijken;
+  const scores = bikeData.times.profiles[bikeFixture].wijken || {};
   const areaGroups = [...bikeData.areas.features, null].map(area => {
     const id = area?.id || null;
     const children = bikeData.wijken.features.filter(wijk => wijk.properties.parent === id).sort((a, b) =>
-      ring[bands[a.id]] - ring[bands[b.id]] || (scores[a.id].seconds ?? Infinity) - (scores[b.id].seconds ?? Infinity) ||
+      ring[bands[a.id]] - ring[bands[b.id]] || (scores[a.id]?.seconds ?? Infinity) - (scores[b.id]?.seconds ?? Infinity) ||
       a.properties.buurtnaam.localeCompare(b.properties.buurtnaam, "nl"));
     return {id, name: area?.properties.buurtnaam || bikeWords().unassigned, children};
   }).filter(group => group.children.length);
   areaGroups.sort((a, b) => ring[bands[a.children[0].id]] - ring[bands[b.children[0].id]] ||
-    (scores[a.children[0].id].seconds ?? Infinity) - (scores[b.children[0].id].seconds ?? Infinity) ||
+    (scores[a.children[0].id]?.seconds ?? Infinity) - (scores[b.children[0].id]?.seconds ?? Infinity) ||
     a.name.localeCompare(b.name, "nl"));
   container.replaceChildren();
   for (const group of areaGroups) {
@@ -137,7 +138,7 @@ function renderBikeList() {
       const rows = [];
       if (bands[id] === "direct") rows.push(makeBikeControl(feature, "direct"));
       if (target.length) rows.push(makeBikeControl(feature, "extended"));
-      rows.push(makeBikeControl(feature, "other"));
+      if (networkLayers.grey.has(id)) rows.push(makeBikeControl(feature, "other"));
       return rows;
     }));
     container.append(el);
@@ -156,7 +157,7 @@ function updateTerritoryGate() {
 }
 
 function refreshExtensionRights() {
-  if (bikeLocked || !baseBands || !view) return;
+  if (bikeLocked || !view || !networkData) return;
   clearTimeout(extensionExpiryTimer);
   const actor = extensionActor(bikeFixture);
   const now = Date.now();
@@ -167,26 +168,19 @@ function refreshExtensionRights() {
   if (Number.isFinite(expiry)) {
     extensionExpiryTimer = setTimeout(refreshExtensionRights, Math.min(expiry - now, 2147483647));
   }
-  if (networkData) networkLayers = networkBands(networkData, bikeData.wijken.features, bikeSettings,
-    networkGrants(localStorage, bikeFixture, currentAd));
-  const next = networkLayers?.bands || extensionApply(baseBands, localStorage, bikeFixture, currentAd);
-  const signature = JSON.stringify(networkLayers?.layers.map(layer => layer.properties));
-  if (networkData && signature !== view.networkSignature) {
-    view.networkSignature = signature;
-    bands = next;
-    selected = new Set(eligibleBikeSelection([...selected], bands));
-    refreshBike();
-    persistBikeDraft();
-    return;
-  }
-  if (!Object.keys(next).some(id => next[id] !== bands[id])) return;
-  bands = next;
+  const grants = networkGrants(localStorage, bikeFixture, currentAd);
+  bikeSettings = radiusSettings(localStorage, "amsterdam", bikeFixture);
+  const signature = JSON.stringify([bikeSettings, grants]);
+  if (signature === view.networkSignature) return;
+  view.networkSignature = signature;
+  networkLayers = radiusBands(networkData, bikeData.wijken.features, bikeSettings, grants);
+  bands = networkLayers.bands;
   selected = new Set(eligibleBikeSelection([...selected], bands));
   refreshBike();
   persistBikeDraft();
 }
 window.addEventListener("storage", event => {
-  if (event.key === extensionKey) refreshExtensionRights();
+  if (event.key === extensionKey || event.key === radiusKey) refreshExtensionRights();
 });
 window.addEventListener("focus", refreshExtensionRights);
 
@@ -198,15 +192,15 @@ function refreshBike() {
   bikeElement("network-advice").hidden = !Object.values(bands).includes("extended");
   const uplift = readBikeConfig(localStorage).global.uplift ?? 50;
   bikeElement("network-advice").textContent = networkWords(bikeLanguage.value).advice + " (+" + uplift + "%)";
+  const legacy = bikeElement("radius-legacy");
+  legacy.hidden = !extensionRecords(localStorage).some(record =>
+    extensionOwns(extensionActor(bikeFixture), record) && record.status === "accepted" && !record.authorization?.metres);
+  legacy.textContent = radiusRequestWords(bikeLanguage.value).legacy;
   bikeElement("network-orange").textContent = networkWords(bikeLanguage.value).extended;
   note.textContent = bikeFixtureNames()[bikeFixture];
   bikeElement("campaign-lock").hidden = !bikeLocked;
   checkboxControls.clear();
-  if (networkLayers) {
-    const displayLayers = isochroneDisplay && isochroneDisplayLayers(isochroneDisplay, bikeSettings,
-      networkGrants(localStorage, bikeFixture, currentAd), bands);
-    view.drawNetwork(networkLayers, displayLayers);
-  }
+  if (networkLayers) view.drawNetwork(networkLayers);
   else view.draw(bands);
   view.setSelection(selected);
   renderBikeList();
@@ -221,13 +215,11 @@ async function startBike() {
   bikeData = await loadBikeData();
   const request = bikeLocked?.fixture || bikeUrl.searchParams.get("fixture");
   bikeFixture = Object.hasOwn(bikeData.times.profiles, request) ? request : "dolores";
-  bikeSettings = bikeLocked?.thresholds || resolveBikeThresholds(readBikeConfig(localStorage), "amsterdam", bikeFixture);
-  bikeNetwork = bikeLocked?.network || bikeData.times.version;
-  baseBands = bikeBands(bikeData, bikeFixture, bikeSettings);
+  bikeSettings = bikeLocked?.thresholds || radiusSettings(localStorage, "amsterdam", bikeFixture);
+  bikeNetwork = bikeLocked?.network || radiusVersion;
   if (!bikeLocked) {
-    networkData = await loadNetworkZones(bikeFixture, bikeData.times);
-    isochroneDisplay = await loadIsochroneDisplay(bikeFixture, networkData);
-    networkLayers = networkBands(networkData, bikeData.wijken.features, bikeSettings,
+    networkData = bikeData.times.profiles[bikeFixture];
+    networkLayers = radiusBands(networkData, bikeData.wijken.features, bikeSettings,
       networkGrants(localStorage, bikeFixture, currentAd));
   }
   bands = bikeLocked?.bands || networkLayers.bands;
@@ -263,7 +255,7 @@ bikeElement("extension-form").onsubmit = async event => {
   try {
     if (!persistBikeDraft()) throw Error("draft");
     if (!bikeDialog.open || zone !== active) return;
-    const submitted = await geoAutoSerialize(() => {
+    const submitted = await geoReviewLock(() => {
       return extensionSubmit(localStorage, extensionActor(bikeFixture), {
         zone, name, note: reason, ad: currentAd, band: "other"
       });

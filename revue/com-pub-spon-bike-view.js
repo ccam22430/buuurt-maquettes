@@ -12,7 +12,7 @@ const bikeText = {
     extensionTitle: "Demande d’extension", extensionSend: "Envoyer ma demande", extensionCancel: "Annuler",
     home: "Zone locale gratuite", direct: "Extension sponsorisée standard", other: "Extension sur demande",
     wijken: "Sous-quartiers", areas: "Voir les quartiers", list: "Territoires",
-    estimate: "Temps estimés sur le réseau cyclable. La limite s’applique à au moins la moitié des voies parcourables du sous-quartier.",
+    estimate: "Distances à vol d’oiseau entre commerces.",
     locked: "Périmètre enregistré pour cette campagne.", grayBikeReason: "Ce sous-quartier est hors du périmètre standard. Une demande d’extension est nécessaire.",
     unassigned: "Westpoort · sous-quartiers sans rattachement", adminTitle: "Paramètres géographiques",
     adminDemo: "La session et les réglages de cette maquette sont locaux à ce navigateur.",
@@ -35,7 +35,7 @@ const bikeText = {
     extensionTitle: "Uitbreidingsaanvraag", extensionSend: "Mijn aanvraag versturen", extensionCancel: "Annuleren",
     home: "Gratis lokaal gebied", direct: "Standaard gesponsord uitbreidingsgebied", other: "Uitbreiding op aanvraag",
     wijken: "Wijken", areas: "Gebieden bekijken", list: "Gebieden",
-    estimate: "Geschatte tijden op het fietsnetwerk. De grens geldt voor minstens de helft van de berijdbare wegen in de wijk.",
+    estimate: "Afstanden hemelsbreed tussen zaken.",
     locked: "Gebied opgeslagen voor deze campagne.", grayBikeReason: "Deze wijk valt buiten het standaardgebied. Vraag een uitbreiding aan.",
     unassigned: "Westpoort · wijken zonder gebied", adminTitle: "Geografische instellingen",
     adminDemo: "De sessie en instellingen van deze demo zijn lokaal in deze browser.",
@@ -58,7 +58,7 @@ const bikeText = {
     extensionTitle: "Extension request", extensionSend: "Send my request", extensionCancel: "Cancel",
     home: "Free local area", direct: "Standard sponsored extension", other: "Extension by request",
     wijken: "Neighborhoods", areas: "Show areas", list: "Territories",
-    estimate: "Estimated bicycle network times. The time limit applies to at least half of the neighborhood’s rideable roads.",
+    estimate: "Straight-line distances between businesses.",
     locked: "Saved targeting for this campaign.", grayBikeReason: "This neighborhood is outside standard coverage. Request an extension to use it.",
     unassigned: "Westpoort · unassigned neighborhoods", adminTitle: "Geographic settings",
     adminDemo: "This prototype’s session and settings are local to this browser.",
@@ -100,18 +100,12 @@ function bikeLanguageChange(update) {
 
 async function loadBikeData() {
   const [areas, wijken, times] = await Promise.all(
-    ["amsterdam-levels-areas.geojson", "amsterdam-levels-wijken.geojson", "amsterdam-bike-times.json"].map(async name => {
+    ["amsterdam-levels-areas.geojson", "amsterdam-levels-wijken.geojson", "amsterdam-radius-fixtures.json"].map(async name => {
       const response = await fetch("data/" + name);
       if (!response.ok) throw new Error(name);
       return response.json();
     }));
   return {areas, wijken, times};
-}
-
-function bikeBands(data, fixture, settings) {
-  const profile = data.times.profiles[fixture];
-  return Object.fromEntries(data.wijken.features.map(({id}) =>
-    [id, classifyBikeSeconds(profile.wijken[id]?.seconds, settings)]));
 }
 
 function bikeFailure(text = bikeWords().error) {
@@ -136,7 +130,7 @@ function createBikeMap(data, fixture, onChoose) {
   }).addTo(map);
   const fills = Object.fromEntries([...document.querySelectorAll(".campaign-legend [data-band]")].map(
     item => [item.dataset.band, getComputedStyle(item).getPropertyValue("--band").trim()]));
-  map.attributionControl.addAttribution('<a href="https://maps.amsterdam.nl/gebiedsindeling/">Amsterdam · CC0</a> · <a href="https://www.pdok.nl/introductie/-/article/basisregistratie-topografie-topnl">Kadaster/PDOK · TOP10NL · CC BY 4.0</a>');
+  map.attributionControl.addAttribution('<a href="https://maps.amsterdam.nl/gebiedsindeling/">Amsterdam · CC0</a>');
   let bands = {};
   // Leaflet suppresses drag clicks, but a browser can still synthesize a click after a pinch.
   const pointers = new Map();
@@ -221,21 +215,33 @@ function createBikeMap(data, fixture, onChoose) {
   const boundaries = L.geoJSON(data.wijken, {pane: "districtBoundaries", interactive: false, smoothFactor: 0,
     style: {color: "white", weight: 1.5, fill: false}});
   let networkMode = false;
-  function drawNetwork(result, displayLayers) {
-    if (!networkMode && displayLayers?.length) {
-      map.attributionControl.addAttribution('<a href="https://data.overheid.nl/dataset/81148-bestand-bodemgebruik-2010">CBS · Water · CC BY 4.0</a>');
-    }
+  const indicators = L.layerGroup().addTo(map);
+  function drawNetwork(result) {
+    indicators.clearLayers();
     networkMode = true;
     bands = result.bands;
     outline.setStyle({fillColor: fills.other});
     boundaries.addTo(map);
     access.clearLayers();
-    access.addData(displayLayers?.length ? displayLayers : result.layers);
+    access.addData(result.layers);
     access.eachLayer(layer => {
       const {id, category} = layer.feature.properties;
       layer.setStyle({fillColor: category === "extended" ? "#ff9f43" : fills[category]});
       layer.getElement().dataset.portion = category;
       layer.getElement().dataset.wijk = id;
+      if (onChoose && category !== "home") {
+        const position = radiusLabelPoint(layer.feature.geometry);
+        if (position) {
+          const indicator = L.marker(position, {icon:L.divIcon({className:"radius-choice",html:"<span>✓</span>",
+            iconSize:[24,24],iconAnchor:[12,12]}), keyboard:false})
+            .on("click", event => {
+              L.DomEvent.stopPropagation(event.originalEvent);
+              if (!gestureMoved) onChoose(labels.get(id).polygon.feature, category);
+            });
+          indicators.addLayer(indicator);
+          layer.indicator = indicator;
+        }
+      }
       layer.on("click", event => {
         L.DomEvent.stopPropagation(event.originalEvent);
         if (gestureMoved) return;
@@ -298,7 +304,7 @@ function createBikeMap(data, fixture, onChoose) {
       access.eachLayer(layer => {
         const {id, category} = layer.feature.properties;
         const checked = category !== "home" && selected.has(category === "extended" ? orangeKey(id) : id);
-        layer.setStyle({stroke: checked, color: "#362446", weight: checked ? 1.25 : 0});
+        layer.indicator?.getElement()?.classList.toggle("is-selected", checked);
         layer.getElement().setAttribute("data-selected", String(checked));
       });
       return;

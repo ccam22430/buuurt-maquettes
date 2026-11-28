@@ -26,7 +26,7 @@ function ownRequests() {
   return actor ? extensionRecords(localStorage).filter(record => requestAdmin || extensionOwns(actor, record)) : [];
 }
 function renderRequestList(requests) {
-  const words = {...bikeWords(), ...geoAutoWords(bikeLanguage.value)};
+  const words = {...bikeWords(), ...radiusRequestWords(bikeLanguage.value)};
   bikeElement("request-count").textContent = requestAdmin ? words.actionCount + " : " +
     requests.filter(r => r.status === "pending").length : "";
   const filter = requestFilter.value;
@@ -55,7 +55,7 @@ let requestMapFixture;
 const requestKind = bikeElement("network-kind");
 const requestMinutes = bikeElement("network-minutes");
 function requestThresholds(record) {
-  return resolveBikeThresholds(readBikeConfig(localStorage), "amsterdam", record.fixture);
+  return radiusSettings(localStorage, "amsterdam", record.fixture);
 }
 function previewRequestMap() {
   const record = displayed;
@@ -63,25 +63,21 @@ function previewRequestMap() {
   const settings = requestThresholds(record);
   const grants = networkGrants(localStorage, record.fixture, record.ad);
   const active = bikeElement("network-active");
-  const words = networkWords(bikeLanguage.value);
+  const words = {...networkWords(bikeLanguage.value), ...radiusRequestWords(bikeLanguage.value)};
   active.replaceChildren(...grants.map(grant => {
     const item = document.createElement("li");
     const district = mapData.wijken.features.find(feature => feature.id === grant.zone);
     item.textContent = [words[grant.kind], grant.kind === "targeted" ? district?.properties.buurtnaam : "",
-      grant.minutes + " min", grant.until ? dateText(grant.until) : ""].filter(Boolean).join(" · ");
+      grant.metres ? grant.metres / 1000 + " km" : words.legacy, grant.until ? dateText(grant.until) : ""].filter(Boolean).join(" · ");
     return item;
   }));
-  const base = networkBands(requestNetwork, mapData.wijken.features, settings, grants);
-  const minutes = requestMinutes.valueAsNumber;
-  const preview = requestAdmin && record.status === "pending" && requestDecision.value === "accepted" &&
-    Number.isInteger(minutes) && minutes > settings.standard && minutes <= zoneMax;
-  const proposed = preview ? networkBands(requestNetwork, mapData.wijken.features, settings,
-    [...grants, {kind:requestKind.value, minutes, zone:record.zone}]) : base;
-  const total = result => result.layers.reduce((sum, layer) => sum +
-    (layer.properties.category === "extended" ? layer.properties.surface : 0), 0);
-  bikeElement("network-surface").textContent = preview ?
-    networkWords(bikeLanguage.value).addedSurface + " · " +
-      new Intl.NumberFormat(bikeLanguage.value, {maximumFractionDigits:2}).format((total(proposed)-total(base))/1e6) + " km²" : "";
+  const base = radiusBands(requestNetwork, mapData.wijken.features, settings, grants);
+  const metres = Math.round(requestMinutes.valueAsNumber * 1000);
+  const preview = requestAdmin && (record.status === "pending" || !record.authorization?.metres) && requestDecision.value === "accepted" &&
+    Number.isSafeInteger(metres) && metres > settings.standard && metres <= radiusMaximum;
+  const proposed = preview ? radiusBands(requestNetwork, mapData.wijken.features, settings,
+    [...grants, {kind:requestKind.value, metres, zone:record.zone}]) : base;
+  bikeElement("network-surface").textContent = "";
   pressMap.drawNetwork(proposed);
 }
 
@@ -90,7 +86,8 @@ async function renderRequestMap(record) {
   requestNetwork = null;
   try {
     mapData ||= await loadBikeData();
-    const data = await loadNetworkZones(record.fixture, mapData.times);
+    const data = mapData.times.profiles[record.fixture];
+    if (!data) throw Error("Unknown business");
     if (revision !== requestNetworkRevision) return;
     requestNetwork = data;
     if (!pressMap) pressMap = createBikeMap(mapData, record.fixture);
@@ -107,13 +104,13 @@ async function renderRequestMap(record) {
 }
 
 function renderRequestDetail(record) {
-  const words = {...bikeWords(), ...geoAutoWords(bikeLanguage.value)};
+  const words = {...bikeWords(), ...radiusRequestWords(bikeLanguage.value)};
   displayed = record;
   const geo = networkWords(bikeLanguage.value);
   const previousKind = requestKind.value;
   requestKind.replaceChildren(new Option(geo.targeted, "targeted"), new Option(geo.global, "global"));
   requestKind.value = previousKind || "targeted";
-  requestMinutes.min = requestThresholds(record).standard + 1;
+  requestMinutes.min = (requestThresholds(record).standard + 1) / 1000;
   bikeElement("network-minutes-label").textContent = geo.minutes;
   bikeElement("request-zone").textContent = record.zoneName;
   const mapLink = bikeElement("request-map-link");
@@ -127,7 +124,8 @@ function renderRequestDetail(record) {
   const auth = record.authorization;
   const expiry = auth?.until && Date.parse(auth.until) <= Date.now();
   const info = [record.name, record.address, record.category, dateText(record.created), words[record.status]];
-  if (auth) info.push(words[auth.scope], ...(auth.kind ? [geo[auth.kind], auth.minutes + " min", auth.network] : []), ...(auth.until ? [dateText(auth.until)] : []), ...(expiry ? [words.expired] : []));
+  if (auth && !auth.metres && !auth.kind) info.push(words.legacy);
+  if (auth) info.push(words[auth.scope], ...(auth.kind ? [geo[auth.kind], auth.metres ? auth.metres / 1000 + " km" : words.legacy, auth.network] : []), ...(auth.until ? [dateText(auth.until)] : []), ...(expiry ? [words.expired] : []));
   bikeElement("request-info").textContent = info.join(" · ");
   const events = bikeElement("request-history");
   events.replaceChildren();
@@ -150,7 +148,7 @@ function renderRequestDetail(record) {
   requestDecision.hidden = !requestAdmin;
   bikeElement("request-decision-label").hidden = !requestAdmin;
   const decision = requestDecision.value;
-  requestDecision.replaceChildren(...(revocable ? [new Option(words.revoke, "revoked")] : ["accepted", "refused", "clarify"].map(value => new Option(words[value], value))));
+  requestDecision.replaceChildren(...(revocable ? [new Option(words.revoke, "revoked"), ...(!auth?.metres ? [new Option(words.reissue, "accepted")] : [])] : ["accepted", "refused", "clarify"].map(value => new Option(words[value], value))));
   requestDecision.value = revocable ? "revoked" : decision === "revoked" ? "accepted" : decision || "accepted";
   const scope = requestScope.value;
   requestScope.replaceChildren(...["shop", "ad", "until"].map(value => {
@@ -158,7 +156,8 @@ function renderRequestDetail(record) {
     opt.disabled = value === "ad" && !record.ad;
     return opt;
   }));
-  requestScope.value = scope || "shop";
+  requestScope.value = auth?.scope || scope || "shop";
+  if (auth?.until) requestUntil.value = auth.until.slice(0,10);
   bikeElement("request-submit").textContent = requestAdmin ? words.decide : words.answer;
   updateRequestFields();
   renderRequestMap(record);
@@ -178,7 +177,7 @@ function updateRequestFields() {
 function renderRequests() {
   translateBike();
   const actor = actorForRequest();
-  const words = {...bikeWords(), ...geoAutoWords(bikeLanguage.value)};
+  const words = {...bikeWords(), ...radiusRequestWords(bikeLanguage.value)};
   const back = bikeElement("request-back");
   const url = requestId ? extensionLink(requestFixture, bikeLanguage.value, {admin: requestAdmin, ad: requestAd}) :
     new URL(requestAdmin ? "adm-geo-003.html" : "com-pub-spon-003.html", bikeUrl);
@@ -214,14 +213,14 @@ requestForm.onsubmit = async event => {
   event.preventDefault();
   if (!displayed) return;
   try {
-    await geoAutoSerialize(() => extensionChange(localStorage, actorForRequest(), displayed.id, {
+    await geoReviewLock(() => extensionChange(localStorage, actorForRequest(), displayed.id, {
       action: requestAdmin ? requestDecision.value : "reply",
       note: bikeElement("request-reply").value,
       scope: requestScope.value,
       kind: requestAdmin ? requestKind.value : undefined,
-      minutes: requestMinutes.valueAsNumber,
+      metres: Math.round(requestMinutes.valueAsNumber * 1000),
       standard: requestThresholds(displayed).standard,
-      network: requestNetwork?.version,
+      network: requestNetwork && radiusVersion,
       until: requestUntil.value ? requestUntil.value + "T23:59:59" : "",
       revision: displayed.events.length
     }));

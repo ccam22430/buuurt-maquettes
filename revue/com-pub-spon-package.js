@@ -31,7 +31,7 @@ const scope = isBike ? extensionDraftScope(profile, bikeFixture, extensionAd(url
 const draft = readSponsorDraft(scope);
 let selectedNames;
 let selectionUnavailable = false;
-let bikeBandsForBudget, budgetNetwork, budgetFeatures;
+let bikeBandsForBudget, budgetNetwork, budgetFeatures, budgetGrantsSignature, budgetBands;
 function currentNetworkGrants() { return networkGrants(localStorage, bikeFixture, extensionAd(url)); }
 let displayedBikeSelection;
 const budgetPage = document.querySelector("main");
@@ -43,8 +43,17 @@ if (isBike) {
 function bikeBudgetSelection() {
   if (!bikeBandsForBudget) return [];
   if (engagedBike) return eligibleBikeSelection(engagedBike.selected, bikeBandsForBudget);
-  const activeBands = budgetNetwork ? networkBands(budgetNetwork, budgetFeatures, draft.thresholds, currentNetworkGrants()).bands :
-    extensionApply(bikeBandsForBudget, localStorage, bikeFixture, extensionAd(url));
+  if (budgetNetwork) {
+    const current = radiusSettings(localStorage, "amsterdam", bikeFixture);
+    if (current.local !== draft.thresholds.local || current.standard !== draft.thresholds.standard) return [];
+  }
+  const grants = currentNetworkGrants();
+  const signature = JSON.stringify(grants);
+  if (budgetNetwork && signature !== budgetGrantsSignature) {
+    budgetBands = radiusBands(budgetNetwork,budgetFeatures,draft.thresholds,grants).bands;
+    budgetGrantsSignature = signature;
+  }
+  const activeBands = budgetBands || extensionApply(bikeBandsForBudget, localStorage, bikeFixture, extensionAd(url));
   const current = readSponsorDraft(extensionDraftScope(profile, bikeFixture, extensionAd(url)));
   const latest = new Set(eligibleBikeSelection(current.selected, activeBands));
   return eligibleBikeSelection(readSponsorDraft(scope).selected, activeBands)
@@ -138,28 +147,18 @@ async function showSelectedDistricts() {
   const {features} = await response.json();
   const names = new Map(features.map(feature => [feature.id, feature.properties.buurtnaam]));
   if (isBike) {
-    if (!/^[\da-f-]{36}$/i.test(bikeId || "") || !validBikeThresholds(snapshot.thresholds) ||
+    if (!/^[\da-f-]{36}$/i.test(bikeId || "") || !(engagedBike ? validBikeThresholds(snapshot.thresholds) : validRadius(snapshot.thresholds)) ||
         snapshot.fixture !== bikeFixture) throw new Error("Invalid bike draft");
     if (engagedBike) {
       // Existing campaigns retain the eligibility recorded when they were confirmed.
       bikeBandsForBudget = Object.fromEntries(features.map(({id}) => [id, snapshot.bands?.[id]]));
     } else {
-      const timesResponse = await fetch("data/amsterdam-bike-times.json");
-      if (!timesResponse.ok) throw new Error("Bike times unavailable");
-      const times = await timesResponse.json();
-      if (snapshot.network !== times.version || !Object.hasOwn(times.profiles, bikeFixture)) {
-        throw new Error("Invalid bike network");
-      }
-      const {wijken} = times.profiles[bikeFixture];
-      bikeBandsForBudget = Object.fromEntries(features.map(({id}) =>
-        [id, classifyBikeSeconds(wijken[id]?.seconds, snapshot.thresholds)]));
-    }
-    if (!engagedBike && !draft.portions) throw Error("Outdated draft");
-    if (!engagedBike && draft.portions) {
-      const times = await fetch("data/amsterdam-bike-times.json").then(r => r.json());
-      budgetNetwork = await loadNetworkZones(bikeFixture, times);
-      if (budgetNetwork.version !== draft.portions) throw Error("Outdated geography");
+      if (draft.portions !== radiusVersion) throw Error("Outdated draft");
+      const fixtures = await loadRadiusFixtures();
+      if (!Object.hasOwn(fixtures.profiles, bikeFixture)) throw Error("Unknown business");
+      budgetNetwork = fixtures.profiles[bikeFixture];
       budgetFeatures = features;
+      bikeBandsForBudget = {};
       for (const {id} of features) names.set(orangeKey(id), names.get(id));
     }
     identifiers = bikeBudgetSelection();
